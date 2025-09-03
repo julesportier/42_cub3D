@@ -28,9 +28,6 @@ DEP_FLAGS = -MMD
 
 LIBFT_DIR := ./libft
 LIBFT_AR := $(LIBFT_DIR)/libft.a
-LIBFT_HEADERS := $(LIBFT_DIR)/src/libft.h \
-		 $(LIBFT_DIR)/src/ft_printf.h \
-		 $(LIBFT_DIR)/src/get_next_line.h
 LIBS_FLAGS := -lft -L$(LIBFT_DIR)
 
 #########
