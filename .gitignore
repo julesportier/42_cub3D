@@ -1,0 +1,11 @@
+# compilation output
+*.o
+*.out
+*.gch
+*.a
+build/
+# project specific
+cub3D
+# bear output
+compile_commands.json
+.cache/
