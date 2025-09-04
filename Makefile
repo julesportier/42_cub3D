@@ -28,7 +28,7 @@ DEP_FLAGS = -MMD
 
 LIBFT_DIR := ./libft
 LIBFT_AR := $(LIBFT_DIR)/libft.a
-LIBS_FLAGS := -lft -L$(LIBFT_DIR)
+LIBFT_FLAGS := -lft -L$(LIBFT_DIR)
 
 LIBMLX_DIR := ./minilibx
 LIBMLX_AR := $(LIBMLX_DIR)/libmlx.a
@@ -88,7 +88,7 @@ re: fclean all
 # RULES #
 #########
 $(NAME): $(OBJ) $(LIBFT_AR)
-	$(CC) $^ -o $@ $(LIBS_FLAGS)
+	$(CC) $^ -o $@ $(LIBFT_FLAGS)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(DEP_FLAGS) -c $< -o $@
