@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/09/04 11:20:04 by juportie         ###   ########.fr        #
+#    Updated: 2025/09/04 12:24:28 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,8 @@ SRC_DIR := src
 vpath %.c $(SRC_DIR)
 SRC := main.c \
 	   free.c \
-	   mlx_alloc.c
+	   mlx_alloc.c \
+	   mlx_hooks_utils.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)

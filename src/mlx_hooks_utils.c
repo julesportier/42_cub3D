@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mlx_hooks_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/04 12:24:32 by juportie         ###   ########.fr       */
+/*   Created: 2025/09/04 12:10:20 by juportie          #+#    #+#             */
+/*   Updated: 2025/09/04 12:24:46 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 #include "../minilibx/mlx.h"
 
-int	main(void)
+int	end_loop_mouse(t_mlx_data *mlx_data)
 {
-	t_mlx_data	mlx_data;
+	mlx_loop_end(mlx_data->mlx);
+	return (0);
+}
 
-	if (allocate_mlx(&mlx_data, "cub3D"))
-		return (-1);
-	mlx_hook(mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &mlx_data);
-	mlx_key_hook(mlx_data.win, end_loop_esc, &mlx_data);
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
+int	end_loop_esc(int keycode, t_mlx_data *mlx_data)
+{
+	if (keycode == ESC)
+		mlx_loop_end(mlx_data->mlx);
 	return (0);
 }
