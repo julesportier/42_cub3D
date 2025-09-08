@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/04 12:24:32 by juportie         ###   ########.fr       */
+/*   Created: 2025/09/04 10:34:05 by juportie          #+#    #+#             */
+/*   Updated: 2025/09/04 11:01:06 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 #include "../minilibx/mlx.h"
+#include <stdlib.h>
 
-int	main(void)
+void	free_mlx(t_mlx_data *mlx_data)
 {
-	t_mlx_data	mlx_data;
-
-	if (allocate_mlx(&mlx_data, "cub3D"))
-		return (-1);
-	mlx_hook(mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &mlx_data);
-	mlx_key_hook(mlx_data.win, end_loop_esc, &mlx_data);
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
-	return (0);
+	if (mlx_data->img.img != NULL)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->img.img);
+	if (mlx_data->win != NULL)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->win);
+	if (mlx_data->mlx != NULL)
+	{
+		mlx_destroy_display(mlx_data->mlx);
+		free(mlx_data->mlx);
+	}
 }

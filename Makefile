@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/09/03 11:43:03 by juportie         ###   ########.fr        #
+#    Updated: 2025/09/04 12:24:28 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ DEP_FLAGS = -MMD
 
 LIBFT_DIR := ./libft
 LIBFT_AR := $(LIBFT_DIR)/libft.a
-LIBS_FLAGS := -lft -L$(LIBFT_DIR)
+LIBFT_FLAGS := -lft -L$(LIBFT_DIR)
 
 LIBMLX_DIR := ./minilibx
 LIBMLX_AR := $(LIBMLX_DIR)/libmlx.a
@@ -41,7 +41,10 @@ NAME := cub3D
 
 SRC_DIR := src
 vpath %.c $(SRC_DIR)
-SRC := main.c
+SRC := main.c \
+	   free.c \
+	   mlx_alloc.c \
+	   mlx_hooks_utils.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
@@ -88,7 +91,7 @@ re: fclean all
 # RULES #
 #########
 $(NAME): $(OBJ) $(LIBFT_AR)
-	$(CC) $^ -o $@ $(LIBS_FLAGS)
+	$(CC) $^ -o $@ $(LIBFT_FLAGS) $(LIBMLX_FLAGS)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(DEP_FLAGS) -c $< -o $@
