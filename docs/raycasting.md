@@ -8,11 +8,16 @@
 - [lodev raycasting](https://lodev.org/cgtutor/raycasting.html)
 - [RayTracingInOneWeekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview)
 - [Wolfenstein 3D raycasting in C](https://timallanwheeler.com/blog/2023/04/01/wolfenstein-3d-raycasting-in-c/)
-
 - [permadi's raycast](https://www.permadi.com/tutorial/raycast/rayc1.html)
 
 - [A raycasting engine in 7 easy steps](https://austinhenley.com/blog/raycasting.html)
 (- [Elissa Black ray raycasting engine](https://www.elissablack.com/ray-the-raycasting-engine/))
+
+## Videos
+
+- **javidx9**: 
+    - [Super Fast Ray Casting in Tiled Worlds using DDA](https://www.youtube.com/watch?v=NbSee-XM7WA)
+    - [Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
 
 
 ## Recipe
