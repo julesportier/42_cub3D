@@ -30,15 +30,23 @@ typedef struct s_point
 typedef enum e_direction
 {
 	north,
-	south
+	south,
+	est,
+	west
 }	t_direction;
 
 double	calc_angle_increment(int screen_width, double fov);
-t_point	calc_first_intersection(
+t_point	calc_first_y_intersection(
 	t_point pos,
 	t_direction direction,
 	double angle
 );
-t_point	calc_intersections_lenght(t_direction direction, double angle);
+t_point	calc_first_x_intersection(
+	t_point pos,
+	t_direction direction,
+	double angle
+);
+t_point	calc_y_vector(t_direction direction, double angle);
+t_point	calc_x_vector(t_direction direction, double angle);
 
 #endif
