@@ -42,24 +42,48 @@ t_point	calc_first_intersection(
 	intersection.x = pos.x + intersection.x;
 	return (intersection);
 }
+
+t_point	calc_intersections_lenght(t_direction direction, double angle)
+{
+	t_point	vector;
+
+	vector.y = CUBE_SIZE;
+	vector.x = vector.y * tan(angle);
+	if (direction == north)
+		vector.y *= -1;
+	return (vector);
 }
-//
-// #include <stdio.h>
-//
-// int	main(void)
-// {
-// 	t_point	pos = {.x = 256, .y = 1024 + 256};
-// 	// Angled to the left/west
-// 	double	angle = (M_PI * 2) - (double)FOV / 2;
-// 	t_point	inter = calc_first_intersection(pos, north, angle);
-// 	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-// 	inter = calc_first_intersection(pos, south, angle);
-// 	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-// 	// Angled to the right/est
-// 	angle = (double)FOV / 2;
-// 	inter = calc_first_intersection(pos, north, angle);
-// 	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-// 	inter = calc_first_intersection(pos, south, angle);
-// 	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-// 	return (0);
-// }
+
+#include <stdio.h>
+
+int	main(void)
+{
+	t_point	pos = {.x = 256, .y = 1024 + 256};
+	// Angled to the left/west
+	double	angle = (M_PI * 2) - (double)FOV / 2;
+	t_point	inter = calc_first_intersection(pos, north, angle);
+	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_first_intersection(pos, south, angle);
+	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	// Angled to the right/est
+	angle = (double)FOV / 2;
+	inter = calc_first_intersection(pos, north, angle);
+	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_first_intersection(pos, south, angle);
+	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+
+	// calc_intersections_lenght()
+	// Angled to the right/est
+	angle = (double)FOV / 2;
+	inter = calc_intersections_lenght(north, angle);
+	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_intersections_lenght(south, angle);
+	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	// Angled to the left/west
+	angle = (M_PI * 2) - (double)FOV / 2;
+	inter = calc_intersections_lenght(north, angle);
+	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_intersections_lenght(south, angle);
+	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	return (0);
+}

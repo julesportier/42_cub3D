@@ -39,5 +39,6 @@ t_point	calc_first_intersection(
 	t_direction direction,
 	double angle
 );
+t_point	calc_intersections_lenght(t_direction direction, double angle);
 
 #endif
