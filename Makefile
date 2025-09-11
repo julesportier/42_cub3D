@@ -44,7 +44,8 @@ vpath %.c $(SRC_DIR)
 SRC := main.c \
 	   free.c \
 	   mlx_alloc.c \
-	   mlx_hooks_utils.c
+	   mlx_hooks_utils.c \
+	   rendering.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
