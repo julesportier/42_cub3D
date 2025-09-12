@@ -52,9 +52,15 @@ t_point	calc_first_x_intersection(
 )
 {
 	t_point	intersection;
+	double	cos_angle;
 
 	intersection.x = (pos.x >> SHIFT_OP_512 << SHIFT_OP_512);
-	intersection.y = (pos.x - intersection.x) / cos(M_PI_2 - angle);
+	cos_angle = cos(M_PI_2 - angle);
+	// /!\ cosinus(90deg || pi/2rad) == 0
+	if (cos_angle > -0.0000001 && cos_angle < 0.0000001)
+		intersection.y = 0;
+	else
+		intersection.y = (pos.x - intersection.x) / cos(M_PI_2 - angle);
 	if (direction == west)
 		intersection.x -= 1;
 	else
@@ -77,9 +83,14 @@ t_point	calc_y_vector(t_direction direction, double angle)
 t_point	calc_x_vector(t_direction direction, double angle)
 {
 	t_point	vector;
+	double	cos_angle;
 
 	vector.x = CUBE_SIZE;
-	vector.y = vector.x / cos(M_PI_2 - angle);
+	cos_angle = cos(M_PI_2 - angle);
+	if (cos_angle > -0.0000001 && cos_angle < 0.0000001)
+		vector.y = 0;
+	else
+		vector.y = vector.x / cos(M_PI_2 - angle);
 	if (direction == west)
 		vector.x *= -1;
 	return (vector);
@@ -128,6 +139,12 @@ int	main(void)
 	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
 
 	printf("-------\ncalc_first_x_intersection()\n");
+	// Full angled to the left/west 0rad
+	angle = 0;
+	inter = calc_first_x_intersection(pos, west, angle);
+	printf("inter west 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_first_x_intersection(pos, est, angle);
+	printf("inter est 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
 	// Angled to the left/west
 	angle = (M_PI * 2) - (double)FOV / 2;
 	inter = calc_first_x_intersection(pos, west, angle);
@@ -168,6 +185,12 @@ int	main(void)
 	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
 
 	printf("-------\ncalc_x_vector()\n");
+	// Full angled to the left/west 0deg
+	angle = 0;
+	inter = calc_x_vector(west, angle);
+	printf("inter vector west 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+	inter = calc_x_vector(est, angle);
+	printf("inter vector est 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
 	// Angled to the right/est
 	angle = (double)FOV / 2;
 	inter = calc_x_vector(west, angle);
