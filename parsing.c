@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/12 10:36:01 by vakozhev          #+#    #+#             */
+/*   Updated: 2025/09/12 10:38:01 by vakozhev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
 
 static bool check_extension(const char *path)
@@ -86,8 +98,7 @@ void print_perr(t_perr err, const char *str) //attention fprintf n'est pas autor
     }
     fprintf(stderr, "Error: échec inconnu.\n");
 }
-
-/* 
+/*
 int main(int argc, char **argv)
 {
     const char *path = NULL;
