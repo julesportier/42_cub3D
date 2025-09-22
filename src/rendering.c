@@ -6,17 +6,26 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/09 12:04:18 by juportie         ###   ########.fr       */
+/*   Updated: 2025/09/18 15:28:51 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
 #include "rendering.h"
 #include <math.h>
 
-double	calc_angle_increment(int screen_width, double fov)
+t_direction	calc_direction(double angle)
 {
-	return (fov / screen_width);
+	t_direction	direction;
+
+	if (angle < TURN_180)
+		direction.y = north;
+	else
+		direction.y = south;
+	if (angle > TURN_90 && angle < TURN_270)
+		direction.x = west;
+	else
+		direction.x = est;
+	return (direction);
 }
 
 t_point	calc_first_y_intersection(
@@ -26,22 +35,25 @@ t_point	calc_first_y_intersection(
 )
 {
 	t_point	intersection;
+	double	tan_angle;
 
 	// equivalent to:
 	// intersection.y = floor((double)pos.y / 512) * 512;
 	// but shift is roughly 40% faster than division
 	// and we don't use floor neither floating points.
 	intersection.y = (pos.y >> SHIFT_OP_512 << SHIFT_OP_512);
-
 	// Or as grid coordinate:
 	// coordinate.y -= (pos.y >> SHIFT_OP_512) - 1;
-	intersection.x = (pos.y - intersection.y) * tan(angle);
 	// Minus 1 to make the coordinate belong to the above block.
-	if (direction == north)
-		intersection.y -= 1;
-	else
+	if (direction.y == south)
 		intersection.y += CUBE_SIZE;
-	intersection.x = pos.x + intersection.x;
+
+	// division by zero of double type don't cause much trouble with IEEE 754.
+	intersection.x = round((pos.y - intersection.y) / tan(angle)) + pos.x;
+	if (direction.y == north)
+		intersection.y -= 1;
+
+
 	return (intersection);
 }
 
@@ -52,20 +64,14 @@ t_point	calc_first_x_intersection(
 )
 {
 	t_point	intersection;
-	double	cos_angle;
+	double	tan_angle;
 
 	intersection.x = (pos.x >> SHIFT_OP_512 << SHIFT_OP_512);
-	cos_angle = cos(M_PI_2 - angle);
-	// /!\ cosinus(90deg || pi/2rad) == 0
-	if (cos_angle > -0.0000001 && cos_angle < 0.0000001)
-		intersection.y = 0;
-	else
-		intersection.y = (pos.x - intersection.x) / cos(M_PI_2 - angle);
-	if (direction == west)
-		intersection.x -= 1;
-	else
+	if (direction.x == est)
 		intersection.x += CUBE_SIZE;
-	intersection.y = pos.y + intersection.y;
+	intersection.y = round((pos.x - intersection.x) * tan(angle)) + pos.y;
+	if (direction.x == west)
+		intersection.x -= 1;
 	return (intersection);
 }
 
@@ -74,9 +80,9 @@ t_point	calc_y_vector(t_direction direction, double angle)
 	t_point	vector;
 
 	vector.y = CUBE_SIZE;
-	vector.x = vector.y * tan(angle);
-	if (direction == north)
+	if (direction.y == north)
 		vector.y *= -1;
+	vector.x = round(vector.y / tan(angle));
 	return (vector);
 }
 
@@ -86,128 +92,127 @@ t_point	calc_x_vector(t_direction direction, double angle)
 	double	cos_angle;
 
 	vector.x = CUBE_SIZE;
-	cos_angle = cos(M_PI_2 - angle);
-	if (cos_angle > -0.0000001 && cos_angle < 0.0000001)
-		vector.y = 0;
-	else
-		vector.y = vector.x / cos(M_PI_2 - angle);
-	if (direction == west)
+	if (direction.x == west)
 		vector.x *= -1;
+	vector.y = round(vector.x * tan(angle));
 	return (vector);
 }
-
-// t_point	dda(t_point pos, t_point vector_x, t_point vector_y)
+//
+//
+//
+//
+// #include <stdio.h>
+// # define RAD_TO_DEG(rad) ((int)(rad * (180 / M_PI)))
+//
+//
+// int	main(void)
 // {
-// 	int	x_dist;
-// 	int	y_dist;
+// 	t_point	pos = {.x = 512 + 256, .y = 1024 + 256};
 //
-// 	x_dist = 0;
-// 	y_dist = 0;
-// 	while (pos.x > 0 && pos.x < WIN_WIDTH && pos.y> 0 && pos.y < WIN_HEIGHT)
-// 	{
-// 		if (x_dist < y_dist)
-// 		{
+// 	printf("=========\nstart pos: x = %d ; y = %d\n", pos.x, pos.y);
+// 	printf("---------\ncalc_first_y_intersection()\n");
+// 	// Angled to the left/west
+// 	double	angle = TURN_135;
+// 	t_direction	direction = calc_direction(angle);
+// 	t_point	inter = calc_first_y_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_225;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_y_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est
+// 	angle = TURN_45;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_y_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_315;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_y_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est but faster on est than north
+// 	angle = 0.2;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_y_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	printf("---------\ncalc_first_x_intersection()\n");
+// 	// Angled to the left/west
+// 	angle = TURN_135;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_x_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_225;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_x_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est
+// 	angle = TURN_45;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_x_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_315;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_x_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est but faster on est than north
+// 	angle = 0.2;
+// 	direction = calc_direction(angle);
+// 	inter = calc_first_x_intersection(pos, direction, angle);
+// 	printf("%ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
 //
-//
-//
+// 	printf("---------\ncalc_y_vector()\n");
+// 	// Angled to the left/west
+// 	angle = TURN_135;
+// 	direction = calc_direction(angle);
+// 	inter = calc_y_vector(direction, angle);
+// 	printf("vector %ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_225;
+// 	direction = calc_direction(angle);
+// 	inter = calc_y_vector(direction, angle);
+// 	printf("vector %ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est
+// 	angle = TURN_45;
+// 	direction = calc_direction(angle);
+// 	inter = calc_y_vector(direction, angle);
+// 	printf("vector %ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	angle = TURN_315;
+// 	direction = calc_direction(angle);
+// 	inter = calc_y_vector(direction, angle);
+// 	printf("vector %ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// 	// Angled to the right/est but faster on x than y
+// 	angle = 0.2;
+// 	direction = calc_direction(angle);
+// 	inter = calc_y_vector(direction, angle);
+// 	printf("vector %ddeg x = %d; y = %d\n", RAD_TO_DEG(angle), inter.x, inter.y);
+// // 	angle = 1;
+// // 	inter = calc_y_vector(north, angle);
+// // 	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	inter = calc_y_vector(south, angle);
+// // 	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// //
+// // 	printf("-------\ncalc_x_vector()\n");
+// // 	// Full angled to the left/west 0deg
+// // 	angle = 0;
+// // 	inter = calc_x_vector(west, angle);
+// // 	printf("inter vector west 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	inter = calc_x_vector(est, angle);
+// // 	printf("inter vector est 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	// Angled to the right/est
+// // 	angle = (double)FOV / 2;
+// // 	inter = calc_x_vector(west, angle);
+// // 	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	inter = calc_x_vector(est, angle);
+// // 	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	// Angled to the left/west
+// // 	angle = (M_PI * 2) - (double)FOV / 2;
+// // 	inter = calc_x_vector(west, angle);
+// // 	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	inter = calc_x_vector(est, angle);
+// // 	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	// Angled to the right/est but faster on x than y
+// // 	angle = 1;
+// // 	inter = calc_x_vector(west, angle);
+// // 	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// // 	inter = calc_x_vector(est, angle);
+// // 	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
+// 	return (0);
 // }
-
-#include <stdio.h>
-
-int	main(void)
-{
-	t_point	pos = {.x = 256, .y = 1024 + 256};
-
-	printf("calc_first_y_intersection()\n");
-	// Angled to the left/west
-	double	angle = (M_PI * 2) - (double)FOV / 2;
-	t_point	inter = calc_first_y_intersection(pos, north, angle);
-	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_y_intersection(pos, south, angle);
-	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est
-	angle = (double)FOV / 2;
-	inter = calc_first_y_intersection(pos, north, angle);
-	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_y_intersection(pos, south, angle);
-	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est but faster on x than y
-	angle = 1;
-	inter = calc_first_y_intersection(pos, north, angle);
-	printf("inter north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_y_intersection(pos, south, angle);
-	printf("inter south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-
-	printf("-------\ncalc_first_x_intersection()\n");
-	// Full angled to the left/west 0rad
-	angle = 0;
-	inter = calc_first_x_intersection(pos, west, angle);
-	printf("inter west 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_x_intersection(pos, est, angle);
-	printf("inter est 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the left/west
-	angle = (M_PI * 2) - (double)FOV / 2;
-	inter = calc_first_x_intersection(pos, west, angle);
-	printf("inter west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_x_intersection(pos, est, angle);
-	printf("inter est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est
-	angle = (double)FOV / 2;
-	inter = calc_first_x_intersection(pos, west, angle);
-	printf("inter west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_x_intersection(pos, est, angle);
-	printf("inter est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est but faster on x than y
-	angle = 1;
-	inter = calc_first_x_intersection(pos, west, angle);
-	printf("inter west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_first_x_intersection(pos, est, angle);
-	printf("inter est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-
-	printf("-------\ncalc_y_vector()\n");
-	// Angled to the right/est
-	angle = (double)FOV / 2;
-	inter = calc_y_vector(north, angle);
-	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_y_vector(south, angle);
-	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the left/west
-	angle = (M_PI * 2) - (double)FOV / 2;
-	inter = calc_y_vector(north, angle);
-	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_y_vector(south, angle);
-	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est but faster on x than y
-	angle = 1;
-	inter = calc_y_vector(north, angle);
-	printf("inter vector north %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_y_vector(south, angle);
-	printf("inter vector south %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-
-	printf("-------\ncalc_x_vector()\n");
-	// Full angled to the left/west 0deg
-	angle = 0;
-	inter = calc_x_vector(west, angle);
-	printf("inter vector west 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_x_vector(est, angle);
-	printf("inter vector est 0rad %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est
-	angle = (double)FOV / 2;
-	inter = calc_x_vector(west, angle);
-	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_x_vector(est, angle);
-	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the left/west
-	angle = (M_PI * 2) - (double)FOV / 2;
-	inter = calc_x_vector(west, angle);
-	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_x_vector(est, angle);
-	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	// Angled to the right/est but faster on x than y
-	angle = 1;
-	inter = calc_x_vector(west, angle);
-	printf("inter vector west %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	inter = calc_x_vector(est, angle);
-	printf("inter vector est %ddeg x = %d; y = %d\n", (int)(angle * (180 / M_PI)), inter.x, inter.y);
-	return (0);
-}

@@ -20,6 +20,15 @@
 # define CUBE_SIZE 512
 # define PLAYER_HEIGHT 256
 # define SHIFT_OP_512 9
+// radians turns
+# define TURN_45 M_PI_4
+# define TURN_90 M_PI_2
+# define TURN_135 (M_PI_2 + M_PI_4)
+# define TURN_180 M_PI
+# define TURN_225 (M_PI + M_PI_4)
+# define TURN_270 (M_PI + M_PI_2)
+# define TURN_315 (M_PI + M_PI_2 + M_PI_4)
+# define TURN_360 0
 
 typedef struct s_point
 {
@@ -27,14 +36,21 @@ typedef struct s_point
 	int y;
 }	t_point;
 
-typedef enum e_direction
+typedef enum e_cardinal
 {
 	north,
 	south,
 	est,
-	west
+	west,
+}	t_cardinal;
+
+typedef struct e_direction
+{
+	t_cardinal	x;
+	t_cardinal	y;
 }	t_direction;
 
+t_direction	calc_direction(double angle);
 double	calc_angle_increment(int screen_width, double fov);
 t_point	calc_first_y_intersection(
 	t_point pos,
