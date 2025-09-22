@@ -1,4 +1,21 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>     // realloc, free, NULL
 #include "parsing.h"
+
+void cfg_init(t_config *cfg)
+{
+    ft_memset(cfg, 0, sizeof(*cfg));
+    cfg->floor_rgb.r = - 1;
+    cfg->floor_rgb.g = - 1;
+    cfg->floor_rgb.b = - 1;
+    cfg->ceil_rgb.r  = - 1;
+    cfg->ceil_rgb.g  = - 1;
+    cfg->ceil_rgb.b  = - 1;
+    cfg->floor_rgb.is_set = false;
+    cfg->ceil_rgb.is_set = false;
+}
 
 static int push_map_line(t_config *c, const char *line)
 {
@@ -9,7 +26,7 @@ static int push_map_line(t_config *c, const char *line)
         c->map_lines = tmp;
         c->map_cap   = newcap;
     }
-    c->map_lines[c->map_h] = strdup(line);
+    c->map_lines[c->map_h] = ft_strdup(line);
     if (!c->map_lines[c->map_h]) return -1;
     c->map_h++;
     return 0;
@@ -17,18 +34,19 @@ static int push_map_line(t_config *c, const char *line)
 
 int main(int argc, char **argv)
 {
-    if (argc != 2) {
+    if (argc != 2)
+    {
         fprintf(stderr, "Usage: %s file.cub\n", argv[0]);
         return 1;
     }
     int fd = open(argv[1], O_RDONLY);
-    if (fd < 0) {
-        perror("open");
-        return 1;
-    }
+    if (fd < 0)
+    {
+		perror("open");
+		return 1;
+	}
 
-    t_config cfg;
-    cfg_init(&cfg);
+    t_config cfg; cfg_init(&cfg);
 
     t_perr perr = PERR_OK;
     char  *line = NULL;
@@ -37,67 +55,81 @@ int main(int argc, char **argv)
 
     while ((line = get_next_line(fd)) != NULL)
     {
-        // retire le \n final si présent (facultatif mais pratique)
-        size_t n = strlen(line);
-        while (n && (line[n-1] == '\n' || line[n-1] == '\r')) line[--n] = '\0';
-		fprintf(stderr, "DBG: line='%s'\n", line);
-        if (!header_done)
-        {
-            bool handled = parse_header_line(line, &cfg, &perr);
-            if (handled)
-            {
-                // ligne header traitée, on continue
-                free(line);
-                // vérifie si tout le header est déjà complet (optionnel ici)
-                t_perr hc = header_complete(&cfg);
-                if (hc == PERR_OK) header_done = 1;
-                continue;
-            }
-            else
-            {
+		fprintf(stderr, "DBG main: got line ptr=%p\n", (void*)line);
+		size_t n = ft_strlen(line);
+		while (n && (line[n-1] == '\n' || line[n-1] == '\r')) line[--n] = '\0';
+		fprintf(stderr, "DBG main: trimmed line='%s'\n", line);
+		// skip lignes blanches avant parse
+		const char *q = line;
+		while (*q == ' ' || *q == '\t' || *q == '\r') q++;
+		if (*q == '\0') {        // ligne vide
+		free(line);
+		line = NULL;
+		continue;}
+		if (!header_done)
+		{
+			bool handled = parse_header_line(line, &cfg, &perr);
+			fprintf(stderr, "DBG after parse_header_line: handled=%d perr=%d\n", handled, perr);
+
+			if (handled)
+			{
+				fprintf(stderr, "DBG main: about to free(line)\n");
+				free(line);
+				line = NULL; // 🔒 évite toute réutilisation
+				fprintf(stderr, "DBG main: call header_complete\n");
+				t_perr hc = header_complete(&cfg);
+				fprintf(stderr, "DBG main: header_complete -> %d\n", hc);
+				if (hc == PERR_OK) header_done = 1;
+				fprintf(stderr, "DBG main: continue loop\n");
+				continue;
+			}
+			else
+			{
 				if (perr != PERR_OK)
 				{
+					fprintf(stderr, "Error\nheader: %d\n", perr);
 					free(line);
+					line = NULL;
 					err = 1;
 					break;
 				}
-			// 🔽 ajout temporaire
-				fprintf(stderr, "DBG: handled=%d perr=%d for line='%s'\n", handled, perr, line);
-            // pas header : peut être ligne vide avant map -> on ignore les vides
 				const char *p = line;
-				while (*p == ' ' || *p == '\t') p++;
-				if (*p == '\0') { free(line); continue; }
-
-            // sinon : c'est le début de la map
-				header_done = 1;
+				while (*p==' '||*p=='\t') p++;
+				if (*p == '\0')
+				{
+					free(line);
+					line = NULL;
+					continue;
+				}
+				header_done = 1; // début de la map
+            // pas de continue; on garde cette 1ère ligne de map
 			}
-
-        // A partir d'ici: on empile la map (y compris la 1ère ligne non-header)
-			if (push_map_line(&cfg, line) != 0)
-			{
-				fprintf(stderr, "OOM pushing map line\n");
-				free(line);
-				err = 1;
-				break;
-			}
-			free(line);
 		}
-	}
 
-    close(fd);
-	dump_header(&cfg, "before-final-check");
-    // Vérification finale du header (au cas où il manquait des éléments)
-    if (!err)
-    {
+		// phase map
+		if (push_map_line(&cfg, line) != 0)
+		{
+			fprintf(stderr, "OOM pushing map line\n");
+			free(line);
+			line = NULL;
+			err = 1;
+			break;
+		}
+		free(line);
+		line = NULL;
+	}
+	fprintf(stderr, "DBG main: loop ended (line=%p)\n", (void*)line);
+	close(fd);
+
+    // Vérif finale du header si on n'a pas déjà eu d'erreur
+    if (!err) {
         t_perr hc = header_complete(&cfg);
-        if (hc != PERR_OK)
-        {
+        if (hc != PERR_OK) {
             fprintf(stderr, "Header incomplet (%d)\n", hc);
             err = 1;
         }
     }
 
-    // Affiche un petit résumé
     if (!err)
     {
         printf("NO=%s\nSO=%s\nWE=%s\nEA=%s\n",
