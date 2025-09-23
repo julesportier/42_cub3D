@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rendering_2.c                                      :+:      :+:    :+:   */
+/*   dda.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/18 16:46:44 by juportie         ###   ########.fr       */
+/*   Updated: 2025/09/23 07:40:27 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,7 @@ static char	**alloc_map(void)
 	return (map);
 }
 
-void	cast_rays(
-	t_map_data	map_data,
-	t_point		pos,
-	double		player_angle)
+void	cast_rays(t_map_data map_data, t_point pos, double player_angle)
 {
 	double	angle_increment;
 	double	angle;

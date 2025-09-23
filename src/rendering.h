@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/09 11:52:44 by juportie         ###   ########.fr       */
+/*   Updated: 2025/09/23 07:41:06 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,11 @@ typedef struct e_direction
 	t_cardinal	y;
 }	t_direction;
 
+// dda_utils.c
 t_direction	calc_direction(double angle);
-double	calc_angle_increment(int screen_width, double fov);
+t_point	calc_y_vector(t_direction direction, double angle);
+t_point	calc_x_vector(t_direction direction, double angle);
+// NO MORE USAGE ??
 t_point	calc_first_y_intersection(
 	t_point pos,
 	t_direction direction,
@@ -69,7 +72,25 @@ t_point	calc_first_x_intersection(
 	t_direction direction,
 	double angle
 );
-t_point	calc_y_vector(t_direction direction, double angle);
-t_point	calc_x_vector(t_direction direction, double angle);
+//******************
+
+// dda.c
+double	calc_angle_increment(int screen_width, double fov);
+int	calc_ray_length(
+	t_map_data	map_data,
+	t_point		pos,
+	t_direction	dir,
+	t_point		vector_x,
+	t_point		vector_y);
+void	cast_rays(t_map_data map_data, t_point pos, double player_angle);
+// NO MORE USAGE ??
+int	is_inside_map(t_point pos, t_map_data map_data);
+int	is_wall(char *map[], t_point pos);
+t_point	calc_first_side_wall(
+	t_map_data map_data,
+	t_point	first_intersection,
+	t_point vector);
+t_point	calc_first_wall(t_map_data map_data, t_point pos, double angle);
+//******************
 
 #endif
