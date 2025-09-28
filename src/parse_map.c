@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 12:12:17 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/09/28 13:57:14 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/09/28 19:55:21 by vakozhev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,18 +110,21 @@ int	main(int argc, char **argv)
 	char *line;
 	int   n = 1;
 
-	if (fd < 0) { perror("open"); return 1; }
-
+	if (fd < 0)
+	{
+		perror("open");
+		return 1;
+	}
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		int len = line_len_no_nl(line);
-		if (len > 0)                 // ignore lignes vides "logiques"
+		if (len > 0)                 // ignore lignes vides
 		{
-			tabs_to_spaces(line);    // in-place, 0 malloc
-			if (is_map_line(line))   // ne lit que les len premiers chars
+			tabs_to_spaces(line);    // sans malloc
+			if (is_map_line(line))
 			{
-				// ici tu pousserais dans mb_push_line(line)
-				// pour le test, on affiche juste un aperçu:
+				// si ok -> mb_push_line(line)
+				// j affiche pour test, cela disparaitera
 				printf("L%03d len=%d map=1 -> \"", n, len);
 				for (int i = 0; i < len; i++)
 					putchar(line[i] == ' ' ? '.' : (unsigned char)line[i]);
@@ -132,7 +135,7 @@ int	main(int argc, char **argv)
 				printf("L%03d len=%d map=0\n", n, len);
 			}
 		}
-		free(line);  // toujours free la ligne fournie par GNL
+		free(line);
 		n++;
 	}
 	if (argc > 1) close(fd);
