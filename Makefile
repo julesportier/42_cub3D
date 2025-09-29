@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/09/04 12:24:28 by juportie         ###   ########.fr        #
+#    Updated: 2025/09/29 13:02:52 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ CFLAGS_NE := -g3
 CFLAGS_REL := $(WARNINGS) -O2
 DEP_FLAGS = -MMD
 
+LIBMATH_FLAGS := -lm
 LIBFT_DIR := ./libft
 LIBFT_AR := $(LIBFT_DIR)/libft.a
 LIBFT_FLAGS := -lft -L$(LIBFT_DIR)
@@ -45,6 +46,9 @@ SRC := main.c \
 	   free.c \
 	   mlx_alloc.c \
 	   mlx_hooks_utils.c \
+	   dda_utils.c \
+	   dda_directions.c \
+	   dda.c \
 	   rendering.c
 
 BUILD_DIR := build
@@ -92,7 +96,7 @@ re: fclean all
 # RULES #
 #########
 $(NAME): $(OBJ) $(LIBFT_AR)
-	$(CC) $^ -o $@ $(LIBFT_FLAGS) $(LIBMLX_FLAGS)
+	$(CC) $^ -o $@ $(LIBMATH_FLAGS) $(LIBFT_FLAGS) $(LIBMLX_FLAGS)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(DEP_FLAGS) -c $< -o $@

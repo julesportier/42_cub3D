@@ -6,13 +6,13 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/23 07:40:27 by juportie         ###   ########.fr       */
+/*   Updated: 2025/09/23 08:25:53 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 #include "rendering.h"
-#include "vector_operations.h"
+#include "../minilibx/mlx.h"
 #include <math.h>
 
 double	calc_angle_increment(int screen_width, double fov)
@@ -20,84 +20,51 @@ double	calc_angle_increment(int screen_width, double fov)
 	return (fov / screen_width);
 }
 
-int	is_inside_map(t_point pos, t_map_data map_data)
-{
-	pos.x >>= SHIFT_OP_512;
-	pos.y >>= SHIFT_OP_512;
-	if (pos.x < 0 || pos.x >= map_data.width
-			|| pos.y < 0 || pos.y >= map_data.height)
-		return (0);
-	else
-		return (1);
-}
-
-#include <stdio.h>
-int	is_wall(char *map[], t_point pos)
-{
-	printf("pos.x >> SHIFT_OP_512 == %d\n", pos.x >> SHIFT_OP_512);
-	printf("pos.y >> SHIFT_OP_512 == %d\n", pos.y >> SHIFT_OP_512);
-	return (map[pos.y >> SHIFT_OP_512][pos.x >> SHIFT_OP_512] == '1');
-}
-
 int	calc_ray_length(
 	t_map_data	map_data,
 	t_point		pos,
 	t_direction	dir,
 	t_point		vector_x,
-	t_point		vector_y)
+	t_point		vector_y,
+	double		angle)
+	// double		player_angle)
 {
 	// printf("pos.x == %d, pos.y == %d\n", pos.x, pos.y);
 	int	map_x = pos.x >> SHIFT_OP_512;
 	int	map_y = pos.y >> SHIFT_OP_512;
+	printf("map_x == %d, map_y == %d\n", map_x, map_y);
 	double	delta_x = hypot(vector_x.x, vector_x.y);
 	double	delta_y = hypot(vector_y.x, vector_y.y);
 	// printf("delta_x == %f, delta_y == %f\n", delta_x, delta_y);
-	int	side_dist_x;
-	int	side_dist_y;
+	int	dist_x;
+	int	dist_y;
 	int	step_x;
 	int	step_y;
 	char	side;
+
+	dist_x = calc_line_dist(pos, calc_first_vertical_inter(pos, dir, angle));
 	if (dir.x == est)
-	{
-		side_dist_x = ((double)CUBE_SIZE
-				/ ((pos.x >> SHIFT_OP_512 << SHIFT_OP_512) + CUBE_SIZE - pos.x))
-				* delta_x;
 		step_x = 1;
-	}
 	else
-	{
-		side_dist_x = ((double)CUBE_SIZE
-				/ (pos.x - (pos.x >> SHIFT_OP_512 << SHIFT_OP_512)))
-				* delta_x;
 		step_x = -1;
-	}
+	dist_y = calc_line_dist(pos, calc_first_horizontal_inter(pos, dir, angle));
 	if (dir.y == south)
-	{
-		side_dist_y = ((double)CUBE_SIZE
-				/ ((pos.y >> SHIFT_OP_512 << SHIFT_OP_512) + CUBE_SIZE - pos.y))
-				* delta_y;
 		step_y = 1;
-	}
 	else
-	{
-		side_dist_y = ((double)CUBE_SIZE
-				/ (pos.y - (pos.y >> SHIFT_OP_512 << SHIFT_OP_512)))
-				* delta_y;
 		step_y = -1;
-	}
 
 
 	while (1)
 	{
-		if (side_dist_x < side_dist_y)
+		if (dist_x < dist_y)
 		{
-			side_dist_x += delta_x;
+			dist_x += delta_x;
 			map_x += step_x;
 			side = 'x';
 		}
 		else
 		{
-			side_dist_y += delta_y;
+			dist_y += delta_y;
 			map_y += step_y;
 			side = 'y';
 		}
@@ -106,122 +73,19 @@ int	calc_ray_length(
 		{
 			// printf("is wall\n");
 			if (side == 'x')
-			{
-				// TO REMOVE THE FISHBOWL EFFECT NOT SURE WITH THIS IMPLEMENTATION
-				return (side_dist_x - delta_x);
-			}
+				return (dist_x);
 			else
-				return (side_dist_y - delta_y);
+				return (dist_y);
 		}
 	}
 }
 
-t_point	calc_first_side_wall(
+#include <stdio.h>
+void	cast_rays(
+	t_mlx_data *mlx_data,
 	t_map_data map_data,
-	t_point	first_intersection,
-	t_point vector)
-{
-	t_point	pos;
-
-	pos = first_intersection;
-	printf("pos.x == %d, pos.y == %d\n", pos.x, pos.y);
-	while (is_inside_map(pos, map_data))
-	{
-		if (is_wall(map_data.map, pos))
-		{
-			printf("is wall\n");
-			return (pos);
-		}
-		pos = add_vec(pos, vector);
-		printf("after add_vec\n");
-		printf("pos.x == %d, pos.y == %d\n", pos.x, pos.y);
-	}
-	printf("OUTSIDE MAP\n");
-	pos.x = 0;
-	pos.y = 0;
-	return (pos);
-}
-
-// t_point	calc_first_wall(
-// 	char *map[],
-// 	t_point	pos,
-// 	t_point	first_x_intersection,
-// 	t_point	first_y_intersection,
-// 	t_point vector_x,
-// 	t_point vector_y)
-// {
-// 	t_point	wall_y;
-// 	t_point	wall_x;
-// 	t_point	dist_y;
-// 	t_point	dist_x;
-//
-// 	wall_y = calc_first_side_wall(map, first_y_intersection, vector_y);
-// 	wall_x = calc_first_side_wall(map, first_x_intersection, vector_x);
-// 	dist_y = calc_dist(pos, wall_y);
-// 	dist_x = calc_dist(pos, wall_x);
-// 	if (is_inferior(dist_y, dist_x))
-// 		return (wall_y);
-// 	else
-// 		return (wall_x);
-// }
-
-t_point	calc_first_wall(t_map_data map_data, t_point pos, double angle)
-{
-	t_point	wall_y;
-	t_point	wall_x;
-	t_point	dist_y;
-	t_point	dist_x;
-	t_direction	dir;
-
-	dir = calc_direction(angle);
-	wall_x = calc_first_side_wall(
-				map_data,
-				calc_first_x_intersection(pos, dir, angle),
-				calc_x_vector(dir, angle));
-	wall_y = calc_first_side_wall(
-				map_data,
-				calc_first_y_intersection(pos, dir, angle),
-				calc_y_vector(dir, angle));
-	dist_x = calc_dist(pos, wall_x);
-	dist_y = calc_dist(pos, wall_y);
-	if (is_inferior(dist_y, dist_x))
-		return (wall_y);
-	else
-		return (wall_x);
-}
-
-// #include <stdio.h>
-#include <stdlib.h>
-
-static void	fill_map_line(char **map, char *line, int width, int line_nbr)
-{
-	for (int i = 0; i < width; ++i)
-		map[line_nbr][i] = *(line + i);
-}
-
-static char	**alloc_map(void)
-{
-	int	w = 5;
-	int h = 5;
-	char	**map = malloc(sizeof(char *) * h);
-	for (int i = 0; i < h; ++i)
-		map[i] = malloc(sizeof(char) * w);
-
-	// arrays size is w
-	char line_0[] = {'1','1','1','1','1'};
-	char line_1[] = {'1','0','0','0','1'};
-	char line_2[] = {'1','0','0','0','1'};
-	char line_3[] = {'1','0','0','0','1'};
-	char line_4[] = {'1','1','1','1','1'};
-	fill_map_line(map, line_0, w, 0);
-	fill_map_line(map, line_1, w, 1);
-	fill_map_line(map, line_2, w, 2);
-	fill_map_line(map, line_3, w, 3);
-	fill_map_line(map, line_4, w, 4);
-	return (map);
-}
-
-void	cast_rays(t_map_data map_data, t_point pos, double player_angle)
+	t_point pos,
+	double player_angle)
 {
 	double	angle_increment;
 	double	angle;
@@ -237,36 +101,74 @@ void	cast_rays(t_map_data map_data, t_point pos, double player_angle)
 		dir = calc_direction(angle);
 		ray_length = calc_ray_length(
 				map_data, pos, dir,
-				calc_x_vector(dir, angle),
-				calc_y_vector(dir, angle));
+				calc_vertical_vector(dir, angle),
+				calc_horizontal_vector(dir, angle),
+				angle);
+		// Remove fishbowl effect
+		ray_length = round(ray_length * cos(angle - player_angle));
 		printf("ray_length == %d\n", ray_length);
+		printf("line_height == %d\n", calc_line_height(ray_length));
+		draw_line(&(mlx_data->img), (t_pixel){{i, 0}, 0x00FFFFFF}, ray_length);
 		angle += angle_increment;
 		++i;
 	}
+	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);
 }
+#include <stdlib.h>
 
-int	main(void)
+static void	fill_map_line(char **map, char *line, int width, int line_nbr)
 {
-	t_point	pos = {.x = 1024 + 256, .y = 1024 + 256};
-
-	char	**test_map = alloc_map();
-	t_map_data map_data = {5, 5, test_map};
-
-	// // Angled to the right/est
-	// double	angle = TURN_45;
-	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
-	// t_direction dir = calc_direction(angle);
-	// int	ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
-	// printf("ray_length == %d\n", ray_length);
-	// // Angled to the left/west
-	// angle = TURN_135 + 0.01;
-	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
-	// dir = calc_direction(angle);
-	// ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
-	// printf("ray_length == %d\n", ray_length);
-	cast_rays(map_data, pos, TURN_45);
-
-
-
-	return (0);
+	for (int i = 0; i < width; ++i)
+		map[line_nbr][i] = *(line + i);
 }
+
+char	**alloc_map(void)
+{
+	int	w = 5;
+	int h = 6;
+	char	**map = malloc(sizeof(char *) * h);
+	for (int i = 0; i < h; ++i)
+		map[i] = malloc(sizeof(char) * w);
+
+	// arrays size is w
+	char line_0[] = {'1','1','1','1','1'};
+	char line_1[] = {'1','0','1','0','1'};
+	char line_2[] = {'1','0','0','0','1'};
+	char line_3[] = {'1','0','0','0','1'};
+	char line_4[] = {'1','0','0','0','1'};
+	char line_5[] = {'1','1','1','1','1'};
+	fill_map_line(map, line_0, w, 0);
+	fill_map_line(map, line_1, w, 1);
+	fill_map_line(map, line_2, w, 2);
+	fill_map_line(map, line_3, w, 3);
+	fill_map_line(map, line_4, w, 4);
+	fill_map_line(map, line_5, w, 5);
+	return (map);
+}
+
+//
+// int	main(void)
+// {
+// 	t_point	pos = {.x = 1024 + 256, .y = 1024 + 256};
+//
+// 	char	**test_map = alloc_map();
+// 	t_map_data map_data = {5, 5, test_map};
+//
+// 	// // Angled to the right/est
+// 	// double	angle = TURN_45;
+// 	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
+// 	// t_direction dir = calc_direction(angle);
+// 	// int	ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
+// 	// printf("ray_length == %d\n", ray_length);
+// 	// // Angled to the left/west
+// 	// angle = TURN_135 + 0.01;
+// 	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
+// 	// dir = calc_direction(angle);
+// 	// ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
+// 	// printf("ray_length == %d\n", ray_length);
+// 	cast_rays(map_data, pos, TURN_45);
+//
+//
+//
+// 	return (0);
+// }

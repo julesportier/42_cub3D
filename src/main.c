@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "rendering.h"
 #include "cube.h"
 #include "../minilibx/mlx.h"
+#include <math.h>
 
 int	main(void)
 {
@@ -21,6 +23,13 @@ int	main(void)
 		return (-1);
 	mlx_hook(mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &mlx_data);
 	mlx_key_hook(mlx_data.win, end_loop_esc, &mlx_data);
+
+	t_point	pos = {.x = 512 * 3 + 256, .y = 512 * 4 + 256};
+	char	**test_map = alloc_map();
+	t_map_data map_data = {5, 6, test_map};
+	double	angle = TURN_45;
+	cast_rays(&mlx_data, map_data, pos, angle);
+
 	mlx_loop(mlx_data.mlx);
 	free_mlx(&mlx_data);
 	return (0);
