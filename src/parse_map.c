@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "parsing_map.h"
 
 
 void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
@@ -28,7 +28,7 @@ void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 	}
 }
 
-bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant, en quelle mesure c'est nécessaire ???
+bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
 {
 	unsigned char c = (unsigned char)car;
 	if (c=='0'||c=='1'||c==' '||c=='N'||c=='S'||c=='E'||c=='W')
@@ -69,40 +69,43 @@ bool	is_map_line(const char *str)
 	return (true);
 }
 
-/*int	main(int argc, char **argv)
+void	mb_init(t_mapbuild *map)
 {
-	int   fd = (argc > 1) ? open(argv[1], O_RDONLY) : STDIN_FILENO;
-	char *line;
-	int   n = 1;
+    ft_memset(map, 0, sizeof(*map));
+    map->player.row = -1;
+    map->player.column = -1;
+}
 
-	if (fd < 0)
-	{
-		perror("open");
-		return 1;
+static bool mb_grow_buf(t_mapbuild *map, size_t need_more)
+{
+	size_t	want; //want = len de buff actuel + need_more (= len de la ligne qu'on veut ajouter + 1(= \n))
+	size_t	new_cap; //a combien reallouer 
+	char	*new_buf; //buff apres realloc
+	size_t	limit; //eviter overflow de want
+	size_t	half; //pour eviter l'overflow lors de doublement
+	
+	limit = SIZE_MAX - map->len; //calculer en amont si want ne depassera pas size_max 
+	if (need_more > limit) 
+		return (false);
+	want = map->len + need_more;
+    if (want <= map->capacity) //si l'espace actuel suffit, on ne fait rien
+		return (true);	
+    if (map->capacity == 0)
+		new_cap = 256;
+	else
+		new_cap = map->capacity;
+	half = SIZE_MAX / 2;
+    while (want > new_cap)
+    {
+		if (new_cap > half) //on ne pourra plus doubler
+			new_cap = want; //on a verifie au debut que want ne depasse pas size_max
+		else
+			new_cap *= 2; //on double jusqu'à couvrir want
 	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		int len = line_len_no_nl(line);
-		if (len > 0)                 // ignore lignes vides
-		{
-			tabs_to_spaces(line);    // sans malloc
-			if (is_map_line(line))
-			{
-				// si ok -> mb_push_line(line)
-				// j affiche pour test, cela disparaitera
-				printf("L%03d len=%d map=1 -> \"", n, len);
-				for (int i = 0; i < len; i++)
-					putchar(line[i] == ' ' ? '.' : (unsigned char)line[i]);
-				puts("\"");
-			}
-			else
-			{
-				printf("L%03d len=%d map=0\n", n, len);
-			}
-		}
-		free(line);
-		n++;
-	}
-	if (argc > 1) close(fd);
-	return 0;
-}*/
+    new_buf = (char *)realloc(map->buf, new_cap); //faire la fonction realloc 'maison'!!!
+    if (!new_buf)
+		return (false);
+    map->buf = new_buf; 
+    map->capacity = new_cap;
+    return (true);
+}
