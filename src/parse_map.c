@@ -10,45 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h> 
+#include "parsing.h"
 
-typedef struct s_player
-{
-    int  row;
-    int  column;
-    char dir;
-} t_player;
 
-typedef struct s_map
-{
-    int   rows;
-    int	  columns;
-    char *grid;
-    t_player player;
-} t_map;
-
-typedef struct s_mapbuild
-{
-    char *buf;
-    size_t len;
-    size_t capacity;
-    int  *offs;
-    int *lens;
-    int   rows;
-    int rows_capacity;
-    int   maxw;
-    t_player player;
-    int     player_count;
-    bool    started;
-    bool    ended;
-} t_mapbuild;
-
-void	tabs_to_spaces(char *str)
+void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 {
 	int	i;
 
@@ -63,7 +28,7 @@ void	tabs_to_spaces(char *str)
 	}
 }
 
-bool	is_map_char(int	car) //on n'accepte plus \t ici
+bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant, en quelle mesure c'est nécessaire ???
 {
 	unsigned char c = (unsigned char)car;
 	if (c=='0'||c=='1'||c==' '||c=='N'||c=='S'||c=='E'||c=='W')
@@ -104,7 +69,7 @@ bool	is_map_line(const char *str)
 	return (true);
 }
 
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	int   fd = (argc > 1) ? open(argv[1], O_RDONLY) : STDIN_FILENO;
 	char *line;
@@ -140,4 +105,4 @@ int	main(int argc, char **argv)
 	}
 	if (argc > 1) close(fd);
 	return 0;
-}
+}*/
