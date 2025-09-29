@@ -1,5 +1,5 @@
-#ifndef PARSING_H
-# define PARSING_H
+#ifndef PARSING_MAP_H
+# define PARSING_MAP_H
 
 # include "libft/src/libft.h"
 #include <unistd.h>
@@ -29,10 +29,7 @@ typedef struct s_mapbuild
     char *buf;
     size_t len;
     size_t capacity;
-    int  *offs;
-    int *lens;
     int   rows;
-    int rows_capacity;
     int   maxw;
     t_player player;
     int     player_count;
@@ -40,9 +37,6 @@ typedef struct s_mapbuild
     bool    ended;
 } t_mapbuild;
 
-
-//t_perr validate_params(int argc, char **argv, const char **out_path);
-//void   print_perr(t_perr err, const char *str);
 char      *get_next_line(int fd);
 
 
