@@ -67,6 +67,13 @@ typedef struct s_direction
 	t_cardinal	y;
 }	t_direction;
 
+typedef struct	s_ray
+{
+	int	length;
+	char	side;
+	t_cardinal	wall;
+}	t_ray;
+
 // dda_directions.c
 t_direction     calc_direction(double angle);
 double	scale_angle(double angle);
@@ -77,8 +84,7 @@ int	calc_x_dev(t_point pos, t_direction dir, int x_step);
 int	calc_y_dev(t_point pos, t_direction dir, int y_step);
 
 // dda.c
-double	calc_angle_increment(int screen_width, double fov);
-int	calc_ray_length(
+t_ray	calc_ray_length(
 	t_map_data	map_data,
 	t_point		pos,
 	t_direction	dir,

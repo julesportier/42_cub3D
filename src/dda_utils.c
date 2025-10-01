@@ -107,6 +107,9 @@ int	calc_y_dev(t_point pos, t_direction dir, int y_step)
 // 	tests(pos, TURN_90 + 0.1);
 // 	tests(pos, TURN_180 + 0.1);
 // 	tests(pos, TURN_270 + 0.1);
+// 	printf("-------- ZERO DIVISION\n");
+// 	tests(pos, TURN_90);
+// 	tests(pos, 0);
 //
 // 	return (0);
 // }
