@@ -41,7 +41,7 @@ static void draw_pixel(t_img_data *img_data, t_pixel pixel)
 	*(unsigned int *)pix_addr = pixel.color;
 }
 
-void	draw_line(
+void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
 	int			distance)

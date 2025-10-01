@@ -82,10 +82,7 @@ int	calc_ray_length(
 	t_map_data	map_data,
 	t_point		pos,
 	t_direction	dir,
-	t_point		vector_x,
-	t_point		vector_y,
 	double		angle);
-	// double		player_angle);
 void	cast_rays(
 	t_mlx_data *mlx_data,
 	t_map_data map_data,
@@ -93,19 +90,10 @@ void	cast_rays(
 	double player_angle);
 // FOR TESTING
 char	**alloc_map(void);
-// NO MORE USAGE ??
-int	is_inside_map(t_point pos, t_map_data map_data);
-int	is_wall(char *map[], t_point pos);
-t_point	calc_first_side_wall(
-	t_map_data map_data,
-	t_point	first_intersection,
-	t_point vector);
-t_point	calc_first_wall(t_map_data map_data, t_point pos, double angle);
-//******************
 
 // rendering.c
 int	calc_line_height(int distance);
-void	draw_line(
+void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
 	int			distance);

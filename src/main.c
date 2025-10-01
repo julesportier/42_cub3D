@@ -27,8 +27,8 @@ int	main(void)
 	t_point	pos = {.x = 512 * 3 + 256, .y = 512 * 4 + 256};
 	char	**test_map = alloc_map();
 	t_map_data map_data = {5, 6, test_map};
-	double	angle = TURN_45;
-	cast_rays(&mlx_data, map_data, pos, angle);
+	double	player_angle = TURN_90;
+	cast_rays(&mlx_data, map_data, pos, player_angle);
 
 	mlx_loop(mlx_data.mlx);
 	free_mlx(&mlx_data);

@@ -15,6 +15,7 @@
 #include "../minilibx/mlx.h"
 #include <math.h>
 
+#include <stdio.h>
 double	calc_angle_increment(int screen_width, double fov)
 {
 	return (fov / screen_width);
@@ -24,58 +25,58 @@ int	calc_ray_length(
 	t_map_data	map_data,
 	t_point		pos,
 	t_direction	dir,
-	t_point		vector_x,
-	t_point		vector_y,
 	double		angle)
 	// double		player_angle)
 {
 	// printf("pos.x == %d, pos.y == %d\n", pos.x, pos.y);
 	int	map_x = pos.x >> SHIFT_OP_512;
 	int	map_y = pos.y >> SHIFT_OP_512;
-	printf("map_x == %d, map_y == %d\n", map_x, map_y);
-	double	delta_x = hypot(vector_x.x, vector_x.y);
-	double	delta_y = hypot(vector_y.x, vector_y.y);
+	// printf("map_x == %d, map_y == %d\n", map_x, map_y);
+	int	step_x = calc_x_step(angle);
+	int	step_y = calc_y_step(angle);
 	// printf("delta_x == %f, delta_y == %f\n", delta_x, delta_y);
 	int	dist_x;
 	int	dist_y;
-	int	step_x;
-	int	step_y;
+	int	inc_x;
+	int	inc_y;
 	char	side;
 
-	dist_x = calc_line_dist(pos, calc_first_vertical_inter(pos, dir, angle));
+	dist_x = calc_x_dev(pos, dir, step_x);
 	if (dir.x == est)
-		step_x = 1;
+		inc_x = 1;
 	else
-		step_x = -1;
-	dist_y = calc_line_dist(pos, calc_first_horizontal_inter(pos, dir, angle));
+		inc_x = -1;
+	dist_y = calc_y_dev(pos, dir, step_y);
 	if (dir.y == south)
-		step_y = 1;
+		inc_y = 1;
 	else
-		step_y = -1;
+		inc_y = -1;
 
 
 	while (1)
 	{
 		if (dist_x < dist_y)
 		{
-			dist_x += delta_x;
-			map_x += step_x;
+			dist_x += step_x;
+			map_x += inc_x;
 			side = 'x';
 		}
 		else
 		{
-			dist_y += delta_y;
-			map_y += step_y;
+			dist_y += step_y;
+			map_y += inc_y;
 			side = 'y';
 		}
 
+		printf("map[%d][%d] == ", map_y, map_x);
+		printf(" %c\n", map_data.map[map_y][map_x]);
 		if (map_data.map[map_y][map_x] == '1')
 		{
 			// printf("is wall\n");
 			if (side == 'x')
-				return (dist_x);
+				return (dist_x - step_x);
 			else
-				return (dist_y);
+				return (dist_y - step_y);
 		}
 	}
 }
@@ -93,22 +94,18 @@ void	cast_rays(
 	t_direction	dir;
 	int	ray_length;
 
-	angle_increment = FOV / WIN_WIDTH;
+	angle_increment = calc_angle_increment(WIN_WIDTH, FOV);
 	angle = player_angle - (FOV / 2);
 	i = 0;
 	while (i < WIN_WIDTH)
 	{
 		dir = calc_direction(angle);
-		ray_length = calc_ray_length(
-				map_data, pos, dir,
-				calc_vertical_vector(dir, angle),
-				calc_horizontal_vector(dir, angle),
-				angle);
+		ray_length = calc_ray_length(map_data, pos, dir, angle);
 		// Remove fishbowl effect
 		ray_length = round(ray_length * cos(angle - player_angle));
-		printf("ray_length == %d\n", ray_length);
-		printf("line_height == %d\n", calc_line_height(ray_length));
-		draw_line(&(mlx_data->img), (t_pixel){{i, 0}, 0x00FFFFFF}, ray_length);
+		// printf("ray_length == %d\n", ray_length);
+		// printf("line_height == %d\n", calc_line_height(ray_length));
+		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, 0x00FFFFFF}, ray_length);
 		angle += angle_increment;
 		++i;
 	}
@@ -119,7 +116,7 @@ void	cast_rays(
 static void	fill_map_line(char **map, char *line, int width, int line_nbr)
 {
 	for (int i = 0; i < width; ++i)
-		map[line_nbr][i] = *(line + i);
+		map[line_nbr][i] = line[i];
 }
 
 char	**alloc_map(void)
@@ -132,7 +129,7 @@ char	**alloc_map(void)
 
 	// arrays size is w
 	char line_0[] = {'1','1','1','1','1'};
-	char line_1[] = {'1','0','1','0','1'};
+	char line_1[] = {'1','0','0','0','1'};
 	char line_2[] = {'1','0','0','0','1'};
 	char line_3[] = {'1','0','0','0','1'};
 	char line_4[] = {'1','0','0','0','1'};
