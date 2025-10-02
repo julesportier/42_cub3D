@@ -38,7 +38,9 @@ typedef struct s_mapbuild
     bool    ended;
 } t_mapbuild;
 
-char      *get_next_line(int fd);
+char      	*get_next_line(int fd);
+bool		mb_push_line(t_mapbuild *map, char *line);
+bool		parse_map_fd(int fd, t_mapbuild *mb);
 
 
 #endif
