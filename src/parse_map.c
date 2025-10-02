@@ -219,3 +219,94 @@ bool	parse_map_fd(int fd, t_mapbuild *mb)
 		return (false);
 	return (true);
 }
+//-----------Construction carte------------------------------------------
+//copier une ligne depuis mb->buf vers map->grid :
+//  - écrire jusqu'à '\n' ou fin de buffer
+// - ignorer les '\r' (CRLF Windows)
+// - pad déjà fait ailleurs (grid pré-remplie en ' ')
+//  - *pos est avancé juste après le '\n' s'il existe
+static void	copy_one_row(const t_mapbuild *mb, t_map *map, int r, size_t *pos)
+{
+	size_t	row_base;
+	int		col;
+	char	ch;
+
+	row_base = (size_t)r * (size_t)map->columns;
+	col = 0;
+	while (*pos < mb->len && mb->buf[*pos] != '\n' && col < map->columns)
+	{
+		ch = mb->buf[*pos];
+		if (ch != '\r')
+		{
+			map->grid[row_base + (size_t)col] = ch;
+			col++;
+		}
+		(*pos)++;
+	}
+	if (*pos < mb->len && mb->buf[*pos] == '\n')
+		(*pos)++;
+}
+
+//Remplir toute la grille depuis le gros buffer, et remplacer le player par '0'
+static bool	fill_grid_from_buf(const t_mapbuild *mb, t_map *map)
+{
+	size_t	pos;
+	int		r;
+	size_t	row_base;
+
+	pos = 0;
+	r = 0;
+	while (r < map->rows && pos < mb->len)
+	{
+		copy_one_row(mb, map, r, &pos);
+
+		if (r == map->player.row && map->player.column >= 0
+			&& map->player.column < map->columns)
+		{
+			row_base = (size_t)r * (size_t)map->columns;
+			map->grid[row_base + (size_t)map->player.column] = '0';
+		}
+		r++;
+	}
+	return (true);
+}
+
+//Construir la map finale (rows*columns), grilles paddées en ' '
+t_map	*finalize_map(const t_mapbuild *mb)
+{
+	t_map	*map;
+	size_t	total;
+
+	map = NULL;
+	total = 0;
+
+	if (!mb)
+		return (NULL);
+	if (mb->rows <= 0 || mb->maxw <= 0 || mb->player_count != 1)
+		return (NULL);
+
+	map = (t_map *)calloc(1, sizeof(*map));
+	if (!map)
+		return (NULL);
+
+	map->rows = mb->rows;
+	map->columns = mb->maxw;
+	map->player = mb->player;
+
+	total = (size_t)map->rows * (size_t)map->columns;
+	map->grid = (char *)malloc(total);
+	if (!map->grid)
+	{
+		free(map);
+		return (NULL);
+	}
+	ft_memset(map->grid, ' ', total);
+
+	if (!fill_grid_from_buf(mb, map))
+	{
+		free(map->grid);
+		free(map);
+		return (NULL);
+	}
+	return (map);
+}
