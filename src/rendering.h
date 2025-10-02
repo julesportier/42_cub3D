@@ -103,5 +103,9 @@ void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
 	int			distance);
+void	draw_ceiling_and_floor(
+	t_img_data	*img_data,
+	int		ceiling_color,
+	int		floor_color);
 
 #endif

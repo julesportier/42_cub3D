@@ -140,24 +140,32 @@ static void	fill_map_line(char **map, char *line, int width, int line_nbr)
 char	**alloc_map(void)
 {
 	int	w = 5;
-	int h = 6;
+	int h = 10;
 	char	**map = malloc(sizeof(char *) * h);
 	for (int i = 0; i < h; ++i)
 		map[i] = malloc(sizeof(char) * w);
 
 	// arrays size is w
 	char line_0[] = {'1','1','1','1','1'};
-	char line_1[] = {'1','0','0','0','1'};
-	char line_2[] = {'1','0','0','0','1'};
+	char line_1[] = {'1','1','0','0','1'};
+	char line_2[] = {'1','0','1','0','1'};
 	char line_3[] = {'1','0','0','0','1'};
 	char line_4[] = {'1','0','0','0','1'};
-	char line_5[] = {'1','1','1','1','1'};
+	char line_5[] = {'1','0','0','0','1'};
+	char line_6[] = {'1','0','0','0','1'};
+	char line_7[] = {'1','0','0','0','1'};
+	char line_8[] = {'1','0','0','0','1'};
+	char line_9[] = {'1','1','1','1','1'};
 	fill_map_line(map, line_0, w, 0);
 	fill_map_line(map, line_1, w, 1);
 	fill_map_line(map, line_2, w, 2);
 	fill_map_line(map, line_3, w, 3);
 	fill_map_line(map, line_4, w, 4);
 	fill_map_line(map, line_5, w, 5);
+	fill_map_line(map, line_6, w, 6);
+	fill_map_line(map, line_7, w, 7);
+	fill_map_line(map, line_8, w, 8);
+	fill_map_line(map, line_9, w, 9);
 	return (map);
 }
 

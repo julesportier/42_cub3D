@@ -16,7 +16,7 @@
 
 int	calc_line_height(int distance)
 {
-	return (round((double)CUBE_SIZE / distance * (WIN_HEIGHT * 1)));
+	return (round((double)CUBE_SIZE / distance * (WIN_HEIGHT * 1.7)));
 }
 
 static int	calc_line_start(int line_height)
@@ -58,5 +58,31 @@ void	draw_column(
 		pixel.pos.y = line_pos + i;
 		draw_pixel(img_data, pixel);
 		++i;
+	}
+}
+
+void	draw_ceiling_and_floor(
+	t_img_data	*img_data,
+	int		ceiling_color,
+	int		floor_color)
+{
+	int	half_screen;
+	t_pixel pixel;
+
+	half_screen = WIN_HEIGHT / 2;
+	pixel.pos.y = 0;
+	while (pixel.pos.y < WIN_HEIGHT)
+	{
+		if (pixel.pos.y < half_screen)
+			pixel.color = ceiling_color;
+		else
+			pixel.color = floor_color;
+		pixel.pos.x = 0;
+		while (pixel.pos.x < WIN_WIDTH)
+		{
+			draw_pixel(img_data, pixel);
+			++pixel.pos.x;
+		}
+		++pixel.pos.y;
 	}
 }
