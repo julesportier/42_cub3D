@@ -13,7 +13,7 @@
 #include "parsing_map.h"
 
 
-void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
+static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 {
 	int	i;
 
@@ -28,7 +28,7 @@ void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 	}
 }
 
-bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
+static bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
 {
 	unsigned char c = (unsigned char)car;
 	if (c=='0'||c=='1'||c==' '||c=='N'||c=='S'||c=='E'||c=='W')
@@ -37,7 +37,7 @@ bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
 		return (false);
 }
 
-int	line_len_no_nl(const char *str)
+static int	line_len_no_nl(const char *str)
 {
 	int	i;
 	
@@ -51,7 +51,7 @@ int	line_len_no_nl(const char *str)
 	return (i);
 }
 
-bool	is_map_line(const char *str)
+static bool	is_map_line(const char *str)
 {
 	int	len;
 	int	i;
@@ -122,7 +122,6 @@ bool	mb_push_line(t_mapbuild *map, char *line)
 	i = 0;
 	players_nb = 0;
 	player_column = -1;
-
 	if (line_len == 0)
 		return (false);
 	while (i < line_len)
@@ -158,5 +157,65 @@ bool	mb_push_line(t_mapbuild *map, char *line)
 		map->player_count += 1;
 	}
 	map->rows++; // push réussi, on a stocke une ligne de plus
+	return (true);
+}
+
+bool	parse_map_fd(int fd, t_mapbuild *mb)
+{
+	char	*line;
+	int		len;
+
+	line = NULL;
+	len = 0;
+	mb_init(mb);
+	line = get_next_line(fd);
+	while (line)
+	{
+		len = line_len_no_nl(line);
+		//on n'est pas encore dans la carte
+		if (!mb->started && !is_map_line(line))
+		{
+			free(line);
+			line = get_next_line(fd);
+			continue;
+		}
+		//on entre dans la carte
+		if (!mb->started && is_map_line(line))
+			mb->started = true;
+		//si la carte est déjà terminée, seules des lignes vides sont autorisées
+		if (mb->ended)
+		{
+			if (len > 0)
+			{
+				free(line);
+				return (false); //on refuse le contenu après la carte
+			}
+			free(line);
+			line = get_next_line(fd);
+			continue;
+		}
+		//pendant la carte
+		if (mb->started && is_map_line(line))
+		{
+			if (!mb_push_line(mb, line))
+			{
+				free(line);
+				return (false); //erreur de carte
+			}
+		}
+		else if (mb->started && !is_map_line(line))
+		{
+			mb->ended = true; //fermer la carte
+			//on ne retourne pas encore : on laisse la boucle vérifier que le reste est vide
+			free(line);
+			line = get_next_line(fd);
+			continue;
+		}
+		free(line);
+		line = get_next_line(fd);
+	}
+	//au moins une ligne et exactement un joueur doivent être présents
+	if (mb->rows <= 0 || mb->player_count != 1)
+		return (false);
 	return (true);
 }
