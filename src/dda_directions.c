@@ -21,7 +21,7 @@ t_direction     calc_direction(double angle)
 		direction.y = north;
 	else
 		direction.y = south;
-	if (angle > TURN_90 && angle < TURN_270)
+	if (angle >= TURN_90 && angle < TURN_270)
 		direction.x = west;
 	else
 		direction.x = est;

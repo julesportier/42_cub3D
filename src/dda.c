@@ -96,7 +96,7 @@ void	cast_rays(
 	t_ray	ray;
 
 	angle_increment = FOV / WIN_WIDTH;
-	angle = player_angle - (FOV / 2);
+	angle = fmod(player_angle + (FOV / 2), TURN_360);
 	i = 0;
 	while (i < WIN_WIDTH)
 	{
@@ -123,6 +123,8 @@ void	cast_rays(
 		}
 		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, color}, ray.length);
 		angle -= angle_increment;
+		if (angle < 0)
+			angle = TURN_360;
 		++i;
 	}
 	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);
