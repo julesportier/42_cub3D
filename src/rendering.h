@@ -20,6 +20,7 @@
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
 # define CUBE_SIZE 512
+# define SPEED 100
 # define PLAYER_HEIGHT 256
 # define SHIFT_OP_512 9
 // radians turns
@@ -46,6 +47,12 @@ typedef struct s_point
 }	t_point;
 
 typedef struct s_point t_step;
+
+typedef struct s_vec
+{
+	double x;
+	double y;
+}	t_vec;
 
 typedef struct s_pixel
 {

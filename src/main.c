@@ -15,7 +15,63 @@
 #include "../minilibx/mlx.h"
 #include <math.h>
 
+static t_vec	normalize_vec(t_vec vec)
+{
+	double	magnitude;
+
+	magnitude = hypot(vec.x, vec.y);
+	vec.x /= magnitude;
+	vec.y /= magnitude;
+	return (vec);
+}
+
 #include <stdio.h>
+static t_vec	calc_dir_vec(double angle)
+{
+	t_direction	direction;
+	t_vec		vec;
+
+	direction = calc_direction(angle);
+	vec.x = 1;
+	vec.y = tan(scale_angle(angle));
+	if (vec.y > 10)
+		vec.y = 10;
+	printf("dir vec.y == %f\n", vec.y);
+	if (direction.x == west)
+		vec.x *= -1;
+	if (direction.y == north)
+		vec.y *= -1;
+	return (normalize_vec(vec));
+}
+
+// static t_vec	add_vec(t_vec vec_a, t_vec vec_b)
+// {
+// 	t_vec	add;
+//
+// 	add.x = vec_a.x + vec_b.x;
+// 	add.y = vec_a.y + vec_b.y;
+// 	return (add);
+// }
+//
+static t_point	move_forward(t_point pos, t_vec vec_b)
+{
+	t_point	add;
+
+	add.x = pos.x + (vec_b.x * SPEED);
+	add.y = pos.y + (vec_b.y * SPEED);
+	return (add);
+}
+
+static t_point	move_backward(t_point pos, t_vec vec_b)
+{
+	t_point	add;
+
+	add.x = pos.x - (vec_b.x * SPEED);
+	add.y = pos.y - (vec_b.y * SPEED);
+	return (add);
+}
+
+// #include <stdio.h>
 #define RAD_TO_DEG(rad) (rad * (180 / M_PI))
 static int	test_print(int keycode, t_mlx_data *mlx_data)
 {
@@ -35,7 +91,13 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 		if (player_angle < 0)
 			player_angle = TURN_360;
 	}
+	else if (keycode == W)
+		pos = move_forward(pos, calc_dir_vec(player_angle));
+	else if (keycode == S)
+		pos = move_backward(pos, calc_dir_vec(player_angle));
 	printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
+	t_vec	dir_vec = calc_dir_vec(player_angle);
+	printf("dir_vec .x == %f ; .y == %f\n", dir_vec.x, dir_vec.y);
 	draw_ceiling_and_floor(&(mlx_data->img), 0x008db5bf, 0x00000000);
 	cast_rays(mlx_data, map_data, pos, player_angle);
 	return (0);
