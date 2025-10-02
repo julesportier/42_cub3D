@@ -17,7 +17,6 @@
 
 - **javidx9**: 
     - [Super Fast Ray Casting in Tiled Worlds using DDA](https://www.youtube.com/watch?v=NbSee-XM7WA)
-    - [Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
 - [Wolfenstein 3D's map renderer](https://www.youtube.com/watch?v=eOCQfxRQ2pY)
 
 ## Forums
@@ -31,3 +30,9 @@
 1. 2D square grid map, each square can either be 0 or 1 (a wall).
 2. For each x of the screen (vertical stripes), send out a ray that starts at the player location with direction depending on both the player looking direction and the x coordinate of the screen. If it hits a wall calculate the distance and use the distance to calculate the height of the wall.
     - use DDA (Digital Differential Analysis) to find when the ray crosses a line.
+
+# Maths for graphics
+
+- [Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
+- [vector normalization (stack overflow)](https://stackoverflow.com/questions/10002918/what-is-the-need-for-normalizing-a-vector)
+- [godot engine vector documentation](https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html)
