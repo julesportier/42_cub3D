@@ -222,9 +222,10 @@ bool	parse_map_fd(int fd, t_mapbuild *mb)
 //-----------Construction carte------------------------------------------
 //copier une ligne depuis mb->buf vers map->grid :
 //  - écrire jusqu'à '\n' ou fin de buffer
-// - ignorer les '\r' (CRLF Windows)
+// - ignorer les '\r'
 // - pad déjà fait ailleurs (grid pré-remplie en ' ')
 //  - *pos est avancé juste après le '\n' s'il existe
+//on calcule l'index linéaire index = row * columns + col (pour savoir où écrire/lire dans le tab 1D)
 static void	copy_one_row(const t_mapbuild *mb, t_map *map, int r, size_t *pos)
 {
 	size_t	row_base;
@@ -259,7 +260,6 @@ static bool	fill_grid_from_buf(const t_mapbuild *mb, t_map *map)
 	while (r < map->rows && pos < mb->len)
 	{
 		copy_one_row(mb, map, r, &pos);
-
 		if (r == map->player.row && map->player.column >= 0
 			&& map->player.column < map->columns)
 		{
@@ -279,29 +279,24 @@ t_map	*finalize_map(const t_mapbuild *mb)
 
 	map = NULL;
 	total = 0;
-
 	if (!mb)
 		return (NULL);
 	if (mb->rows <= 0 || mb->maxw <= 0 || mb->player_count != 1)
-		return (NULL);
-
-	map = (t_map *)calloc(1, sizeof(*map));
+		return (NULL);//sortir du programme ici à voir 
+	map = (t_map *)calloc(1, sizeof(*map));//allouer la struct finale
 	if (!map)
-		return (NULL);
-
+		return (NULL);//sortir du programme ici
 	map->rows = mb->rows;
 	map->columns = mb->maxw;
 	map->player = mb->player;
-
-	total = (size_t)map->rows * (size_t)map->columns;
+	total = (size_t)map->rows * (size_t)map->columns;//allouer la grille 1D (rows * columns)
 	map->grid = (char *)malloc(total);
-	if (!map->grid)
+	if (!map->grid)//sortir du programme ici
 	{
 		free(map);
 		return (NULL);
 	}
 	ft_memset(map->grid, ' ', total);
-
 	if (!fill_grid_from_buf(mb, map))
 	{
 		free(map->grid);
@@ -309,4 +304,50 @@ t_map	*finalize_map(const t_mapbuild *mb)
 		return (NULL);
 	}
 	return (map);
+}
+
+void	mb_free(t_mapbuild *map)
+{
+	if (!map)
+		return;
+	free(map->buf);
+	map->buf = NULL;
+	mb_init(map);
+}
+
+bool	map_quick_border_check(const t_map *m)
+{
+	int		row_index;
+	int		column_index;
+	char	c;
+
+	row_index = 0;
+	column_index = 0;
+	if (!m || !m->grid)
+		return (false);
+	if (m->rows <= 0 || m->columns <= 0)
+		return (false);
+	//bord haut et bord bas
+	while (column_index < m->columns)
+	{
+		c = m->grid[column_index];//haut
+		if (c == '0')
+			return (false);
+		c = m->grid[(m->rows - 1) * m->columns + column_index];//bas: de colonne 0 a nb_colonnes -1 
+		if (c == '0')
+			return (false);
+		column_index++;
+	}
+	// bord gauche et bord droit
+	while (row_index < m->rows)
+	{
+		c = m->grid[row_index * m->columns];//pour chaque ligne, on regarde l'index de la colonne 0 et derniere colonne
+		if (c == '0')
+			return (false);
+		c = m->grid[row_index * m->columns + (m->columns - 1)];
+		if (c == '0')
+			return (false);
+		row_index++;
+	}
+	return (true);
 }
