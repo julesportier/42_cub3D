@@ -20,7 +20,8 @@
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
 # define CUBE_SIZE 512
-# define SPEED 100
+# define SPEED 0.0000001
+# define ROT_SPEED 0.000001
 # define PLAYER_HEIGHT 256
 # define SHIFT_OP_512 9
 // radians turns
@@ -32,6 +33,23 @@
 # define TURN_270 (M_PI + M_PI_2)
 # define TURN_315 (M_PI + M_PI_2 + M_PI_4)
 # define TURN_360 (M_PI * 2)
+
+// mlx keycodes
+# define ESC 65307
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define LEFT 65361
+# define RIGHT 65363
+// mlx events
+# define ON_DESTROY 17
+# define ON_KEYPRESS 2
+# define ON_KEYRELEASE 3
+// mlx masks
+# define MASK_KEYPRESS 1L << 0
+# define MASK_KEYRELEASE 1L << 1
+# define MASK_ESC 1L << 3
 
 typedef struct	s_map_data
 {
@@ -80,6 +98,23 @@ typedef struct	s_ray
 	char	side;
 	t_cardinal	wall;
 }	t_ray;
+
+typedef struct	s_keys_state
+{
+	char	w;
+	char	a;
+	char	s;
+	char	d;
+	char	esc;
+	char	changed;
+}	t_keys_state;
+
+typedef struct	s_prog_state
+{
+	t_mlx_data		*mlx_data;
+	t_map_data		*map_data;
+	t_keys_state	keys;
+}	t_prog_state;
 
 // dda_directions.c
 t_direction     calc_direction(double angle);

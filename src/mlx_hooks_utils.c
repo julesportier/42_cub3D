@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cube.h"
+#include "rendering.h"
 #include "../minilibx/mlx.h"
 
 int	end_loop_mouse(t_mlx_data *mlx_data)
