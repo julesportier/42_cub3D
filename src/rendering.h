@@ -20,8 +20,8 @@
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
 # define CUBE_SIZE 512
-# define SPEED 0.0000001
-# define ROT_SPEED 0.000001
+# define SPEED 0.01
+# define ROT_SPEED 0.01
 # define PLAYER_HEIGHT 256
 # define SHIFT_OP_512 9
 // radians turns
@@ -109,11 +109,20 @@ typedef struct	s_keys_state
 	char	changed;
 }	t_keys_state;
 
+typedef struct	s_player_state
+{
+	t_point	pos;
+	double	angle;
+	t_vec	dir_vec;
+	t_direction	dir_card;
+}	t_player_state;
+
 typedef struct	s_prog_state
 {
 	t_mlx_data		*mlx_data;
-	t_map_data		*map_data;
+	t_map_data		map_data;
 	t_keys_state	keys;
+	t_player_state	player;
 }	t_prog_state;
 
 // dda_directions.c
