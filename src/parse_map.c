@@ -351,3 +351,40 @@ bool	map_quick_border_check(const t_map *m)
 	}
 	return (true);
 }
+
+bool	map_neighbors_ok(const t_map *m)
+{
+	int		row_index;
+	int		column_index;
+	char	c;
+	if (!m || !m->grid)
+		return (false);
+	row_index = 0;
+	while (row_index < m->rows)
+	{
+		column_index = 0;
+		while (column_index < m->columns)
+		{
+			c = m->grid[row_index * m->columns + column_index];
+			if (c == '0')
+			{
+				//voisins haut/bas/gauche/droite ne doivent pas être des espaces
+				if (row_index > 0
+					&& m->grid[(row_index - 1) * m->columns + column_index] == ' ')
+					return (false);
+				if (row_index + 1 < m->rows
+					&& m->grid[(row_index + 1) * m->columns + column_index] == ' ')
+					return (false);
+				if (column_index > 0
+					&& m->grid[row_index * m->columns + (column_index - 1)] == ' ')
+					return (false);
+				if (column_index + 1 < m->columns
+					&& m->grid[row_index * m->columns + (column_index + 1)] == ' ')
+					return (false);
+			}
+			column_index++;
+		}
+		row_index++;
+	}
+	return (true);
+}
