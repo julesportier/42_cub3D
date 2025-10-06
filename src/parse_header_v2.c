@@ -143,7 +143,7 @@ static bool read_component(const char **pp, int *out)
     tok[nd] = '\0';
     if (nd == 0)
 		return (false);
-    // Valide via ta fonction (exige chaine pure et 0..255)
+    // Valide via la fonction (exige chaine pure et 0..255)
     if (!parse_colors(tok, out))
 		return (false);
     p += nd;
@@ -200,7 +200,7 @@ static bool parse_triplet(const char *str, t_rgb *dst, const char **end_after)
     return true;
 }
 
-// Trim début+fin sur une sous-chaîne [start,end)
+// Trim début+fin sur une sous-chaîne [start,end), ensuite alloc avec dup_range
 static bool trim_range(const char *rest, const char **start, const char **end)
 {
     const char *p = skip_ws(rest);
