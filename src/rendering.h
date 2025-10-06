@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/29 12:58:04 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/09 10:26:47 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
 # define CUBE_SIZE 512
+# define COLLISION 128
 # define SPEED 100
 # define PLAYER_HEIGHT 256
 # define SHIFT_OP_512 9
@@ -114,5 +115,9 @@ void	draw_ceiling_and_floor(
 	t_img_data	*img_data,
 	int		ceiling_color,
 	int		floor_color);
+
+// player_movements.c
+t_point	move_forward(t_point pos, t_vec dir_vec, t_map_data *map_data);
+t_point	move_backward(t_point pos, t_vec dir_vec, t_map_data *map_data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/04 12:24:32 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/09 10:17:33 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,6 @@ static t_vec	calc_dir_vec(double angle)
 // 	return (add);
 // }
 //
-static t_point	move_forward(t_point pos, t_vec vec_b)
-{
-	t_point	add;
-
-	add.x = pos.x + (vec_b.x * SPEED);
-	add.y = pos.y + (vec_b.y * SPEED);
-	return (add);
-}
-
-static t_point	move_backward(t_point pos, t_vec vec_b)
-{
-	t_point	add;
-
-	add.x = pos.x - (vec_b.x * SPEED);
-	add.y = pos.y - (vec_b.y * SPEED);
-	return (add);
-}
 
 // #include <stdio.h>
 #define RAD_TO_DEG(rad) (rad * (180 / M_PI))
@@ -92,9 +75,9 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 			player_angle = TURN_360;
 	}
 	else if (keycode == W)
-		pos = move_forward(pos, calc_dir_vec(player_angle));
+		pos = move_forward(pos, calc_dir_vec(player_angle), &map_data);
 	else if (keycode == S)
-		pos = move_backward(pos, calc_dir_vec(player_angle));
+		pos = move_backward(pos, calc_dir_vec(player_angle), &map_data);
 	printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
 	t_vec	dir_vec = calc_dir_vec(player_angle);
 	printf("dir_vec .x == %f ; .y == %f\n", dir_vec.x, dir_vec.y);

@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/09/29 13:02:52 by juportie         ###   ########.fr        #
+#    Updated: 2025/10/09 10:19:16 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRC := main.c \
 	   dda_utils.c \
 	   dda_directions.c \
 	   dda.c \
-	   rendering.c
+	   rendering.c \
+	   player_movements.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
