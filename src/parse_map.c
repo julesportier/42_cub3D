@@ -13,7 +13,7 @@
 #include "parsing_map.h"
 
 
-static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
+/*static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 {
 	int	i;
 
@@ -26,7 +26,7 @@ static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en 
 			str[i] = ' ';
 		i ++;
 	}
-}
+}*/
 
 static bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
 {
@@ -146,7 +146,8 @@ bool	mb_push_line(t_mapbuild *map, char *line)
 		return (false);
 	ft_memcpy(map->buf + map->len, line, (size_t)line_len); // copier line_len octets a la fin des donnees deja copiées précédemment
 	map->len += (size_t)line_len; // on met a jour le buff
-	map->buf[map->len + 1] = '\n';
+	map->buf[map->len] = '\n';//c'etait + 1
+	map->len += 1;
 	if (line_len > map->maxw)
 		map->maxw = line_len; // on met a jour la ligne la plus longue (largeur max)
 	if (players_nb == 1)
@@ -388,3 +389,88 @@ bool	map_neighbors_ok(const t_map *m)
 	}
 	return (true);
 }
+
+/////////////////////tester//////////////////////////////
+#include <fcntl.h>      // open
+#include <unistd.h>     // close
+#include <stdio.h>      // fprintf, printf
+#include <stdlib.h>     // EXIT_*
+#include <stdbool.h>    // bool
+
+static void map_free(t_map *m)
+{
+    if (!m)
+		return;
+    free(m->grid);
+    free(m);
+}
+
+static void dump_map(const t_map *m) // affichage carte, si espaces -> '.'
+{
+    int row_index;
+    int column_index;
+    char c;
+
+    if (!m || !m->grid)
+		return;
+    row_index = 0;
+    while (row_index < m->rows)
+    {
+        column_index = 0;
+        while (column_index < m->columns)
+        {
+            c = m->grid[row_index * m->columns + column_index];
+            putchar(c == ' ' ? '.' : c);
+            column_index++;
+        }
+        putchar('\n');
+        row_index++;
+    }
+}
+
+int main(int ac, char **av)
+{
+    int fd;
+    t_mapbuild mb;
+    t_map *m;
+
+    if (ac < 2)
+    {
+        fprintf(stderr, "Usage: %s <map.cub>\n", av[0]);
+        return (EXIT_FAILURE);
+    }
+    fd = open(av[1], O_RDONLY);
+    if (fd < 0)
+    {
+        perror("open");
+        return (EXIT_FAILURE);
+    }
+    if (!parse_map_fd(fd, &mb))
+    {
+        close(fd);
+        mb_free(&mb);
+        fprintf(stderr, "Parse error: invalid map section.\n");
+        return (2);
+    }
+    close(fd);
+    m = finalize_map(&mb);
+    mb_free(&mb);
+    if (!m)
+    {
+        fprintf(stderr, "Finalize error: cannot build rectangular grid.\n");
+        return (3);
+    }
+    // Quick checks fermeture
+    if (!map_quick_border_check(m) || !map_neighbors_ok(m)) {
+        fprintf(stderr, "Map not closed/coherent (quick checks failed).\n");
+        map_free(m);
+        return (4);
+    }
+    // Affichage
+    printf("rows=%d cols=%d | player=(r=%d,c=%d,dir=%c)\n",
+           m->rows, m->columns, m->player.row, m->player.column, m->player.dir);
+    dump_map(m);
+    map_free(m);
+    return (EXIT_SUCCESS);
+}
+
