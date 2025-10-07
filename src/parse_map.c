@@ -6,12 +6,12 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 12:12:17 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/09/28 19:55:21 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:50:50 by vakozhev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing_map.h"
-
+#include <limits.h>
 
 /*static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
 {

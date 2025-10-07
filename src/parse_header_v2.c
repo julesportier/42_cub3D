@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 16:25:27 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/06 16:58:08 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:33:30 by vakozhev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ static bool parse_colors(const char *str, int *result)
     if (!str || !result)
 		return (false);
     // tolérer espaces de tête
-    while (*str==' ' || *str=='\t' || *str=='\r')
-		str++;
+    //while (*str==' ' || *str=='\t' || *str=='\r')
+	//	str++;
     // premier non-blanc doit être un chiffre (refuse + et -)
-    if (*str < '0' || *str > '9')
-		return (false);
+   // if (*str < '0' || *str > '9')
+	//	return (false);
     v = strtol(str, &end, 10);//LIBFT!
     if (end == str)
 		return (false); // rien lu
@@ -139,7 +139,10 @@ static bool read_component(const char **pp, int *out)
     if (*p < '0' || *p > '9')
 		return (false);   // doit commencer par un chiffre
     while (nd < 3 && p[nd] >= '0' && p[nd] <= '9')
-        tok[nd++] = p[nd-1];
+	{
+        tok[nd] = p[nd];
+		nd ++;
+	}
     tok[nd] = '\0';
     if (nd == 0)
 		return (false);
