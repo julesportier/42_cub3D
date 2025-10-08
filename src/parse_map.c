@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 12:12:17 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/07 13:50:50 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:23:18 by vakozhev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,7 +428,7 @@ static void dump_map(const t_map *m) // affichage carte, si espaces -> '.'
     }
 }
 
-int main(int ac, char **av)
+/*int main(int ac, char **av)
 {
     int fd;
     t_mapbuild mb;
@@ -472,5 +472,5 @@ int main(int ac, char **av)
     dump_map(m);
     map_free(m);
     return (EXIT_SUCCESS);
-}
+}*/
 

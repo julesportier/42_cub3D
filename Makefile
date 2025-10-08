@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/09/03 11:43:03 by juportie         ###   ########.fr        #
+#    Updated: 2025/10/08 16:24:36 by vakozhev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ NAME := cub3D
 SRC_DIR := src
 vpath %.c $(SRC_DIR)
 SRC := \
-	src/parse_map.c
+	src/parse_header_v2.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
