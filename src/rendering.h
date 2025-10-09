@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/09 10:26:47 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/09 10:30:08 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,5 +119,9 @@ void	draw_ceiling_and_floor(
 // player_movements.c
 t_point	move_forward(t_point pos, t_vec dir_vec, t_map_data *map_data);
 t_point	move_backward(t_point pos, t_vec dir_vec, t_map_data *map_data);
+
+// vector_operations.c
+t_vec	normalize_vec(t_vec vec);
+t_vec	calc_dir_vec(double angle);
 
 #endif

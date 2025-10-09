@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/09 10:17:33 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/09 10:31:14 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,6 @@
 #include "cube.h"
 #include "../minilibx/mlx.h"
 #include <math.h>
-
-static t_vec	normalize_vec(t_vec vec)
-{
-	double	magnitude;
-
-	magnitude = hypot(vec.x, vec.y);
-	vec.x /= magnitude;
-	vec.y /= magnitude;
-	return (vec);
-}
-
-#include <stdio.h>
-static t_vec	calc_dir_vec(double angle)
-{
-	t_direction	direction;
-	t_vec		vec;
-
-	direction = calc_direction(angle);
-	vec.x = 1;
-	vec.y = tan(scale_angle(angle));
-	if (vec.y > 10)
-		vec.y = 10;
-	printf("dir vec.y == %f\n", vec.y);
-	if (direction.x == west)
-		vec.x *= -1;
-	if (direction.y == north)
-		vec.y *= -1;
-	return (normalize_vec(vec));
-}
-
-// static t_vec	add_vec(t_vec vec_a, t_vec vec_b)
-// {
-// 	t_vec	add;
-//
-// 	add.x = vec_a.x + vec_b.x;
-// 	add.y = vec_a.y + vec_b.y;
-// 	return (add);
-// }
-//
 
 // #include <stdio.h>
 #define RAD_TO_DEG(rad) (rad * (180 / M_PI))
@@ -78,6 +39,7 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 		pos = move_forward(pos, calc_dir_vec(player_angle), &map_data);
 	else if (keycode == S)
 		pos = move_backward(pos, calc_dir_vec(player_angle), &map_data);
+# include <stdio.h>
 	printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
 	t_vec	dir_vec = calc_dir_vec(player_angle);
 	printf("dir_vec .x == %f ; .y == %f\n", dir_vec.x, dir_vec.y);
