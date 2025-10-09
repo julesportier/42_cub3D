@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 12:12:17 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/09/28 19:55:21 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/09 19:59:23 by vakozhev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 	}
 }*/
 
-static bool	is_map_char(int	car) //on n'accepte plus \t ici, on convertit avant
+static bool	is_map_char(int	car)
 {
 	unsigned char c = (unsigned char)car;
 	if (c=='0'||c=='1'||c==' '||c=='N'||c=='S'||c=='E'||c=='W')
@@ -227,7 +227,7 @@ bool	parse_map_fd(int fd, t_mapbuild *mb)
 // - pad déjà fait ailleurs (grid pré-remplie en ' ')
 //  - *pos est avancé juste après le '\n' s'il existe
 //on calcule l'index linéaire index = row * columns + col (pour savoir où écrire/lire dans le tab 1D)
-static void	copy_one_row(const t_mapbuild *mb, t_map *map, int r, size_t *pos)
+/*static void	copy_one_row(const t_mapbuild *mb, t_map *map, int r, size_t *pos)
 {
 	size_t	row_base;
 	int		col;
@@ -270,8 +270,9 @@ static bool	fill_grid_from_buf(const t_mapbuild *mb, t_map *map)
 		r++;
 	}
 	return (true);
-}
+}*/
 
+/*
 //Construir la map finale (rows*columns), grilles paddées en ' '
 t_map	*finalize_map(const t_mapbuild *mb)
 {
@@ -305,6 +306,91 @@ t_map	*finalize_map(const t_mapbuild *mb)
 		return (NULL);
 	}
 	return (map);
+}*/
+
+static void map_free_split(t_map *m)
+{
+    int r;
+
+    if (!m)
+        return;
+    if (m->grid)
+    {
+        r = 0;
+        while (r < m->rows)
+        {
+            free(m->grid[r]);
+            r++;
+        }
+        free(m->grid);
+    }
+    ft_memset(m, 0, sizeof(*m));
+}
+
+static bool map_build_split(const t_mapbuild *mb, t_map *out)
+{
+    int     r;
+    size_t  pos;
+    int     cidx;
+    char    ch;
+
+    if (!mb || !out)
+        return (false);
+    if (mb->rows <= 0 || mb->maxw <= 0 || mb->player_count != 1)
+        return (false);
+
+    ft_memset(out, 0, sizeof(*out));
+    out->rows = mb->rows;
+    out->columns = mb->maxw;
+    out->player = mb->player;
+
+    out->grid = (char **)malloc((size_t)out->rows * sizeof(char *));
+    if (!out->grid)
+        return (false);
+    ft_memset(out->grid, 0, (size_t)out->rows * sizeof(char *));
+
+    r = 0;
+    while (r < out->rows)
+    {
+        out->grid[r] = (char *)malloc((size_t)out->columns);
+        if (!out->grid[r])
+        {
+            out->rows = r;
+            map_free_split(out);
+            return (false);
+        }
+        ft_memset(out->grid[r], ' ', (size_t)out->columns); /* padding à droite */
+        r++;
+    }
+
+    pos = 0;
+    r = 0;
+    while (r < out->rows && pos < mb->len)
+    {
+        cidx = 0;
+        while (pos < mb->len && mb->buf[pos] != '\n' && cidx < out->columns)
+        {
+            ch = mb->buf[pos];
+            if (ch != '\r')
+            {
+                out->grid[r][cidx] = ch; /* recouvre le padding */
+                cidx++;
+            }
+            pos++;
+        }
+        if (pos < mb->len && mb->buf[pos] == '\n')
+            pos++;
+
+        /* remplace le spawn par '0' */
+        if (r == out->player.row
+            && out->player.column >= 0
+            && out->player.column < out->columns)
+        {
+            out->grid[r][out->player.column] = '0';
+        }
+        r++;
+    }
+    return (true);
 }
 
 void	mb_free(t_mapbuild *map)
@@ -312,114 +398,108 @@ void	mb_free(t_mapbuild *map)
 	if (!map)
 		return;
 	free(map->buf);
-	map->buf = NULL;
 	mb_init(map);
 }
 
-bool	map_quick_border_check(const t_map *m)
+bool map_quick_border_check(const t_map *m)
 {
-	int		row_index;
-	int		column_index;
-	char	c;
+    int  row_index;
+    int  column_index;
+    char c;
 
-	row_index = 0;
-	column_index = 0;
-	if (!m || !m->grid)
-		return (false);
-	if (m->rows <= 0 || m->columns <= 0)
-		return (false);
-	//bord haut et bord bas
-	while (column_index < m->columns)
-	{
-		c = m->grid[column_index];//haut
-		if (c == '0')
-			return (false);
-		c = m->grid[(m->rows - 1) * m->columns + column_index];//bas: de colonne 0 a nb_colonnes -1 
-		if (c == '0')
-			return (false);
-		column_index++;
-	}
-	// bord gauche et bord droit
-	while (row_index < m->rows)
-	{
-		c = m->grid[row_index * m->columns];//pour chaque ligne, on regarde l'index de la colonne 0 et derniere colonne
-		if (c == '0')
-			return (false);
-		c = m->grid[row_index * m->columns + (m->columns - 1)];
-		if (c == '0')
-			return (false);
-		row_index++;
-	}
-	return (true);
+    row_index = 0;
+    column_index = 0;
+    if (!m || !m->grid)
+        return (false);
+    if (m->rows <= 0 || m->columns <= 0)
+        return (false);
+
+    /* haut et bas */
+    while (column_index < m->columns)
+    {
+        c = m->grid[0][column_index];                     /* haut */
+        if (c == '0')
+            return (false);
+        c = m->grid[m->rows - 1][column_index];           /* bas */
+        if (c == '0')
+            return (false);
+        column_index++;
+    }
+
+    /* gauche et droite */
+    row_index = 0;
+    while (row_index < m->rows)
+    {
+        c = m->grid[row_index][0];                        /* gauche */
+        if (c == '0')
+            return (false);
+        c = m->grid[row_index][m->columns - 1];           /* droite */
+        if (c == '0')
+            return (false);
+        row_index++;
+    }
+    return (true);
 }
 
-bool	map_neighbors_ok(const t_map *m)
+bool map_neighbors_ok(const t_map *m)
 {
-	int		row_index;
-	int		column_index;
-	char	c;
-	if (!m || !m->grid)
-		return (false);
-	row_index = 0;
-	while (row_index < m->rows)
-	{
-		column_index = 0;
-		while (column_index < m->columns)
-		{
-			c = m->grid[row_index * m->columns + column_index];
-			if (c == '0')
-			{
-				//voisins haut/bas/gauche/droite ne doivent pas être des espaces
-				if (row_index > 0
-					&& m->grid[(row_index - 1) * m->columns + column_index] == ' ')
-					return (false);
-				if (row_index + 1 < m->rows
-					&& m->grid[(row_index + 1) * m->columns + column_index] == ' ')
-					return (false);
-				if (column_index > 0
-					&& m->grid[row_index * m->columns + (column_index - 1)] == ' ')
-					return (false);
-				if (column_index + 1 < m->columns
-					&& m->grid[row_index * m->columns + (column_index + 1)] == ' ')
-					return (false);
-			}
-			column_index++;
-		}
-		row_index++;
-	}
-	return (true);
-}
-
-/////////////////////tester//////////////////////////////
-#include <fcntl.h>      // open
-#include <unistd.h>     // close
-#include <stdio.h>      // fprintf, printf
-#include <stdlib.h>     // EXIT_*
-#include <stdbool.h>    // bool
-
-static void map_free(t_map *m)
-{
-    if (!m)
-		return;
-    free(m->grid);
-    free(m);
-}
-
-static void dump_map(const t_map *m) // affichage carte, si espaces -> '.'
-{
-    int row_index;
-    int column_index;
+    int  row_index;
+    int  column_index;
     char c;
 
     if (!m || !m->grid)
-		return;
+        return (false);
+
     row_index = 0;
     while (row_index < m->rows)
     {
         column_index = 0;
         while (column_index < m->columns)
         {
-            c = m->grid[row_index * m->columns + column_index];
+            c = m->grid[row_index][column_index];
+            if (c == '0')
+            {
+                if (row_index > 0 && m->grid[row_index - 1][column_index] == ' ')
+                    return (false);
+                if (row_index + 1 < m->rows && m->grid[row_index + 1][column_index] == ' ')
+                    return (false);
+                if (column_index > 0 && m->grid[row_index][column_index - 1] == ' ')
+                    return (false);
+                if (column_index + 1 < m->columns && m->grid[row_index][column_index + 1] == ' ')
+                    return (false);
+            }
+            column_index++;
+        }
+        row_index++;
+    }
+    return (true);
+}
+
+/////////////////////tester//////////////////////////////
+#include <fcntl.h>      // open
+#include <unistd.h>     // close
+#include <stdio.h>      // fprintf, printf, perror
+#include <stdlib.h>     // EXIT_*
+#include <stdbool.h>    // bool
+#include "parsing_map.h"/* tes prototypes: parse_map_fd, mb_free, map_build_split, map_free_split,
+                           map_quick_border_check, map_neighbors_ok, dump_map si tu l'as déclaré */
+                        /* + get_next_line, line_len_no_nl, is_map_line, etc. */
+
+/* affichage carte, espaces -> '.' (version char** grid) */
+static void dump_map_split(const t_map *m)
+{
+    int row_index;
+    int column_index;
+    char c;
+
+    if (!m || !m->grid) return;
+    row_index = 0;
+    while (row_index < m->rows)
+    {
+        column_index = 0;
+        while (column_index < m->columns)
+        {
+            c = m->grid[row_index][column_index];
             putchar(c == ' ' ? '.' : c);
             column_index++;
         }
@@ -430,47 +510,55 @@ static void dump_map(const t_map *m) // affichage carte, si espaces -> '.'
 
 int main(int ac, char **av)
 {
-    int fd;
+    int        fd;
     t_mapbuild mb;
-    t_map *m;
+    t_map      m;   /* on laisse map sur la pile; map_build_split va allouer m.grid[r] */
 
     if (ac < 2)
     {
         fprintf(stderr, "Usage: %s <map.cub>\n", av[0]);
-        return (EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
+
     fd = open(av[1], O_RDONLY);
-    if (fd < 0)
-    {
-        perror("open");
-        return (EXIT_FAILURE);
-    }
+    if (fd < 0) { perror("open"); return EXIT_FAILURE; }
+
+    /* 1) parse la section MAP dans mb (remplit mb->buf, rows, maxw, player, etc.) */
     if (!parse_map_fd(fd, &mb))
     {
         close(fd);
         mb_free(&mb);
         fprintf(stderr, "Parse error: invalid map section.\n");
-        return (2);
+        return 2;
     }
     close(fd);
-    m = finalize_map(&mb);
-    mb_free(&mb);
-    if (!m)
+
+    /* 2) construis directement la vue 2D "split" (char**), padding à droite depuis mb->buf */
+    if (!map_build_split(&mb, &m))
     {
-        fprintf(stderr, "Finalize error: cannot build rectangular grid.\n");
-        return (3);
+        mb_free(&mb);
+        fprintf(stderr, "Build error: cannot build split grid.\n");
+        return 3;
     }
-    // Quick checks fermeture
-    if (!map_quick_border_check(m) || !map_neighbors_ok(m)) {
+
+    /* on n'a plus besoin de mb->buf après la construction */
+    mb_free(&mb);
+
+    /* 3) quick checks fermeture */
+    if (!map_quick_border_check(&m) || !map_neighbors_ok(&m))
+    {
         fprintf(stderr, "Map not closed/coherent (quick checks failed).\n");
-        map_free(m);
-        return (4);
+        map_free_split(&m);
+        return 4;
     }
-    // Affichage
+
+    /* 4) affichage debug */
     printf("rows=%d cols=%d | player=(r=%d,c=%d,dir=%c)\n",
-           m->rows, m->columns, m->player.row, m->player.column, m->player.dir);
-    dump_map(m);
-    map_free(m);
-    return (EXIT_SUCCESS);
+           m.rows, m.columns, m.player.row, m.player.column, m.player.dir);
+    dump_map_split(&m);
+
+    /* 5) free */
+    map_free_split(&m);
+    return EXIT_SUCCESS;
 }
 
