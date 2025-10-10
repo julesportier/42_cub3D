@@ -54,6 +54,6 @@ t_point	move_backward(t_point pos, t_vec dir_vec, t_map_data *map_data)
 
 	add.x = pos.x - (dir_vec.x * SPEED);
 	add.y = pos.y - (dir_vec.y * SPEED);
-	add = limit_displacement(add, dir_vec, pos, map_data);
+	add = limit_displacement(add, negate_vec(dir_vec), pos, map_data);
 	return (add);
 }

@@ -122,6 +122,7 @@ t_point	move_forward(t_point pos, t_vec dir_vec, t_map_data *map_data);
 t_point	move_backward(t_point pos, t_vec dir_vec, t_map_data *map_data);
 
 // vector_operations.c
+t_vec	negate_vec(t_vec vec);
 t_vec	normalize_vec(t_vec vec);
 t_vec	calc_dir_vec(double angle);
 

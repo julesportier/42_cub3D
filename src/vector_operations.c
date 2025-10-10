@@ -13,6 +13,13 @@
 #include "rendering.h"
 #include <math.h>
 
+t_vec	negate_vec(t_vec vec)
+{
+	vec.x *= -1;
+	vec.y *= -1;
+	return (vec);
+}
+
 t_vec	normalize_vec(t_vec vec)
 {
 	double	magnitude;
