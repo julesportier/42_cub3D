@@ -21,18 +21,18 @@ static t_point	limit_displacement(
 	int		collision;
 	t_point	grid_pos;
 
-	grid_pos.x = new_pos.x >> SHIFT_OP_512;
-	grid_pos.y = new_pos.y >> SHIFT_OP_512;
+	grid_pos.x = new_pos.x >> MUL_512;
+	grid_pos.y = new_pos.y >> MUL_512;
 	collision = COLLISION;
 	if (dir_vec.x < 0)
 		collision *= -1;
-	collision = (new_pos.x + collision) >> SHIFT_OP_512;
+	collision = (new_pos.x + collision) >> MUL_512;
 	if (map_data->map[grid_pos.y][collision] == '1')
 		new_pos.x = last_pos.x;
 	collision = COLLISION;
 	if (dir_vec.y < 0)
 		collision *= -1;
-	collision = (new_pos.y + collision) >> SHIFT_OP_512;
+	collision = (new_pos.y + collision) >> MUL_512;
 	if (map_data->map[collision][grid_pos.x] == '1')
 		new_pos.y = last_pos.y;
 	return (new_pos);

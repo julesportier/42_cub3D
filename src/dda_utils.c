@@ -29,7 +29,7 @@ int	calc_x_dev(t_point pos, t_direction dir, int x_step)
 {
 	double	first_x_inter;
 
-	first_x_inter = (pos.x >> SHIFT_OP_512 << SHIFT_OP_512);
+	first_x_inter = (pos.x >> MUL_512 << MUL_512);
 	if (dir.x == est)
 	{
 		first_x_inter += CUBE_SIZE;
@@ -43,7 +43,7 @@ int	calc_y_dev(t_point pos, t_direction dir, int y_step)
 {
 	double	first_y_inter;
 
-	first_y_inter = (pos.y >> SHIFT_OP_512 << SHIFT_OP_512);
+	first_y_inter = (pos.y >> MUL_512 << MUL_512);
 	if (dir.y == south)
 	{
 		first_y_inter += CUBE_SIZE;

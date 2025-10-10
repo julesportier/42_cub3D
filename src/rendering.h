@@ -23,7 +23,7 @@
 # define COLLISION 128
 # define SPEED 100
 # define PLAYER_HEIGHT 256
-# define SHIFT_OP_512 9
+# define MUL_512 9
 // radians turns
 # define TURN_45 M_PI_4
 # define TURN_90 M_PI_2

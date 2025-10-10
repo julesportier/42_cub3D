@@ -64,8 +64,8 @@ t_ray	calc_ray_length(
 	t_point	dist;
 	t_point	inc;
 
-	cell.x = pos.x >> SHIFT_OP_512;
-	cell.y = pos.y >> SHIFT_OP_512;
+	cell.x = pos.x >> MUL_512;
+	cell.y = pos.y >> MUL_512;
 	step.x = calc_x_step(angle);
 	step.y = calc_y_step(angle);
 	dist.x = calc_x_dev(pos, dir, step.x);
