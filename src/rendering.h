@@ -21,7 +21,8 @@
 // power of two to permit bitshift operations without loss.
 # define CUBE_SIZE 512
 # define COLLISION 128
-# define SPEED 100
+# define SPEED 300
+# define ROT_SPEED 0.3
 # define PLAYER_HEIGHT 256
 # define MUL_512 9
 // radians turns

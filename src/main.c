@@ -28,10 +28,10 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 	if (keycode == ESC)
 		mlx_loop_end(mlx_data->mlx);
 	else if (keycode == A)
-		player_angle = fmod((player_angle + 0.1), TURN_360);
+		player_angle = fmod((player_angle + ROT_SPEED), TURN_360);
 	else if (keycode == D)
 	{
-		player_angle = fmod((player_angle - 0.1), TURN_360);
+		player_angle = fmod((player_angle - ROT_SPEED), TURN_360);
 		if (player_angle < 0)
 			player_angle = TURN_360;
 	}
