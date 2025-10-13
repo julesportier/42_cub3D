@@ -12,6 +12,96 @@
 char *get_next_line(int fd);
 
 /* ============================================================
+**  VERIF PARAMS
+** ============================================================*/
+
+static bool check_extension(const char *path)
+{
+    size_t n;
+
+    if (path == NULL)
+        return (false);
+    n = strlen(path);
+    if (n <= 4)                      // refuse ".cub"
+        return (false);
+    if (path[n - 5] == '/')          // refuse "/.cub", "./.cub", "dir/.cub"
+        return (false);
+    if (strcmp(path + (n - 4), ".cub") == 0)
+        return (true);
+    return (false);
+}
+
+t_perr validate_params(int argc, char **argv, const char **out_path)
+{
+    const char *path;
+    int         fd;
+    char        octet_test;
+    ssize_t     r;
+
+    if (argc != 2)
+        return (PERR_ARGC);
+    path = argv[1];
+    if (path == NULL || *path == '\0')
+        return (PERR_EMPTY);
+    if (!check_extension(path))
+        return (PERR_EXT);
+    fd = open(path, O_RDONLY);
+    if (fd < 0)
+        return (PERR_OPEN);
+    r = read(fd, &octet_test, 1);
+    if (r < 0)
+    {
+        if (errno == EISDIR)
+        {
+            close(fd);
+            return (PERR_DIR);
+        }
+        close(fd);
+        return (PERR_OPEN);  // autre erreur ??
+    }
+    close(fd);
+    if (out_path)
+        *out_path = path;
+    return (PERR_OK);
+}
+
+void print_perr(t_perr err, const char *str) //attention fprintf n'est pas autorisé !
+{
+    const char *path_for_msg;
+
+    path_for_msg = str;
+    if (path_for_msg == NULL)
+        path_for_msg = "";
+    if (err == PERR_OK)
+		return;
+    if (err == PERR_ARGC)
+    {
+        fprintf(stderr, "Usage: ./cub3D <map.cub>\n");
+        return;
+    }
+    if (err == PERR_EMPTY)
+    {
+        fprintf(stderr, "Error: chemin de fichier vide.\n");
+        return;
+    }
+    if (err == PERR_EXT)
+    {
+        fprintf(stderr, "Error: extension invalide pour '%s' (attendu: .cub, sensible à la casse).\n", path_for_msg);
+        return;
+    }
+    if (err == PERR_DIR)
+    {
+        fprintf(stderr, "Error: '%s' est un dossier.\n", path_for_msg);
+        return;
+    }
+    if (err == PERR_OPEN)
+    {
+        fprintf(stderr, "Error: impossible d'ouvrir '%s' (%s).\n", path_for_msg, strerror(errno));
+        return;
+    }
+    fprintf(stderr, "Error: échec inconnu.\n");
+}
+/* ============================================================
 **  MAP PARSER
 ** ============================================================*/
 
@@ -604,23 +694,20 @@ bool parse_header_line(const char *line, t_config *cfg, t_perr *perr)
 
 static const char *perr_str(t_perr e)
 {
-	switch (e)
-	{
-		case PERR_OK:      return "OK";
-		case PERR_ALLOC:   return "ALLOC";
-		case PERR_ID_BAD:  return "ID_BAD";
-		case PERR_PATH_MISS:return "PATH_BAD/MISS";
-		case PERR_RGB_BAD: return "RGB_BAD";
-		case PERR_EL_DUP:  return "EL_DUP";
-		case PERR_EL_MISS: return "EL_MISS";
-		case PERR_ARGC:    return "ARGC";
-		case PERR_EMPTY:   return "EMPTY";
-		case PERR_EXT:     return "EXT";
-		case PERR_DIR:     return "DIR";
-		case PERR_OPEN:    return "OPEN";
-		case PERR_READ:    return "READ";
-		default:           return "UNKNOWN";
-	}
+    if (e == PERR_OK)       return "OK";
+    else if (e == PERR_ARGC) return "ARGC";
+    else if (e == PERR_EMPTY)return "EMPTY";
+    else if (e == PERR_EXT)  return "EXT";
+    else if (e == PERR_DIR)  return "DIR";
+    else if (e == PERR_OPEN) return "OPEN";
+    else if (e == PERR_READ) return "READ";
+    else if (e == PERR_ALLOC)return "ALLOC";
+    else if (e == PERR_EL_DUP)  return "EL_DUP";
+    else if (e == PERR_EL_MISS) return "EL_MISS";
+    else if (e == PERR_ID_BAD)  return "ID_BAD";
+    else if (e == PERR_RGB_BAD) return "RGB_BAD";
+    else if (e == PERR_PATH_MISS) return "PATH_BAD/MISS";
+    return "UNKNOWN";
 }
 
 static void cfg_init(t_config *c)
@@ -779,8 +866,14 @@ int main(int ac, char **av)
 	t_mapbuild mb;
 	t_map m;
 	t_config cfg;
+	const char *path = NULL;
+	t_perr v = validate_params(ac, av, &path);
+	if (v != PERR_OK)
+	{
+		print_perr(v, path);
+		return (EXIT_FAILURE);
+	}
 	t_perr perr = PERR_OK;
-
 	if (ac < 2)
 	{
 		fprintf(stderr, "Usage: %s <map.cub>\n", av[0]);
@@ -792,9 +885,7 @@ int main(int ac, char **av)
 		perror("open");
 		return (EXIT_FAILURE);
 	}
-
 	cfg_init(&cfg);
-
 	// 1) parse header + map en une passe
 	if (!parse_file_fd(fd, &cfg, &mb, &perr))
 	{
@@ -805,7 +896,6 @@ int main(int ac, char **av)
 		return (2);
 	}
 	close(fd);
-
 	// 2) valider l’en-tête
 	perr = header_complete(&cfg);
 	if (perr != PERR_OK)
@@ -815,7 +905,6 @@ int main(int ac, char **av)
 		fprintf(stderr, "Header incomplete: %s\n", perr_str(perr));
 		return (3);
 	}
-
 	// 3) construire la grille "split" (char **)
 	if (!map_build_split(&mb, &m))
 	{
@@ -825,7 +914,6 @@ int main(int ac, char **av)
 		return (4);
 	}
 	mb_free(&mb);
-
 	// 4) quick checks fermeture
 	if (!map_quick_border_check(&m) || !map_neighbors_ok(&m))
 	{
@@ -834,23 +922,21 @@ int main(int ac, char **av)
 		cfg_free(&cfg);
 		return (5);
 	}
-
 	// 5) affichage debug
 	printf("== HEADER ==\n");
 	dump_header(&cfg, "CONFIG");
 	printf("\n== MAP ==\n");
 	printf("rows=%d cols=%d | player=(r=%d,c=%d,dir=%c)\n",
 		m.rows, m.columns, m.player.row, m.player.column, m.player.dir);
-	for (int r = 0; r < m.rows; ++r)
+	for (int r = 0; r < m.rows; ++r) //boucle for attention -> main de test uniquement
 	{
 		for (int c = 0; c < m.columns; ++c)
 		{
 			char ch = m.grid[r][c];
-			putchar(ch == ' ' ? '.' : ch);
+			putchar(ch == ' ' ? '.' : ch); //expression interdite -> main de test uniquement
 		}
 		putchar('\n');
 	}
-
 	// 6) free
 	map_free_split(&m);
 	cfg_free(&cfg);
