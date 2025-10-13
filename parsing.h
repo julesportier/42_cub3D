@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_map.h                                      :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/09 19:56:51 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:07:01 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_MAP_H
-# define PARSING_MAP_H
+#ifndef PARSING_H
+# define PARSING_H
 
 # include <stddef.h>
 # include <stdbool.h>
@@ -20,6 +20,53 @@
 # include <stdint.h>
 
 /* ================== Data ================== */
+
+typedef enum e_perr
+{
+	PERR_OK = 0,
+	PERR_ARGC,
+	PERR_EMPTY,
+	PERR_EXT,
+	PERR_DIR,
+	PERR_OPEN,
+	PERR_READ,
+	PERR_ALLOC,
+	PERR_EL_DUP,
+	PERR_EL_MISS,
+	PERR_ID_BAD,
+	PERR_RGB_BAD,
+	PERR_PATH_MISS
+} t_perr;
+
+typedef enum e_id
+{
+	ID_NONE = 0,
+	ID_NO,
+	ID_SO,
+	ID_WE,
+	ID_EA,
+	ID_F,
+	ID_C,
+	ID_UNKNOWN
+} t_id;
+
+typedef struct s_rgb
+{
+	int	r;
+	int	g;
+	int	b;
+	bool	is_set;
+} t_rgb;
+
+typedef struct s_config
+{
+	char	*no;
+	char	*so;
+	char	*we;
+	char	*ea;
+	t_rgb	floor_rgb;
+	t_rgb	ceil_rgb;
+} t_config;
 
 typedef struct s_player
 {

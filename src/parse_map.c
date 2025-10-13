@@ -6,11 +6,11 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 12:12:17 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/09 19:59:23 by vakozhev         ###   ########.fr       */
+/*   Updated: 2025/10/13 15:52:18 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing_map.h"
+#include "parsing.h"
 
 
 /*static void	tabs_to_spaces(char *str) //faut il accepter \t en les changeant en ' ' ???
@@ -338,17 +338,14 @@ static bool map_build_split(const t_mapbuild *mb, t_map *out)
         return (false);
     if (mb->rows <= 0 || mb->maxw <= 0 || mb->player_count != 1)
         return (false);
-
     ft_memset(out, 0, sizeof(*out));
     out->rows = mb->rows;
     out->columns = mb->maxw;
     out->player = mb->player;
-
     out->grid = (char **)malloc((size_t)out->rows * sizeof(char *));
     if (!out->grid)
         return (false);
     ft_memset(out->grid, 0, (size_t)out->rows * sizeof(char *));
-
     r = 0;
     while (r < out->rows)
     {
@@ -359,10 +356,9 @@ static bool map_build_split(const t_mapbuild *mb, t_map *out)
             map_free_split(out);
             return (false);
         }
-        ft_memset(out->grid[r], ' ', (size_t)out->columns); /* padding à droite */
+        ft_memset(out->grid[r], ' ', (size_t)out->columns); //espaces  à droite
         r++;
     }
-
     pos = 0;
     r = 0;
     while (r < out->rows && pos < mb->len)
@@ -380,8 +376,7 @@ static bool map_build_split(const t_mapbuild *mb, t_map *out)
         }
         if (pos < mb->len && mb->buf[pos] == '\n')
             pos++;
-
-        /* remplace le spawn par '0' */
+        // remplace le joueur par '0'
         if (r == out->player.row
             && out->player.column >= 0
             && out->player.column < out->columns)
@@ -413,8 +408,7 @@ bool map_quick_border_check(const t_map *m)
         return (false);
     if (m->rows <= 0 || m->columns <= 0)
         return (false);
-
-    /* haut et bas */
+    // haut et bas
     while (column_index < m->columns)
     {
         c = m->grid[0][column_index];                     /* haut */
@@ -425,8 +419,7 @@ bool map_quick_border_check(const t_map *m)
             return (false);
         column_index++;
     }
-
-    /* gauche et droite */
+    //gauche et droite
     row_index = 0;
     while (row_index < m->rows)
     {
@@ -449,7 +442,6 @@ bool map_neighbors_ok(const t_map *m)
 
     if (!m || !m->grid)
         return (false);
-
     row_index = 0;
     while (row_index < m->rows)
     {
@@ -476,14 +468,12 @@ bool map_neighbors_ok(const t_map *m)
 }
 
 /////////////////////tester//////////////////////////////
-#include <fcntl.h>      // open
-#include <unistd.h>     // close
-#include <stdio.h>      // fprintf, printf, perror
-#include <stdlib.h>     // EXIT_*
-#include <stdbool.h>    // bool
-#include "parsing_map.h"/* tes prototypes: parse_map_fd, mb_free, map_build_split, map_free_split,
-                           map_quick_border_check, map_neighbors_ok, dump_map si tu l'as déclaré */
-                        /* + get_next_line, line_len_no_nl, is_map_line, etc. */
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "parsing_map.h"
 
 /* affichage carte, espaces -> '.' (version char** grid) */
 static void dump_map_split(const t_map *m)
@@ -517,48 +507,45 @@ int main(int ac, char **av)
     if (ac < 2)
     {
         fprintf(stderr, "Usage: %s <map.cub>\n", av[0]);
-        return EXIT_FAILURE;
+        return (EXIT_FAILURE);
     }
-
     fd = open(av[1], O_RDONLY);
-    if (fd < 0) { perror("open"); return EXIT_FAILURE; }
-
+    if (fd < 0)
+	{
+		perror("open");
+		return (EXIT_FAILURE);
+	}
     /* 1) parse la section MAP dans mb (remplit mb->buf, rows, maxw, player, etc.) */
     if (!parse_map_fd(fd, &mb))
     {
         close(fd);
         mb_free(&mb);
         fprintf(stderr, "Parse error: invalid map section.\n");
-        return 2;
+        return (2);
     }
     close(fd);
-
     /* 2) construis directement la vue 2D "split" (char**), padding à droite depuis mb->buf */
     if (!map_build_split(&mb, &m))
     {
         mb_free(&mb);
         fprintf(stderr, "Build error: cannot build split grid.\n");
-        return 3;
+        return (3);
     }
-
     /* on n'a plus besoin de mb->buf après la construction */
     mb_free(&mb);
-
     /* 3) quick checks fermeture */
     if (!map_quick_border_check(&m) || !map_neighbors_ok(&m))
     {
         fprintf(stderr, "Map not closed/coherent (quick checks failed).\n");
         map_free_split(&m);
-        return 4;
+        return (4);
     }
-
     /* 4) affichage debug */
     printf("rows=%d cols=%d | player=(r=%d,c=%d,dir=%c)\n",
            m.rows, m.columns, m.player.row, m.player.column, m.player.dir);
     dump_map_split(&m);
-
     /* 5) free */
     map_free_split(&m);
-    return EXIT_SUCCESS;
+    return (EXIT_SUCCESS);
 }
 
