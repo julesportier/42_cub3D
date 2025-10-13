@@ -13,28 +13,17 @@
 #include "rendering.h"
 #include <math.h>
  
-t_direction     calc_direction(double angle)
+t_direction     calc_direction(t_vec vec)
 {
 	t_direction	direction;
 
-	if (angle < TURN_180)
+	if (vec.y < 0)
 		direction.y = north;
 	else
 		direction.y = south;
-	if (angle >= TURN_90 && angle < TURN_270)
+	if (vec.x < 0)
 		direction.x = west;
 	else
 		direction.x = est;
 	return (direction);
-}
-
-double	scale_angle(double angle)
-{
-	if (angle >= TURN_90 && angle < TURN_180)
-		angle = TURN_180 - angle;
-	else if (angle >= TURN_180 && angle < TURN_270)
-		angle = angle - TURN_180;
-	else if (angle >= TURN_270 && angle < TURN_360)
-		angle = TURN_360 - angle;
-	return (angle);
 }

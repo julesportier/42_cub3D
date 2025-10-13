@@ -16,7 +16,8 @@
 
 int	calc_line_height(int distance)
 {
-	return (round((double)CUBE_SIZE / distance * (WIN_HEIGHT * 1.7)));
+	// return (round((double)CUBE_SIZE / distance * (WIN_HEIGHT * 1.7)));
+	return (round(WIN_HEIGHT / (double)distance));
 }
 
 static int	calc_line_start(int line_height)

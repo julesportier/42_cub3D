@@ -17,9 +17,9 @@
 
 static t_ray	dda(
 	t_map_data	map_data,
-	t_point		dist,
+	t_vec		dist,
 	t_point		cell,
-	t_point		step,
+	t_vec		step,
 	t_point		inc)
 {
 	char	side;
@@ -55,29 +55,40 @@ static t_ray	dda(
 
 t_ray	calc_ray_length(
 	t_map_data	map_data,
-	t_point		pos,
+	t_vec		pos,
 	t_direction	dir,
-	double		angle)
+	t_vec		ray_vec)
 {
 	t_point	cell;
-	t_point	step;
-	t_point	dist;
+	t_vec	step;
+	t_vec	dist;
 	t_point	inc;
 
-	cell.x = pos.x >> MUL_512;
-	cell.y = pos.y >> MUL_512;
-	step.x = calc_x_step(angle);
-	step.y = calc_y_step(angle);
-	dist.x = calc_x_dev(pos, dir, step.x);
+	cell.x = pos.x;
+	cell.y = pos.y;
+	step = calc_steps(ray_vec);
+	print_vec("steps", step);
+	// dist = calc_initial_dev(pos, dir);
 	if (dir.x == est)
+	{
 		inc.x = 1;
+		dist.x = cell.x + 1 - pos.x * step.x;
+	}
 	else
+	{
 		inc.x = -1;
-	dist.y = calc_y_dev(pos, dir, step.y);
+		dist.x = pos.x - cell.x * step.x;
+	}
 	if (dir.y == south)
+	{
 		inc.y = 1;
+		dist.y = cell.y + 1 - pos.y * step.y;
+	}
 	else
+	{
 		inc.y = -1;
+		dist.y = pos.y - cell.y * step.y;
+	}
 	return (dda(map_data, dist, cell, step, inc));
 }
 
@@ -86,49 +97,59 @@ t_ray	calc_ray_length(
 void	cast_rays(
 	t_mlx_data *mlx_data,
 	t_map_data map_data,
-	t_point pos,
-	double player_angle)
+	t_vec pos,
+	t_vec player_dir,
+	t_vec plane_vec)
 {
-	double	angle_increment;
-	double	angle;
 	int		i;
 	t_direction	dir;
 	t_ray	ray;
+	double	hit_pos;
+	t_vec	ray_vec;
 
-	angle_increment = FOV / WIN_WIDTH;
-	angle = fmod(player_angle + (FOV / 2), TURN_360);
 	i = 0;
-	while (i < WIN_WIDTH)
+	while (i <= WIN_WIDTH)
 	{
-		dir = calc_direction(angle);
-		ray = calc_ray_length(map_data, pos, dir, angle);
+		hit_pos = i * 2 / (double)WIN_WIDTH - 1;
+		ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
+		print_vec("ray_vec", ray_vec);
+		dir = calc_direction(ray_vec);
+		// printf("dir x == %d y == %d\n", dir.x, dir.y);
+		ray = calc_ray_length(map_data, pos, dir, ray_vec);
+		// printf("ray len == %d\n", ray.length);
 		// Remove fishbowl effect
-		ray.length = round(ray.length * cos(angle - player_angle));
+		// ray.length = round(ray.length * cos(angle - player_angle));
 		// printf("ray_length == %d\n", ray_length);
 		// printf("line_height == %d\n", calc_line_height(ray_length));
 		int	color;
 		if (ray.side == 'x')
 		{
 			if (dir.x == est)
-				color = 0x0000FF00;
+				color = GREEN;
 			else
-				color = 0x000000FF;
+				color = BLUE;
 		}
 		else
 		{
 			if (dir.y == north)
-				color = 0x00FFFFFF;
+				color = WHITE;
 			else
-				color = 0x00FF0000;
+				color = RED;
 		}
 		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, color}, ray.length);
-		angle -= angle_increment;
-		if (angle < 0)
-			angle = TURN_360;
 		++i;
 	}
 	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);
 }
+
+
+
+
+
+
+
+
+
 #include <stdlib.h>
 
 static void	fill_map_line(char **map, char *line, int width, int line_nbr)
