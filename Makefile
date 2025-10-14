@@ -53,7 +53,11 @@ NAME := cub3D
 SRC_DIR := src
 vpath %.c $(SRC_DIR)
 SRC := \
-	src/parsing.c
+	src/parse_map.c\
+	src/parse_header.c\
+	src/parse_args.c\
+	src/parsing_cleanup.c\
+	src/parsing_main.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
