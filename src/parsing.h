@@ -15,7 +15,7 @@
 
 # include <stdbool.h> // revoir si toutes ces includes sont necessaires ?
 # include <stdlib.h>
-# include "libft/src/libft.h"
+# include "../libft/src/libft.h"
 # include <stdint.h>
 # include <stdio.h>
 # include <fcntl.h>
