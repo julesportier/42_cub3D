@@ -14,13 +14,12 @@
 #include "cube.h"
 #include <math.h>
 
-int	calc_line_height(int distance)
+int	calc_line_height(double distance)
 {
-	// return (round((double)CUBE_SIZE / distance * (WIN_HEIGHT * 1.7)));
-	return (round(WIN_HEIGHT / (double)distance));
+	return (round(WIN_HEIGHT / distance));
 }
 
-static int	calc_line_start(int line_height)
+static int	calc_line_start(double line_height)
 {
 	if (line_height >= WIN_HEIGHT)
 		return (0);
@@ -45,7 +44,7 @@ static void draw_pixel(t_img_data *img_data, t_pixel pixel)
 void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
-	int			distance)
+	double		distance)
 {
 	int	i;
 	int	line_pos;

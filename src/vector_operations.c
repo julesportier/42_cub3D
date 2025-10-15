@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/09 10:31:30 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:00:00 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ t_vec	normalize_vec(t_vec vec)
 // Apply the 2d rotation matrix to the vector
 t_vec	rotate_vec(t_vec vec, double angle)
 {
-	vec.x = vec.x * cos(angle) - (vec.y * sin(angle));
-	vec.y = vec.x * sin(angle) + (vec.y * cos(angle));
+	vec.x = vec.x * cos(angle) - vec.y * sin(angle);
+	vec.y = vec.x * sin(angle) + vec.y * cos(angle);
 	return (vec);
 }
 

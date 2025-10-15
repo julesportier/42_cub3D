@@ -22,7 +22,7 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 	char	**test_map = alloc_map();
 	t_map_data map_data = {5, 10, test_map};
 	// FACE NORTH ?
-	static t_vec	player_pos = {.x = 2, .y = 6};
+	static t_vec	player_pos = {.x = 2.5, .y = 5.5};
 	static t_vec	player_dir = { .x = -1, .y = 0 };
 	static t_vec	plane_vec = { .x = 0, .y = 0.6 };
 
@@ -46,7 +46,7 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 	// printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
 	// t_vec	dir_vec = calc_dir_vec(player_angle);
 	// print_vec("player_dir", player_dir);
-	print_vec("plane_vec", plane_vec);
+	// print_vec("plane_vec", plane_vec);
 	draw_ceiling_and_floor(&(mlx_data->img), 0x008db5bf, 0x00000000);
 	cast_rays(mlx_data, map_data, player_pos, player_dir, plane_vec);
 	return (0);

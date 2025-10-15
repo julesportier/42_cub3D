@@ -69,7 +69,7 @@ typedef struct s_direction
 
 typedef struct	s_ray
 {
-	int	length;
+	double	length;
 	char	side;
 	t_cardinal	wall;
 }	t_ray;
@@ -96,11 +96,11 @@ void	cast_rays(
 char	**alloc_map(void);
 
 // rendering.c
-int	calc_line_height(int distance);
+int	calc_line_height(double distance);
 void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
-	int			distance);
+	double		distance);
 void	draw_ceiling_and_floor(
 	t_img_data	*img_data,
 	int		ceiling_color,

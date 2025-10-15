@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/09/23 08:25:53 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:54:48 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "rendering.h"
 #include "../minilibx/mlx.h"
 #include <math.h>
+		#include <stdio.h>
 
 static t_ray	dda(
 	t_map_data	map_data,
@@ -65,35 +66,36 @@ t_ray	calc_ray_length(
 	t_point	inc;
 
 	cell.x = pos.x;
+	// printf("cell.x == %d\n", cell.x);
 	cell.y = pos.y;
+	// printf("cell.y == %d\n", cell.y);
 	step = calc_steps(ray_vec);
-	print_vec("steps", step);
+	// print_vec("steps", step);
 	// dist = calc_initial_dev(pos, dir);
 	if (dir.x == est)
 	{
 		inc.x = 1;
-		dist.x = cell.x + 1 - pos.x * step.x;
+		dist.x = (cell.x + 1 - pos.x) * step.x;
 	}
 	else
 	{
 		inc.x = -1;
-		dist.x = pos.x - cell.x * step.x;
+		dist.x = (pos.x - cell.x) * step.x;
 	}
 	if (dir.y == south)
 	{
 		inc.y = 1;
-		dist.y = cell.y + 1 - pos.y * step.y;
+		dist.y = (cell.y + 1 - pos.y) * step.y;
 	}
 	else
 	{
 		inc.y = -1;
-		dist.y = pos.y - cell.y * step.y;
+		dist.y = (pos.y - cell.y) * step.y;
 	}
 	return (dda(map_data, dist, cell, step, inc));
 }
 
 
-#include <stdio.h>
 void	cast_rays(
 	t_mlx_data *mlx_data,
 	t_map_data map_data,
@@ -108,18 +110,19 @@ void	cast_rays(
 	t_vec	ray_vec;
 
 	i = 0;
-	while (i <= WIN_WIDTH)
+	while (i < WIN_WIDTH)
 	{
 		hit_pos = i * 2 / (double)WIN_WIDTH - 1;
-		ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
-		print_vec("ray_vec", ray_vec);
+		// ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
+		ray_vec = add_vec(player_dir, d_mul_vec(plane_vec, hit_pos));
+		// print_vec("ray_vec", ray_vec);
 		dir = calc_direction(ray_vec);
 		// printf("dir x == %d y == %d\n", dir.x, dir.y);
 		ray = calc_ray_length(map_data, pos, dir, ray_vec);
 		// printf("ray len == %d\n", ray.length);
 		// Remove fishbowl effect
 		// ray.length = round(ray.length * cos(angle - player_angle));
-		// printf("ray_length == %d\n", ray_length);
+		printf("ray_length == %f\n", ray.length);
 		// printf("line_height == %d\n", calc_line_height(ray_length));
 		int	color;
 		if (ray.side == 'x')
