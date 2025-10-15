@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/09 10:30:08 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/15 12:43:30 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,9 @@ typedef struct s_direction
 
 typedef struct	s_ray
 {
-	double	length;
-	char	side;
+	t_vec		vec;
+	double		length;
+	char		side;
 	t_cardinal	wall;
 }	t_ray;
 
