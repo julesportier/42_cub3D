@@ -11,3 +11,8 @@ compile_commands.json
 .cache/
 # mlx compilation
 minilibx/test/mlx-test
+*.swp
+.*.swp
+*.swo
+*.sw?
+*.un~
