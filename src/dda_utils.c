@@ -23,18 +23,3 @@ t_vec	calc_steps(t_vec ray_vec)
 	steps.y = fabs(1 / ray_vec.y);
 	return (steps);
 }
-//
-// t_vec	calc_initial_dev(t_point pos, t_direction dir)
-// {
-// 	t_vec	dev;
-//
-// 	if (dir.x == est)
-// 		dev.x = 1 - (pos.x % CUBE_SIZE / (double)CUBE_SIZE);
-// 	else
-// 		dev.x = pos.x % CUBE_SIZE / (double)CUBE_SIZE;
-// 	if (dir.y == south)
-// 		dev.y = 1 - (pos.y % CUBE_SIZE / (double)CUBE_SIZE);
-// 	else
-// 		dev.y = 1 - (pos.y % CUBE_SIZE / (double)CUBE_SIZE);
-// 	return (dev);
-// }

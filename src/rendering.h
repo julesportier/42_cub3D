@@ -17,11 +17,9 @@
 
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
-# define CUBE_SIZE 512
-# define COLLISION 128
-# define SPEED 300
+# define COLLISION 0.25
+# define SPEED 0.1
 # define ROT_SPEED 0.1
-# define MUL_512 9
 
 # define RED 0x00FF0000
 # define GREEN 0x0000FF00
@@ -78,7 +76,6 @@ typedef struct	s_ray
 t_direction     calc_direction(t_vec vec);
 // dda_utils.c
 t_vec	calc_steps(t_vec ray_vec);
-// t_vec	calc_initial_dev(t_point pos, t_direction dir);
 
 // dda.c
 t_ray	calc_ray_length(
@@ -107,8 +104,10 @@ void	draw_ceiling_and_floor(
 	int		floor_color);
 
 // player_movements.c
-t_point	move_forward(t_point pos, t_vec dir_vec, t_map_data *map_data);
-t_point	move_backward(t_point pos, t_vec dir_vec, t_map_data *map_data);
+t_vec	move_forward(t_vec pos, t_vec dir_vec, t_map_data *map_data);
+t_vec	move_backward(t_vec pos, t_vec dir_vec, t_map_data *map_data);
+t_vec	strafe_left(t_vec pos, t_vec dir_vec, t_map_data *map_data);
+t_vec	strafe_right(t_vec pos, t_vec dir_vec, t_map_data *map_data);
 
 // vector_operations.c
 void	print_point(char *name, t_point point);

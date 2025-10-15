@@ -119,10 +119,7 @@ void	cast_rays(
 		dir = calc_direction(ray_vec);
 		// printf("dir x == %d y == %d\n", dir.x, dir.y);
 		ray = calc_ray_length(map_data, pos, dir, ray_vec);
-		// printf("ray len == %d\n", ray.length);
-		// Remove fishbowl effect
-		// ray.length = round(ray.length * cos(angle - player_angle));
-		printf("ray_length == %f\n", ray.length);
+		// printf("ray_length == %f\n", ray.length);
 		// printf("line_height == %d\n", calc_line_height(ray_length));
 		int	color;
 		if (ray.side == 'x')
@@ -192,30 +189,3 @@ char	**alloc_map(void)
 	fill_map_line(map, line_9, w, 9);
 	return (map);
 }
-
-//
-// int	main(void)
-// {
-// 	t_point	pos = {.x = 1024 + 256, .y = 1024 + 256};
-//
-// 	char	**test_map = alloc_map();
-// 	t_map_data map_data = {5, 5, test_map};
-//
-// 	// // Angled to the right/est
-// 	// double	angle = TURN_45;
-// 	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
-// 	// t_direction dir = calc_direction(angle);
-// 	// int	ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
-// 	// printf("ray_length == %d\n", ray_length);
-// 	// // Angled to the left/west
-// 	// angle = TURN_135 + 0.01;
-// 	// // t_point	first_wall = calc_first_wall(map_data, pos, angle);
-// 	// dir = calc_direction(angle);
-// 	// ray_length = calc_ray_length(map_data, pos, dir, calc_x_vector(dir, angle), calc_y_vector(dir, angle));
-// 	// printf("ray_length == %d\n", ray_length);
-// 	cast_rays(map_data, pos, TURN_45);
-//
-//
-//
-// 	return (0);
-// }

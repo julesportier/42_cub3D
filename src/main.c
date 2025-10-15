@@ -28,21 +28,25 @@ static int	test_print(int keycode, t_mlx_data *mlx_data)
 
 	if (keycode == ESC)
 		mlx_loop_end(mlx_data->mlx);
-	else if (keycode == A)
+	else if (keycode == LEFT)
 	{
 		player_dir = rotate_vec(player_dir, ROT_SPEED);
 		plane_vec = rotate_vec(plane_vec, ROT_SPEED);
 	}
-	else if (keycode == D)
+	else if (keycode == RIGHT)
 	{
 		player_dir = rotate_vec(player_dir, -ROT_SPEED);
 		plane_vec = rotate_vec(plane_vec, -ROT_SPEED);
 	}
-	// else if (keycode == W)
-	// 	player_pos = move_forward(player_pos, player_dir, &map_data);
-	// else if (keycode == S)
-	// 	player_pos = move_backward(player_pos, player_dir, &map_data);
-# include <stdio.h>
+	else if (keycode == W)
+		player_pos = move_forward(player_pos, player_dir, &map_data);
+	else if (keycode == S)
+		player_pos = move_backward(player_pos, player_dir, &map_data);
+	else if (keycode == A)
+		player_pos = strafe_left(player_pos, player_dir, &map_data);
+	else if (keycode == D)
+		player_pos = strafe_right(player_pos, player_dir, &map_data);
+
 	// printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
 	// t_vec	dir_vec = calc_dir_vec(player_angle);
 	// print_vec("player_dir", player_dir);
