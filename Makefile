@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/10/09 10:30:24 by juportie         ###   ########.fr        #
+#    Updated: 2025/10/16 08:52:30 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRC_DIR := src
 vpath %.c $(SRC_DIR)
 SRC := main.c \
 	   free.c \
+	   init_state.c \
 	   mlx_alloc.c \
 	   mlx_hooks_utils.c \
 	   dda_utils.c \
@@ -52,6 +53,7 @@ SRC := main.c \
 	   rendering.c \
 	   player_movements.c \
 	   vector_operations.c \
+	   textures.c \
 	   parse_map.c \
 	   parse_header.c \
 	   parse_args.c \

@@ -44,18 +44,25 @@ static void draw_pixel(t_img_data *img_data, t_pixel pixel)
 void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
-	double		distance)
+	t_ray		*ray,
+	t_texture	*texture,
+	t_vec		*player_pos)
 {
 	int	i;
-	int	line_pos;
+	int	line_start;
 	int	line_height;
+	double	texture_y_inc;
+	int		texture_x;
 
-	line_height = calc_line_height(distance);
-	line_pos = calc_line_start(line_height);
+	line_height = calc_line_height(ray->length);
+	line_start = calc_line_start(line_height);
+	texture_x = get_texture_x(ray, player_pos, texture);
+	texture_y_inc = (double)texture->height / line_height;
 	i = 0;
-	while (i < line_height && i + line_pos < WIN_HEIGHT)
+	while (i < line_height && i + line_start < WIN_HEIGHT)
 	{
-		pixel.pos.y = line_pos + i;
+		pixel.pos.y = line_start + i;
+		pixel.color = get_texture_color(texture, texture_x, i * texture_y_inc);
 		draw_pixel(img_data, pixel);
 		++i;
 	}

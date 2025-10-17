@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/15 12:43:30 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/16 09:44:44 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,63 @@ typedef struct	s_ray
 	t_cardinal	wall;
 }	t_ray;
 
+typedef struct	s_texture
+{
+	int			width;
+	int			height;
+	char		*filename;
+	t_img_data	*img;
+}	t_texture;
+
+typedef struct s_textures
+{
+	t_texture	north;
+	t_texture	south;
+	t_texture	est;
+	t_texture	west;
+}	t_textures;
+
+typedef struct	s_player
+{
+	t_vec	pos;
+	t_vec	dir;
+	t_vec	plane;
+}	t_player;
+
+typedef struct	s_state
+{
+	t_mlx_data	mlx;
+	t_map_data	map;
+	t_textures	textures;
+	t_player	player;
+}	t_state;
+
+// init_state.c
+int	init_state(t_state	*state);
 // dda_directions.c
 t_direction     calc_direction(t_vec vec);
 // dda_utils.c
 t_vec	calc_steps(t_vec ray_vec);
 
 // dda.c
-t_ray	calc_ray_length(
+void	calc_ray(
 	t_map_data	map_data,
 	t_vec		pos,
 	t_direction	dir,
-	t_vec		ray_vec);
+	t_ray		*ray);
 void	cast_rays(
 	t_mlx_data *mlx_data,
 	t_map_data map_data,
 	t_vec pos,
 	t_vec player_dir,
-	t_vec plane_vec);
+	t_vec plane_vec,
+	t_textures *textures);
+// void	cast_rays(
+// 	t_mlx_data *mlx_data,
+// 	t_map_data map_data,
+// 	t_vec pos,
+// 	t_vec player_dir,
+// 	t_vec plane_vec);
 // FOR TESTING
 char	**alloc_map(void);
 
@@ -98,11 +138,23 @@ int	calc_line_height(double distance);
 void	draw_column(
 	t_img_data	*img_data,
 	t_pixel		pixel,
-	double		distance);
+	t_ray		*ray,
+	t_texture	*texture,
+	t_vec		*player_pos);
+// void	draw_column(
+// 	t_img_data	*img_data,
+// 	t_pixel		pixel,
+// 	double		distance);
 void	draw_ceiling_and_floor(
 	t_img_data	*img_data,
 	int		ceiling_color,
 	int		floor_color);
+
+// textures.c
+int		texture_to_image(t_mlx_data *mlx_data, t_texture *texture);
+int		load_textures(t_mlx_data *mlx_data, t_textures *textures);
+int		get_texture_color(t_texture *texture, int x, int y);
+int		get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture);
 
 // player_movements.c
 t_vec	move_forward(t_vec pos, t_vec dir_vec, t_map_data *map_data);

@@ -16,16 +16,17 @@
 #include <math.h>
 		#include <stdio.h>
 
-static t_ray	dda(
+static void	dda(
 	t_map_data	map_data,
+	t_ray		*ray,
 	t_vec		dist,
 	t_point		cell,
 	t_vec		step,
 	t_point		inc)
 {
 	char	side;
-	t_ray	ray;
 
+	// Add protection (normally useless) to avoid segfaults with array access
 	while (map_data.map[cell.y][cell.x] != '1')
 	{
 		if (dist.x < dist.y)
@@ -43,22 +44,21 @@ static t_ray	dda(
 	}
 	if (side == 'x')
 	{
-		ray.length = dist.x - step.x;
-		ray.side = 'x';
+		ray->length = dist.x - step.x;
+		ray->side = 'x';
 	}
 	else
 	{
-		ray.length = dist.y - step.y;
-		ray.side = 'y';
+		ray->length = dist.y - step.y;
+		ray->side = 'y';
 	}
-	return (ray);
 }
 
-t_ray	calc_ray_length(
+void	calc_ray(
 	t_map_data	map_data,
 	t_vec		pos,
 	t_direction	dir,
-	t_vec		ray_vec)
+	t_ray		*ray)
 {
 	t_point	cell;
 	t_vec	step;
@@ -69,7 +69,7 @@ t_ray	calc_ray_length(
 	// printf("cell.x == %d\n", cell.x);
 	cell.y = pos.y;
 	// printf("cell.y == %d\n", cell.y);
-	step = calc_steps(ray_vec);
+	step = calc_steps(ray->vec);
 	// print_vec("steps", step);
 	// dist = calc_initial_dev(pos, dir);
 	if (dir.x == est)
@@ -92,7 +92,7 @@ t_ray	calc_ray_length(
 		inc.y = -1;
 		dist.y = (pos.y - cell.y) * step.y;
 	}
-	return (dda(map_data, dist, cell, step, inc));
+	dda(map_data, ray, dist, cell, step, inc);
 }
 
 
@@ -101,41 +101,42 @@ void	cast_rays(
 	t_map_data map_data,
 	t_vec pos,
 	t_vec player_dir,
-	t_vec plane_vec)
+	t_vec plane_vec,
+	t_textures *textures)
 {
 	int		i;
 	t_direction	dir;
 	t_ray	ray;
-	double	hit_pos;
+	double	aim_pos;
+	t_texture	*texture;
 
 	i = 0;
 	while (i < WIN_WIDTH)
 	{
-		hit_pos = i * 2 / (double)WIN_WIDTH - 1;
+		aim_pos = i * 2 / (double)WIN_WIDTH - 1;
 		// ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
-		ray.vec = add_vec(player_dir, d_mul_vec(plane_vec, hit_pos));
-		// print_vec("ray_vec", ray_vec);
+		ray.vec = add_vec(player_dir, d_mul_vec(plane_vec, aim_pos));
+		print_vec("ray.vec", ray.vec);
 		dir = calc_direction(ray.vec);
 		// printf("dir x == %d y == %d\n", dir.x, dir.y);
-		ray = calc_ray_length(map_data, pos, dir, ray.vec);
+		calc_ray(map_data, pos, dir, &ray);
 		// printf("ray_length == %f\n", ray.length);
 		// printf("line_height == %d\n", calc_line_height(ray_length));
-		int	color;
 		if (ray.side == 'x')
 		{
 			if (dir.x == est)
-				color = GREEN;
+				texture = &textures->est;
 			else
-				color = BLUE;
+				texture = &textures->west;
 		}
 		else
 		{
 			if (dir.y == north)
-				color = WHITE;
+				texture = &textures->north;
 			else
-				color = RED;
+				texture = &textures->south;
 		}
-		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, color}, ray.length);
+		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, 0}, &ray, texture, &pos);
 		++i;
 	}
 	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);
