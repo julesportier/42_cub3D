@@ -14,17 +14,9 @@
 #include "cube.h"
 #include <math.h>
 
-int	calc_line_height(double distance)
+int	calc_wall_height(double distance)
 {
 	return (round(WIN_HEIGHT / distance));
-}
-
-static int	calc_line_start(double line_height)
-{
-	if (line_height >= WIN_HEIGHT)
-		return (0);
-	else
-		return ((WIN_HEIGHT - line_height) / 2);
 }
 
 static void draw_pixel(t_img_data *img_data, t_pixel pixel)
@@ -41,31 +33,101 @@ static void draw_pixel(t_img_data *img_data, t_pixel pixel)
 	*(unsigned int *)pix_addr = pixel.color;
 }
 
-void	draw_column(
+void	draw_vert_seg(t_img_data *img_data, t_pixel pixel, int end)
+{
+	if (pixel.pos.y > WIN_HEIGHT)
+		return ;
+	while (pixel.pos.y < end)
+	{
+		draw_pixel(img_data, pixel);
+		++pixel.pos.y;
+	}
+}
+
+
+static void	draw_ceilling(
+	t_img_data *img_data,
+	int wall_height,
+	t_pixel	pixel)
+{
+	int	end;
+
+	end = (WIN_HEIGHT - wall_height) * 0.5;
+	pixel.pos.y = 0;
+	draw_vert_seg(img_data, pixel, end);
+}
+
+static void	draw_floor(
+	t_img_data *img_data,
+	int wall_height,
+	t_pixel	pixel)
+{
+	pixel.pos.y = WIN_HEIGHT - ((WIN_HEIGHT - wall_height) * 0.5);
+	draw_vert_seg(img_data, pixel, WIN_HEIGHT);
+}
+
+static void	draw_wall(
 	t_img_data	*img_data,
+	int			wall_height,
 	t_pixel		pixel,
-	t_ray		*ray,
 	t_texture	*texture,
+	t_ray		*ray,
 	t_vec		*player_pos)
 {
-	int	i;
-	int	line_start;
-	int	line_height;
-	double	texture_y_inc;
+	int		i;
+	double	wall_ratio;
+	double	inc;
 	int		texture_x;
+	int		texture_start;
 
-	line_height = calc_line_height(ray->length);
-	line_start = calc_line_start(line_height);
 	texture_x = get_texture_x(ray, player_pos, texture);
-	texture_y_inc = (double)texture->height / line_height;
-	i = 0;
-	while (i < line_height && i + line_start < WIN_HEIGHT)
+	wall_ratio = (double)WIN_HEIGHT / wall_height;
+	inc = wall_ratio * texture->height_ratio;
+	if (wall_height < WIN_HEIGHT)
 	{
-		pixel.pos.y = line_start + i;
-		pixel.color = get_texture_color(texture, texture_x, i * texture_y_inc);
+		pixel.pos.y = (WIN_HEIGHT - wall_height) * 0.5;
+		texture_start = 0;
+	}
+	else
+	{
+		pixel.pos.y = 0;
+		texture_start = (1 - wall_ratio) * 0.5 * texture->height;
+	}
+	i = 0;
+	while (i < wall_height && i < WIN_HEIGHT)
+	{
+		pixel.color = get_texture_color(texture, texture_x, texture_start + i * inc);
 		draw_pixel(img_data, pixel);
 		++i;
+		++pixel.pos.y;
 	}
+};
+
+void	draw_column(
+	t_img_data	*img_data,
+	int			x_pos,
+	t_ray		*ray,
+	t_vec		*player_pos,
+	t_texture	*texture,
+	int			ceiling_color,
+	int			floor_color)
+{
+	int		wall_height;
+
+ 	wall_height = calc_wall_height(ray->length);
+	if (wall_height < WIN_HEIGHT)
+		draw_ceilling(img_data, wall_height, (t_pixel){ .pos.x = x_pos, .color = ceiling_color });
+
+	draw_wall(
+		img_data,
+		wall_height,
+		(t_pixel){.pos.x = x_pos, .color = 0x00FFFFFF},
+		texture,
+		ray,
+		player_pos);
+
+	if (wall_height < WIN_HEIGHT)
+		draw_floor(img_data, wall_height, (t_pixel){ .pos.x = x_pos, .color = floor_color });
 }
 
 void	draw_ceiling_and_floor(

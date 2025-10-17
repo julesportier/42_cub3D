@@ -14,7 +14,6 @@
 #include "../libft/src/libft.h"
 #include "../minilibx/mlx.h"
 #include <math.h>
-#include <stdio.h>
 
 int	texture_to_image(t_mlx_data *mlx_data, t_texture *texture)
 {
@@ -31,6 +30,7 @@ int	texture_to_image(t_mlx_data *mlx_data, t_texture *texture)
 	texture->img->addr = mlx_get_data_addr(
 			&texture->img->img, &texture->img->bits_per_pixel,
 			&texture->img->line_length, &texture->img->endian);
+	texture->height_ratio = (double)texture->height / WIN_HEIGHT;
 	return (0);
 }
 

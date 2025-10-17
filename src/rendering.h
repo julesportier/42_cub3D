@@ -77,6 +77,7 @@ typedef struct	s_texture
 {
 	int			width;
 	int			height;
+	double		height_ratio;
 	char		*filename;
 	t_img_data	*img;
 }	t_texture;
@@ -134,17 +135,15 @@ void	cast_rays(
 char	**alloc_map(void);
 
 // rendering.c
-int	calc_line_height(double distance);
+int	calc_wall_height(double distance);
 void	draw_column(
 	t_img_data	*img_data,
-	t_pixel		pixel,
+	int			x_pos,
 	t_ray		*ray,
+	t_vec		*player_pos,
 	t_texture	*texture,
-	t_vec		*player_pos);
-// void	draw_column(
-// 	t_img_data	*img_data,
-// 	t_pixel		pixel,
-// 	double		distance);
+	int			ceiling_color,
+	int			floor_color);
 void	draw_ceiling_and_floor(
 	t_img_data	*img_data,
 	int		ceiling_color,

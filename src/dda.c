@@ -116,7 +116,7 @@ void	cast_rays(
 		aim_pos = i * 2 / (double)WIN_WIDTH - 1;
 		// ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
 		ray.vec = add_vec(player_dir, d_mul_vec(plane_vec, aim_pos));
-		print_vec("ray.vec", ray.vec);
+		// print_vec("ray.vec", ray.vec);
 		dir = calc_direction(ray.vec);
 		// printf("dir x == %d y == %d\n", dir.x, dir.y);
 		calc_ray(map_data, pos, dir, &ray);
@@ -136,7 +136,7 @@ void	cast_rays(
 			else
 				texture = &textures->south;
 		}
-		draw_column(&(mlx_data->img), (t_pixel){{i, 0}, 0}, &ray, texture, &pos);
+		draw_column(&(mlx_data->img), i, &ray, &pos, texture, 0x008db5bf, 0x00000000);
 		++i;
 	}
 	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);

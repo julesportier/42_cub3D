@@ -44,7 +44,7 @@ static int	test_print(int keycode, t_state *state)
 	// t_vec	dir_vec = calc_dir_vec(player_angle);
 	// print_vec("state->player.dir", state->player.dir);
 	// print_vec("state->player.plane", state->player.plane);
-	draw_ceiling_and_floor(&(state->mlx.img), 0x008db5bf, 0x00000000);
+	// draw_ceiling_and_floor(&(state->mlx.img), 0x008db5bf, 0x00000000);
 	cast_rays(&state->mlx, state->map, state->player.pos, state->player.dir, state->player.plane, &state->textures);
 	return (0);
 }
