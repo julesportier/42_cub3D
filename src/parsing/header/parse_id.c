@@ -10,61 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*t_id	parse_id_at_start(const char **pline)
-{
-		const char	*p;
-		
-		p = skip_ws(*pline);
-		t_id id = ID_UNKNOWN;
-		if (*p == '\0')
-		{
-			*pline = p;
-			return (ID_NONE);
-		}
-		if (ft_strncmp(p, "NO", 2) == 0 && (p[2]=='\0' || p[2]==' ' || p[2]=='\t' || p[2]=='\r'))
-		{
-			id = ID_NO;
-			p += 2;
-		}
-		else if (ft_strncmp(p, "SO", 2) == 0 && (p[2]=='\0' || p[2]==' ' || p[2]=='\t' || p[2]=='\r'))
-		{
-			id = ID_SO;
-			p += 2;
-		}
-		else if (ft_strncmp(p, "WE", 2) == 0 && (p[2]=='\0' || p[2]==' ' || p[2]=='\t' || p[2]=='\r'))
-		{
-			id = ID_WE;
-			p += 2;
-		}
-		else if (ft_strncmp(p, "EA", 2) == 0 && (p[2]=='\0' || p[2]==' ' || p[2]=='\t' || p[2]=='\r'))
-		{
-			id = ID_EA;
-			p += 2;
-		}
-		else if (ft_strncmp(p, "F", 1) == 0 && (p[1]=='\0' || p[1]==' ' || p[1]=='\t' || p[1]=='\r'))
-		{
-			id = ID_F;
-			p += 1;
-		}
-		else if (ft_strncmp(p, "C", 1) == 0 && (p[1]=='\0' || p[1]==' ' || p[1]=='\t' || p[1]=='\r'))
-		{
-			id = ID_C;
-			p += 1;
-		}
-		else if (*p == ' ' || *p == '\t' || *p == '\r')
-			id = ID_NONE;
-		else
-			id = ID_UNKNOWN;
-		*pline = p;
-		return (id);
-}*/
-
-const char	*skip_ws(const char *str)
-{
-	while (*str == ' ' || *str == '\t' || *str == '\r')
-		str ++;
-	return (str);
-}
+#include "../parsing.h"
 
 static bool	is_id_sep(char c)
 {

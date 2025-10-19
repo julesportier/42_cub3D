@@ -10,57 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*bool	handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr)
-{
-	const char	*start;
-	const char	*end;
-	char	**slot;
-	char	*path;
+#include "../parsing.h"
 
-	if (!trim_range(rest, &start, &end))
-	{
-		*perr = PERR_PATH_MISS;
+static bool trim_range(const char *rest, const char **start, const char **end)
+{
+	const char *p;
+	size_t len;
+	char ch;
+
+	p = skip_ws(rest);
+	if (*p == '\0')
 		return (false);
-	}
-	if (!path_has_xpm_suffix(start, end))
+	len = ft_strlen(p);
+	while (len > 0)
 	{
-		*perr = PERR_PATH_MISS;
-		return (false);
+		ch = p[len - 1];
+		if (!(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n'))
+			break ;
+		len--;
 	}
-	slot = cfg_slot_for_id(cfg, id);
-	if (!slot)
-	{
-		*perr = PERR_ID_BAD;
+	if (len == 0)
 		return (false);
-	}
-	if (*slot)
-	{
-		*perr = PERR_EL_DUP;
-		return (false);
-	}
-	path = dup_range(start, end);
-	if (!path)
-	{
-		*perr = PERR_ALLOC;
-		return (false);
-	}
-	*slot = path;
-	*perr = PERR_OK;
+	*start = p;
+	*end = p + len;
 	return (true);
-}*/
-
-static bool	path_has_xpm_suffix(const char *start, const char *end)
-{
-	size_t	len;
-	const char	*suf;
-	
-	len = (size_t)(end - start);
-	if (len < 4)
-		return (false);
-	suf = end - 4;
-	if (ft_strncmp(suf, ".xpm", 4) == 0)
-		return (true);
-	return (false);
 }
  
 char	**cfg_slot_for_id(t_config *cfg, t_id id)
@@ -76,20 +49,31 @@ char	**cfg_slot_for_id(t_config *cfg, t_id id)
 	return (NULL);
 }
 
-static bool	tex_take_path(
-	const char	*rest,
-	const char	**start,
-	const char	**end,
-	t_perr	*perr
+static bool tex_take_path(
+	const char *rest,
+	const char **start,
+	const char **end,
+	t_perr *perr
 )
 {
+	size_t len;
+	const char *suf;
+
 	if (!trim_range(rest, start, end))
 	{
 		if (perr)
 			*perr = PERR_PATH_MISS;
 		return (false);
 	}
-	if (!path_has_xpm_suffix(*start, *end))
+	len = (size_t)(*end - *start);
+	if (len < 4)
+	{
+		if (perr)
+			*perr = PERR_PATH_MISS;
+		return (false);
+	}
+	suf = *end - 4;
+	if (ft_strncmp(suf, ".xpm", 4) != 0)
 	{
 		if (perr)
 			*perr = PERR_PATH_MISS;

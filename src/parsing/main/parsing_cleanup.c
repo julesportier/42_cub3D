@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../parsing.h"
 
 void	mb_free(t_mapbuild *map)
 {
@@ -46,4 +46,12 @@ void	cfg_free(t_config *c)
 	free(c->we);
 	free(c->ea);
 	ft_memset(c, 0, sizeof(*c));
+}
+
+void parsing_free(t_parsed *p)
+{
+    if (!p)
+		return ;
+    map_free_split(&p->map);
+    cfg_free(&p->config);
 }

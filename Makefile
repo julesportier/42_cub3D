@@ -19,8 +19,10 @@ CC := cc
 #########
 # FLAGS #
 #########
+LIBFT_DIR := ./libft
+LIBFT_AR := $(LIBFT_DIR)/libft.a
 WARNINGS := -Wall -Werror -Wextra
-INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes
+INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes -Isrc/parsing
 CFLAGS := $(WARNINGS) $(INC_FLAGS)
 CFLAGS_DB := $(WARNINGS) -g3 $(INC_FLAGS) 
 CFLAGS_NE := -g3 $(INC_FLAGS)
@@ -28,13 +30,12 @@ CFLAGS_REL := $(WARNINGS) -O2 $(INC_FLAGS)
 DEP_FLAGS = -MMD
 
 
-LIBFT_DIR := ./libft
-LIBFT_AR := $(LIBFT_DIR)/libft.a
+
 LIBS_FLAGS := -lft -L$(LIBFT_DIR)
 
 
 # (en haut du Makefile)
-INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes
+INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes -Isrc/parsing
 
 WARNINGS := -Wall -Werror -Wextra
 
@@ -50,14 +51,21 @@ dbg: all
 #########
 NAME := cub3D
 
-SRC_DIR := src
+SRC_DIR := src/parsing
 vpath %.c $(SRC_DIR)
 SRC := \
-	src/parse_map.c\
-	src/parse_header.c\
-	src/parse_args.c\
-	src/parsing_cleanup.c\
-	src/parsing_main.c
+	src/parsing/main/parse_args.c\
+	src/parsing/main/parse_utils.c\
+	src/parsing/main/parsing_cleanup.c\
+	src/parsing/main/parsing_main.c\
+	src/parsing/main/parsing.c\
+	src/parsing/header/parse_id.c\
+	src/parsing/header/parse_rgb.c\
+	src/parsing/header/parse_texture.c\
+	src/parsing/header/rgb_lexer.c\
+	src/parsing/map/parsing_map_builder.c\
+	src/parsing/map/parsing_map_checks.c\
+	src/parsing/map/parsing_map_grid.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)

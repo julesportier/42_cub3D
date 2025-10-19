@@ -10,48 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*bool	handle_rgb_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
-{
-	t_rgb	tmp;
-	const char	*after;
-	
-	tmp.r = 0; tmp.g = 0; tmp.b = 0; tmp.is_set = false;
-	after = NULL;
-	if (!parse_triplet(rest, &tmp, &after))
-	{
-		if (perr)
-				*perr = PERR_RGB_BAD;
-		return (false);
-	}
-	if (*skip_ws(after) != '\0')
-	{
-		if (perr)
-			*perr = PERR_RGB_BAD;
-		return (false);
-	}
-	if (id == ID_F)
-	{
-		if (cfg->floor_rgb.is_set)
-		{
-			if (perr)
-				*perr = PERR_EL_DUP;
-			return (false);
-		}
-		cfg->floor_rgb = tmp;
-	}
-	else
-	{
-		if (cfg->ceil_rgb.is_set)
-		{
-			if (perr)
-				*perr = PERR_EL_DUP;
-			return (false);
-		}
-		cfg->ceil_rgb = tmp;
-	}
-	if (perr) *perr = PERR_OK;
-		return (true);
-}*/
+#include "../parsing.h"
 
 static bool	rgb_take_triplet(
 	const char	*rest,
@@ -119,4 +78,18 @@ bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
 	if (perr)
 		*perr = PERR_OK;
 	return (true);
+}
+
+bool rgb_is_set(const t_rgb *c)
+{
+	return (c->is_set);
+}
+
+t_perr header_complete(const t_config *cfg)
+{
+	if (!cfg->no || !cfg->so || !cfg->we || !cfg->ea)
+		return (PERR_EL_MISS);
+	if (!rgb_is_set(&cfg->floor_rgb) || !rgb_is_set(&cfg->ceil_rgb))
+		return (PERR_EL_MISS);
+	return (PERR_OK);
 }
