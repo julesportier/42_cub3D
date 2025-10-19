@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_header.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/19 15:19:43 by vakozhev          #+#    #+#             */
+/*   Updated: 2025/10/19 17:55:16 by vakozhev         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
 
-const char *skip_ws(const char *str)
+/*const char *skip_ws(const char *str)
 {
 	while (*str == ' ' || *str == '\t' || *str == '\r')
 		str ++;
 	return (str);
-}
+}*/
 
 char *dup_range(const char *start, const char *end)
 {
@@ -147,7 +159,7 @@ bool trim_range(const char *rest, const char **start, const char **end)
 }
 
 // vérifie suffixe ".xpm"
-bool path_has_xpm_suffix(const char *start, const char *end)
+/*bool path_has_xpm_suffix(const char *start, const char *end)
 {
 	size_t len;
 
@@ -162,9 +174,9 @@ char **cfg_slot_for_id(t_config *cfg, t_id id)
 	if (id==ID_WE) return (&cfg->we);
 	if (id==ID_EA) return (&cfg->ea);
 	return (NULL);
-}
+}*/
 
-t_id parse_id_at_start(const char **pline)
+/*t_id parse_id_at_start(const char **pline)
 {
 	const char *p;
 
@@ -193,9 +205,9 @@ t_id parse_id_at_start(const char **pline)
 		id = ID_UNKNOWN;
 	*pline = p;
 	return (id);
-}
+}*/
 
-bool handle_texture_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
+/*bool handle_texture_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 {
 	const char *start;
 	const char *end;
@@ -232,9 +244,9 @@ bool handle_texture_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr
 	*slot = path;
 	if (perr) *perr = PERR_OK;
 	return (true);
-}
+}*/
 
-bool handle_rgb_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
+/*bool handle_rgb_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 {
 	t_rgb tmp;
 	const char *after;
@@ -271,7 +283,7 @@ bool handle_rgb_entry(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 	}
 	if (perr) *perr = PERR_OK;
 	return (true);
-}
+}*/
 
 bool parse_header_line(const char *line, t_config *cfg, t_perr *perr)
 {

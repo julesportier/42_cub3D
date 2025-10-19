@@ -1,88 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
+/*   Updated: 2025/10/19 15:16:42 by vakozhev         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
 
-bool check_extension(const char *path)
+bool	check_extension(const char *path)
 {
-    size_t n;
+	size_t	n;
 
-    if (path == NULL)
-        return (false);
-    n = strlen(path);
-    if (n <= 4)                      // refuse ".cub"
-        return (false);
-    if (path[n - 5] == '/')          // refuse "/.cub", "./.cub", "dir/.cub"
-        return (false);
-    if (strcmp(path + (n - 4), ".cub") == 0)
-        return (true);
-    return (false);
+	if (path == NULL)
+		return (false);
+	n = ft_strlen(path);
+	if (n <= 4)
+		return (false);
+	if (path[n - 5] == '/')
+		return (false);
+	if (ft_strncmp(path + (n - 4), ".cub", 4) == 0)
+		return (true);
+	return (false);
 }
 
-t_perr validate_params(int argc, char **argv, const char **out_path)
+t_perr	validate_params(int argc, char **argv, const char **out_path)
 {
-    const char *path;
-    int         fd;
-    char        octet_test;
-    ssize_t     r;
-
-    if (argc != 2)
-        return (PERR_ARGC);
-    path = argv[1];
-    if (path == NULL || *path == '\0')
-        return (PERR_EMPTY);
-    if (!check_extension(path))
-        return (PERR_EXT);
-    fd = open(path, O_RDONLY);
-    if (fd < 0)
-        return (PERR_OPEN);
-    r = read(fd, &octet_test, 1);
-    if (r < 0)
-    {
-        if (errno == EISDIR)
-        {
-            close(fd);
-            return (PERR_DIR);
-        }
-        close(fd);
-        return (PERR_OPEN);  // autre erreur ??
-    }
-    close(fd);
-    if (out_path)
-        *out_path = path;
-    return (PERR_OK);
+	const char	*path;
+	
+	if (argc != 2)
+		return (PERR_ARGC);
+	path = argv[1];
+	if (path == NULL || *path == '\0')
+		return (PERR_EMPTY);
+	if (!check_extension(path))
+		return (PERR_EXT);
+	if (out_path)
+		*out_path = path;
+	return (PERR_OK);
 }
 
-void print_perr(t_perr err, const char *str) //attention fprintf n'est pas autorisé !
+void	print_perr(t_perr err, const char *str)
 {
-    const char *path_for_msg;
-
-    path_for_msg = str;
-    if (path_for_msg == NULL)
-        path_for_msg = "";
-    if (err == PERR_OK)
-		return;
-    if (err == PERR_ARGC)
-    {
-        fprintf(stderr, "Usage: ./cub3D <map.cub>\n");
-        return;
-    }
-    if (err == PERR_EMPTY)
-    {
-        fprintf(stderr, "Error: chemin de fichier vide.\n");
-        return;
-    }
-    if (err == PERR_EXT)
-    {
-        fprintf(stderr, "Error: extension invalide pour '%s' (attendu: .cub, sensible à la casse).\n", path_for_msg);
-        return;
-    }
-    if (err == PERR_DIR)
-    {
-        fprintf(stderr, "Error: '%s' est un dossier.\n", path_for_msg);
-        return;
-    }
-    if (err == PERR_OPEN)
-    {
-        fprintf(stderr, "Error: impossible d'ouvrir '%s' (%s).\n", path_for_msg, strerror(errno));
-        return;
-    }
-    fprintf(stderr, "Error: échec inconnu.\n");
+	const char	*path_for_msg;
+	if (str != NULL)
+		path_for_msg = str;
+	else
+		path_for_msg = "";
+	if (err == PERR_OK)
+		return ;
+	ft_putendl_fd("Error", 2);
+	if (err == PERR_ARGC)
+		ft_putendl_fd("Usage: ./cub3D <map.cub>", 2);
+	else if (err == PERR_EMPTY)
+		ft_putendl_fd("Chemin de fichier vide.", 2);
+	else if (err == PERR_EXT)
+	{
+		ft_putstr_fd("Extension invalide pour '", 2);
+		ft_putstr_fd((char *)path_for_msg, 2);
+		ft_putendl_fd("' (attendu: .cub, sensible a la casse).", 2);
+	}
+	else
+		ft_putendl_fd("Parametres invalides.", 2);
 }
