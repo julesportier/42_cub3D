@@ -54,10 +54,18 @@ SRC := main.c \
 	   player_movements.c \
 	   vector_operations.c \
 	   textures.c \
-	   parse_map.c \
-	   parse_header.c \
-	   parse_args.c \
-	   parsing_cleanup.c
+	   parsing/main/parse_args.c\
+	   parsing/main/parse_utils.c\
+	   parsing/main/parsing_cleanup.c\
+	   parsing/main/parsing_main.c\
+	   parsing/main/parsing.c\
+	   parsing/header/parse_id.c\
+	   parsing/header/parse_rgb.c\
+	   parsing/header/parse_texture.c\
+	   parsing/header/rgb_lexer.c\
+	   parsing/map/parsing_map_builder.c\
+	   parsing/map/parsing_map_checks.c\
+	   parsing/map/parsing_map_grid.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
