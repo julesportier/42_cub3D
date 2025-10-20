@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_header.c                                     :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 15:19:43 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 17:55:16 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/20 10:37:00 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ bool parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 	char *line = NULL;
 	bool in_map = false;
 	int len;
-	if (out_err) *out_err = PERR_OK;
+	if (out_err)
+		*out_err = PERR_OK;
 	mb_init(mb);
 	while ((line = get_next_line(fd)) != NULL)
 	{
