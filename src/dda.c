@@ -96,13 +96,7 @@ void	calc_ray(
 }
 
 
-void	cast_rays(
-	t_mlx_data *mlx_data,
-	t_map_data map_data,
-	t_vec pos,
-	t_vec player_dir,
-	t_vec plane_vec,
-	t_textures *textures)
+void	cast_rays(t_state *state)
 {
 	int		i;
 	t_direction	dir;
@@ -115,31 +109,31 @@ void	cast_rays(
 	{
 		aim_pos = i * 2 / (double)WIN_WIDTH - 1;
 		// ray_vec = d_mul_vec(add_vec(player_dir, plane_vec), hit_pos);
-		ray.vec = add_vec(player_dir, d_mul_vec(plane_vec, aim_pos));
+		ray.vec = add_vec(state->player.dir, d_mul_vec(state->player.plane, aim_pos));
 		// print_vec("ray.vec", ray.vec);
 		dir = calc_direction(ray.vec);
 		// printf("dir x == %d y == %d\n", dir.x, dir.y);
-		calc_ray(map_data, pos, dir, &ray);
+		calc_ray(state->map, state->player.pos, dir, &ray);
 		// printf("ray_length == %f\n", ray.length);
 		// printf("line_height == %d\n", calc_line_height(ray_length));
 		if (ray.side == 'x')
 		{
 			if (dir.x == est)
-				texture = &textures->est;
+				texture = &state->textures.est;
 			else
-				texture = &textures->west;
+				texture = &state->textures.west;
 		}
 		else
 		{
 			if (dir.y == north)
-				texture = &textures->north;
+				texture = &state->textures.north;
 			else
-				texture = &textures->south;
+				texture = &state->textures.south;
 		}
-		draw_column(&(mlx_data->img), i, &ray, &pos, texture, 0x008db5bf, 0x00000000);
+		draw_column(&(state->mlx.img), i, &ray, &state->player.pos, texture, state->colors.ceiling, state->colors.floor);
 		++i;
 	}
-	mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img.img, 0, 0);
+	mlx_put_image_to_window(state->mlx.mlx, state->mlx.win, state->mlx.img.img, 0, 0);
 }
 
 
