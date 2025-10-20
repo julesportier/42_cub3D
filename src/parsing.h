@@ -76,19 +76,19 @@ typedef struct s_config
 	t_rgb	ceil_rgb;
 } t_config;
 
-typedef struct s_player
+typedef struct s_player_init
 {
     int  row;
     int  column;
     char dir;
-}   t_player;
+}   t_player_init;
 
 typedef struct s_map
 {
     int       rows;
     int       columns;
     char    **grid;
-    t_player  player;
+    t_player_init  player;
 }   t_map;
 
 typedef struct s_mapbuild
@@ -98,7 +98,7 @@ typedef struct s_mapbuild
     size_t    capacity;   // capacité allouée de buf
     int       rows;       // nb de lignes carte rencontrées
     int       maxw;       // largeur max rencontrée
-    t_player  player;     // position/dir trouvées pendant le build
+    t_player_init  player;     // position/dir trouvées pendant le build
     int       player_count;// combien de joueurs
     t_bool      started;    // on est entré dans la section map
     t_bool      ended;      // on a quitté la section map
@@ -161,7 +161,6 @@ void    dump_map(const t_map *m);
 t_perr validate_params(int argc, char **argv, const char **out_path);
 void print_perr(t_perr err, const char *str);
 t_bool check_extension(const char *path);
-int main(int ac, char **av);
 void    parsing_free(t_parsed *p);
 t_perr  parsing_load(const char *path, t_parsed *out);
 
