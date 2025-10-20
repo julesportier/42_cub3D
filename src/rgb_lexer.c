@@ -1,6 +1,6 @@
-#include "../parsing.h"
+#include "parsing.h"
 
-static bool parse_colors(const char *str, int *result)
+static t_bool parse_colors(const char *str, int *result)
 {
 	char *end;
 	long v;
@@ -20,7 +20,7 @@ static bool parse_colors(const char *str, int *result)
 	return (true);
 }
 
-static bool read_component(const char **pp, int *out)
+static t_bool read_component(const char **pp, int *out)
 {
 	const char *p = *pp;
 	char tok[4];
@@ -45,7 +45,7 @@ static bool read_component(const char **pp, int *out)
 	return (true);
 }
 
-static bool consume_comma(const char **pp)
+static t_bool consume_comma(const char **pp)
 {
 	const char *p = *pp;
 
@@ -58,7 +58,7 @@ static bool consume_comma(const char **pp)
 	return (true);
 }
 
-bool parse_triplet(const char *str, t_rgb *dst, const char **end_after)
+t_bool parse_triplet(const char *str, t_rgb *dst, const char **end_after)
 {
 	const char *p;
 	int i = 0;

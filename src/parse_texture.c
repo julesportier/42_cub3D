@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "parsing.h"
 
-static bool trim_range(const char *rest, const char **start, const char **end)
+static t_bool trim_range(const char *rest, const char **start, const char **end)
 {
 	const char *p;
 	size_t len;
@@ -49,7 +49,7 @@ char	**cfg_slot_for_id(t_config *cfg, t_id id)
 	return (NULL);
 }
 
-static bool tex_take_path(
+static t_bool tex_take_path(
 	const char *rest,
 	const char **start,
 	const char **end,
@@ -102,7 +102,7 @@ static char	**tex_get_slot(t_config *cfg, t_id id, t_perr *perr)
 	return (slot);
 }
 
-bool	handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr)
+t_bool	handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 {
 	const char	*start;
 	const char	*end;

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "parsing.h"
 
-bool	check_extension(const char *path)
+t_bool	check_extension(const char *path)
 {
 	size_t	n;
 

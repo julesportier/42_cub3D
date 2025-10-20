@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "parsing.h"
 
-bool is_map_line(const char *str)
+t_bool is_map_line(const char *str)
 {
 	int len;
 	int i;
@@ -30,7 +30,7 @@ bool is_map_line(const char *str)
 	return (true);
 }
 
-bool is_blank_or_ws_only(const char *s)
+t_bool is_blank_or_ws_only(const char *s)
 {
 	const unsigned char *p = (const unsigned char*)s;
 	while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
@@ -38,10 +38,10 @@ bool is_blank_or_ws_only(const char *s)
 	return (*p == '\0');
 }
 
-bool parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
+t_bool parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 {
 	char *line = NULL;
-	bool in_map = false;
+	t_bool in_map = false;
 	int len;
 	if (out_err) *out_err = PERR_OK;
 	mb_init(mb);
@@ -126,7 +126,7 @@ void mb_init(t_mapbuild *map)
 	map->player.column = -1;
 }
 
-bool parse_header_line(const char *line, t_config *cfg, t_perr *perr)
+t_bool parse_header_line(const char *line, t_config *cfg, t_perr *perr)
 {
 	const char *p;
 

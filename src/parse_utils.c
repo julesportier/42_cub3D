@@ -1,4 +1,4 @@
-#include "../parsing.h"
+#include "parsing.h"
 
 const char	*skip_ws(const char *str)
 {
@@ -46,7 +46,7 @@ char *dup_range(const char *start, const char *end)
 	return (str);
 }
 
-bool is_map_char(int car)
+t_bool is_map_char(int car)
 {
 	unsigned char c = (unsigned char)car;
 	if (c=='0'||c=='1'||c==' '||c=='N'||c=='S'||c=='E'||c=='W')

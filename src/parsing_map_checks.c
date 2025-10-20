@@ -1,7 +1,6 @@
+#include "parsing.h"
 
-#include "../parsing.h"
-
-bool map_quick_border_check(const t_map *m)
+t_bool map_quick_border_check(const t_map *m)
 {
 	int row_index;
 	int column_index;
@@ -39,7 +38,7 @@ bool map_quick_border_check(const t_map *m)
 	return (true);
 }
 
-bool map_neighbors_ok(const t_map *m)
+t_bool map_neighbors_ok(const t_map *m)
 {
 	int row_index;
 	int column_index;

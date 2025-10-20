@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "parsing.h"
 
-static bool	rgb_take_triplet(
+static t_bool	rgb_take_triplet(
 	const char	*rest,
 	t_rgb *out,
 	const char **after,
@@ -43,7 +43,7 @@ static bool	rgb_take_triplet(
 	return (true);
 }
 
-static bool	rgb_assign(t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
+static t_bool	rgb_assign(t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
 {
 	if (id == ID_F)
 	{
@@ -66,7 +66,7 @@ static bool	rgb_assign(t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
 	return (true);
 }
 
-bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
+t_bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
 {
 	const char	*after;
 	t_rgb		tmp;
@@ -80,7 +80,7 @@ bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
 	return (true);
 }
 
-bool rgb_is_set(const t_rgb *c)
+t_bool rgb_is_set(const t_rgb *c)
 {
 	return (c->is_set);
 }

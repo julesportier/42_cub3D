@@ -1,7 +1,6 @@
+#include "parsing.h"
 
-#include "../parsing.h"
-
-bool mb_grow_buf(t_mapbuild *map, size_t need_more)
+t_bool mb_grow_buf(t_mapbuild *map, size_t need_more)
 {
 	size_t want;
 	size_t new_cap;
@@ -35,7 +34,7 @@ bool mb_grow_buf(t_mapbuild *map, size_t need_more)
 	return (true);
 }
 
-bool mb_push_line(t_mapbuild *map, char *line)
+t_bool mb_push_line(t_mapbuild *map, char *line)
 {
 	int line_len;
 	int i;

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "parsing.h"
 
-static bool	is_id_sep(char c)
+static t_bool	is_id_sep(char c)
 {
 	if (c == '\0')
 		return (true);

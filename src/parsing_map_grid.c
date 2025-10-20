@@ -1,7 +1,7 @@
 
-#include "../parsing.h"
+#include "parsing.h"
 
-bool map_build_split(const t_mapbuild *mb, t_map *out)
+t_bool map_build_split(const t_mapbuild *mb, t_map *out)
 {
 	int r;
 	size_t pos;
