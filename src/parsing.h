@@ -13,18 +13,22 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-# include <stdbool.h> // revoir si toutes ces includes sont necessaires ?
+# include "../libft/src/libft.h"
+// # include <stdbool.h> // revoir si toutes ces includes sont necessaires ?
 # include <stdlib.h>
-# include "libft/src/libft.h"
 # include <stdint.h>
 # include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <string.h>
-# include <errno.h>
 
 /* ================== Data ================== */
 
+typedef enum e_bool
+{
+	false,
+	true
+}	t_bool;
 typedef enum e_perr
 {
 	PERR_OK = 0,
@@ -59,7 +63,7 @@ typedef struct s_rgb
 	int	r;
 	int	g;
 	int	b;
-	bool	is_set;
+	t_bool	is_set;
 } t_rgb;
 
 typedef struct s_config
@@ -96,8 +100,8 @@ typedef struct s_mapbuild
     int       maxw;       // largeur max rencontrée
     t_player  player;     // position/dir trouvées pendant le build
     int       player_count;// combien de joueurs
-    bool      started;    // on est entré dans la section map
-    bool      ended;      // on a quitté la section map
+    t_bool      started;    // on est entré dans la section map
+    t_bool      ended;      // on a quitté la section map
 }   t_mapbuild;
 
 typedef struct s_parsed
@@ -113,50 +117,50 @@ char    *get_next_line(int fd);
 /* header */
 const char *skip_ws(const char *str);
 char *dup_range(const char *start, const char *end);
-//static bool parse_colors(const char *str, int *result);
-//static bool read_component(const char **pp, int *out);
-//static bool consume_comma(const char **pp);
-bool parse_triplet(const char *str, t_rgb *dst, const char **end_after);
-//bool trim_range(const char *rest, const char **start, const char **end);
-//bool path_has_xpm_suffix(const char *start, const char *end);
+//static t_bool parse_colors(const char *str, int *result);
+//static t_bool read_component(const char **pp, int *out);
+//static t_bool consume_comma(const char **pp);
+t_bool parse_triplet(const char *str, t_rgb *dst, const char **end_after);
+//t_bool trim_range(const char *rest, const char **start, const char **end);
+//t_bool path_has_xpm_suffix(const char *start, const char *end);
 char **cfg_slot_for_id(t_config *cfg, t_id id);
 t_id parse_id_at_start(const char **pline);
-bool handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr);
-bool handle_rgb(t_id id, const char *rest, t_config *cfg, t_perr *perr);
-bool parse_header_line(const char *line, t_config *cfg, t_perr *perr);
+t_bool handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr);
+t_bool handle_rgb(t_id id, const char *rest, t_config *cfg, t_perr *perr);
+t_bool parse_header_line(const char *line, t_config *cfg, t_perr *perr);
 const char *perr_str(t_perr e);
 void cfg_init(t_config *c);
-bool rgb_is_set(const t_rgb *c);
+t_bool rgb_is_set(const t_rgb *c);
 t_perr header_complete(const t_config *cfg);
 
 /* helpers */
-bool is_map_char(int car);
+t_bool is_map_char(int car);
 int     line_len_no_nl(const char *s);
-bool    is_map_line(const char *s);
+t_bool    is_map_line(const char *s);
 
 /* builder “mb_*” */
 void    mb_init(t_mapbuild *mb);
 void    mb_free(t_mapbuild *mb);
-bool    mb_push_line(t_mapbuild *mb, char *line);
-bool mb_grow_buf(t_mapbuild *map, size_t need_more);
-bool is_blank_or_ws_only(const char *s);
-bool parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err);
+t_bool    mb_push_line(t_mapbuild *mb, char *line);
+t_bool mb_grow_buf(t_mapbuild *map, size_t need_more);
+t_bool is_blank_or_ws_only(const char *s);
+t_bool parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err);
 
 /* ===== SPLIT: tableau de lignes ===== */
-bool    map_build_split(const t_mapbuild *mb, t_map *out);
+t_bool    map_build_split(const t_mapbuild *mb, t_map *out);
 void    map_free_split(t_map *m);
 void	map_free_split(t_map *m);
 void cfg_free(t_config *c);
 
 /* checks fermeture */
-bool    map_quick_border_check(const t_map *m);
-bool    map_neighbors_ok(const t_map *m);
+t_bool    map_quick_border_check(const t_map *m);
+t_bool    map_neighbors_ok(const t_map *m);
 
 /* debug */
 void    dump_map(const t_map *m);
 t_perr validate_params(int argc, char **argv, const char **out_path);
 void print_perr(t_perr err, const char *str);
-bool check_extension(const char *path);
+t_bool check_extension(const char *path);
 int main(int ac, char **av);
 void    parsing_free(t_parsed *p);
 t_perr  parsing_load(const char *path, t_parsed *out);

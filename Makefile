@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/10/08 16:24:36 by vakozhev         ###   ########.fr        #
+#    Updated: 2025/10/16 08:52:30 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,53 +19,53 @@ CC := cc
 #########
 # FLAGS #
 #########
-LIBFT_DIR := ./libft
-LIBFT_AR := $(LIBFT_DIR)/libft.a
 WARNINGS := -Wall -Werror -Wextra
-INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes -Isrc/parsing
-CFLAGS := $(WARNINGS) $(INC_FLAGS)
-CFLAGS_DB := $(WARNINGS) -g3 $(INC_FLAGS) 
-CFLAGS_NE := -g3 $(INC_FLAGS)
-CFLAGS_REL := $(WARNINGS) -O2 $(INC_FLAGS)
+CFLAGS := $(WARNINGS)
+CFLAGS_DB := $(WARNINGS) -g3
+CFLAGS_NE := -g3
+CFLAGS_REL := $(WARNINGS) -O2
 DEP_FLAGS = -MMD
 
+LIBMATH_FLAGS := -lm
+LIBFT_DIR := ./libft
+LIBFT_AR := $(LIBFT_DIR)/libft.a
+LIBFT_FLAGS := -lft -L$(LIBFT_DIR)
 
-
-LIBS_FLAGS := -lft -L$(LIBFT_DIR)
-
-
-# (en haut du Makefile)
-INC_FLAGS := -I. -I$(LIBFT_DIR) -I$(LIBFT_DIR)/includes -Isrc/parsing
-
-WARNINGS := -Wall -Werror -Wextra
-
-
-# cibles pratiques
-dbg: CFLAGS = $(CFLAGS_DB)
-dbg: LDFLAGS = $(LDFLAGS_DB)
-dbg: all
-
+LIBMLX_DIR := ./minilibx
+LIBMLX_AR := $(LIBMLX_DIR)/libmlx.a
+LIBMLX_FLAGS := -lmlx -lXext -lX11 -L$(LIBMLX_DIR)
 
 #########
 # FILES #
 #########
 NAME := cub3D
 
-SRC_DIR := src/parsing
+SRC_DIR := src
 vpath %.c $(SRC_DIR)
-SRC := \
-	src/parsing/main/parse_args.c\
-	src/parsing/main/parse_utils.c\
-	src/parsing/main/parsing_cleanup.c\
-	src/parsing/main/parsing_main.c\
-	src/parsing/main/parsing.c\
-	src/parsing/header/parse_id.c\
-	src/parsing/header/parse_rgb.c\
-	src/parsing/header/parse_texture.c\
-	src/parsing/header/rgb_lexer.c\
-	src/parsing/map/parsing_map_builder.c\
-	src/parsing/map/parsing_map_checks.c\
-	src/parsing/map/parsing_map_grid.c
+SRC := main.c \
+	   free.c \
+	   init_state.c \
+	   mlx_alloc.c \
+	   mlx_hooks_utils.c \
+	   dda_utils.c \
+	   dda_directions.c \
+	   dda.c \
+	   rendering.c \
+	   player_movements.c \
+	   vector_operations.c \
+	   textures.c \
+	   parse_args.c \
+	   parse_utils.c \
+	   parsing_cleanup.c \
+	   parsing.c \
+	   parse_id.c\
+ 	   parse_rgb.c\
+ 	   parse_texture.c\
+ 	   rgb_lexer.c \
+	   parsing_map_builder.c\
+	   parsing_map_checks.c\
+	   parsing_map_grid.c
+	   # parsing_main.c
 
 BUILD_DIR := build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
@@ -91,13 +91,14 @@ ft:
 	@git submodule init
 	@git submodule update
 	$(MAKE) CFLAGS="$(CFLAGS)" -C $(LIBFT_DIR)
-
+mlx:
+	$(MAKE) -C $(LIBMLX_DIR)
 
 # Only print a message if actually removing files/folders
 rm_wrapper = rm -r $(1) 2>/dev/null && echo $(2) || true
 clean:
 	make clean -C $(LIBFT_DIR)
-
+	make clean -C $(LIBMLX_DIR)
 	@$(call rm_wrapper,$(BUILD_DIR),"remove $(BUILD_DIR)/")
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
@@ -110,13 +111,10 @@ re: fclean all
 #########
 # RULES #
 #########
-
 $(NAME): $(OBJ) $(LIBFT_AR)
-	$(CC) $(OBJ) -o $@ $(LDFLAGS) $(LIBS_FLAGS) $(LIBMLX_FLAGS)
-
+	$(CC) $^ -o $@ $(LIBMATH_FLAGS) $(LIBFT_FLAGS) $(LIBMLX_FLAGS)
 
 $(BUILD_DIR)/%.o: %.c Makefile
-	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(DEP_FLAGS) -c $< -o $@
 
 $(BUILD_DIR):
