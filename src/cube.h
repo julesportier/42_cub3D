@@ -30,7 +30,7 @@
 typedef struct s_img_data
 {
 	void	*img;
-	char	*addr;
+	char	*data_addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;

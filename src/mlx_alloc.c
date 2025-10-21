@@ -54,10 +54,10 @@ static int	new_image(t_mlx_data *mlx_data)
 
 static int	get_data_addr(t_mlx_data *mlx_data)
 {
-	mlx_data->img_data.addr = mlx_get_data_addr(
+	mlx_data->img_data.data_addr = mlx_get_data_addr(
 			mlx_data->img_data.img, &mlx_data->img_data.bits_per_pixel,
 			&mlx_data->img_data.line_length, &mlx_data->img_data.endian);
-	if (mlx_data->img_data.addr == NULL)
+	if (mlx_data->img_data.data_addr == NULL)
 	{
 		perror("mlx_get_data_addr");
 		free_mlx(mlx_data);

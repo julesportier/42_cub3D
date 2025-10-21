@@ -80,7 +80,7 @@ typedef struct	s_texture
 	int			height;
 	double		height_ratio;
 	char		*filename;
-	t_img_data	*img;
+	t_img_data	img_data;
 }	t_texture;
 
 typedef struct s_textures

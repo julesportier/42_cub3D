@@ -17,19 +17,19 @@
 
 int	texture_to_image(t_mlx_data *mlx_data, t_texture *texture)
 {
-	texture->img = mlx_xpm_file_to_image(
+	texture->img_data.img = mlx_xpm_file_to_image(
 			mlx_data->mlx,
 			texture->filename,
 			&texture->width,
 			&texture->height);
-	if (!texture->img)
+	if (!texture->img_data.img)
 	{
 		ft_putendl_fd("Error:\nloading texture failed\n", 2);
 		return (-1);
 	}
-	texture->img->addr = mlx_get_data_addr(
-			&texture->img->img, &texture->img->bits_per_pixel,
-			&texture->img->line_length, &texture->img->endian);
+	texture->img_data.data_addr = mlx_get_data_addr(
+			texture->img_data.img, &texture->img_data.bits_per_pixel,
+			&texture->img_data.line_length, &texture->img_data.endian);
 	texture->height_ratio = (double)texture->height / WIN_HEIGHT;
 	return (0);
 }
@@ -52,9 +52,11 @@ int	get_texture_color(t_texture *texture, int x, int y)
 	if (y > texture->height || y < 0
 			|| x > texture->width || x < 0)
 		return (-1);
-	return (*(int *)(texture->img->addr + (
-			y * texture->img->line_length
-			+ x * (texture->img->bits_per_pixel / 8))));
+	if (texture->img_data.data_addr == NULL)
+		return (-1);
+	return (*(int *)(texture->img_data.data_addr + (
+			y * texture->img_data.line_length
+			+ x * (texture->img_data.bits_per_pixel / 8))));
 }
 
 int	get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture)
