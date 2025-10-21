@@ -32,9 +32,9 @@ static int	rgb_to_int(t_rgb rgb)
 
 	color = 0;
 	color = rgb.r;
-	color = color << 16;
+	color = color << 8;
 	color |= rgb.g;
-	color = color << 16;
+	color = color << 8;
 	color |= rgb.b;
 	return (color);
 }
