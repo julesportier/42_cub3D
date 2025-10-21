@@ -14,6 +14,7 @@
 # define RENDERING_H
 
 # include "cube.h"
+# include "parsing.h"
 
 // Wall height in pixels,
 // power of two to permit bitshift operations without loss.
@@ -79,7 +80,7 @@ typedef struct	s_texture
 	int			height;
 	double		height_ratio;
 	char		*filename;
-	t_img_data	*img;
+	t_img_data	img_data;
 }	t_texture;
 
 typedef struct s_textures
@@ -97,16 +98,23 @@ typedef struct	s_player
 	t_vec	plane;
 }	t_player;
 
+typedef struct	s_colors
+{
+	int	ceiling;
+	int	floor;
+}	t_colors;
+
 typedef struct	s_state
 {
-	t_mlx_data	mlx;
+	t_mlx_data	mlx_data;
 	t_map_data	map;
 	t_textures	textures;
 	t_player	player;
+	t_colors	colors;
 }	t_state;
 
 // init_state.c
-int	init_state(t_state	*state);
+int	init_state(t_state *state, t_parsed *parsed);
 // dda_directions.c
 t_direction     calc_direction(t_vec vec);
 // dda_utils.c
@@ -118,19 +126,7 @@ void	calc_ray(
 	t_vec		pos,
 	t_direction	dir,
 	t_ray		*ray);
-void	cast_rays(
-	t_mlx_data *mlx_data,
-	t_map_data map_data,
-	t_vec pos,
-	t_vec player_dir,
-	t_vec plane_vec,
-	t_textures *textures);
-// void	cast_rays(
-// 	t_mlx_data *mlx_data,
-// 	t_map_data map_data,
-// 	t_vec pos,
-// 	t_vec player_dir,
-// 	t_vec plane_vec);
+void	cast_rays(t_state *state);
 // FOR TESTING
 char	**alloc_map(void);
 
@@ -170,5 +166,9 @@ t_vec	normalize_vec(t_vec vec);
 t_vec	rotate_vec(t_vec vec, double angle);
 t_vec	add_vec(t_vec vec_a, t_vec vec_b);
 t_vec	d_mul_vec(t_vec vec, double mul);
+
+// free.c
+void	free_mlx(t_mlx_data *mlx_data);
+void	free_state(t_state *state, t_parsed *parsed);
 
 #endif

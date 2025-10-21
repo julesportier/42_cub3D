@@ -12,6 +12,7 @@
 
 #include "rendering.h"
 #include "cube.h"
+#include "parsing.h"
 #include "../minilibx/mlx.h"
 #include <math.h>
 
@@ -20,7 +21,7 @@
 static int	test_print(int keycode, t_state *state)
 {
 	if (keycode == ESC)
-		mlx_loop_end(state->mlx.mlx);
+		mlx_loop_end(state->mlx_data.mlx);
 	else if (keycode == LEFT)
 	{
 		state->player.dir = rotate_vec(state->player.dir, ROT_SPEED);
@@ -45,22 +46,39 @@ static int	test_print(int keycode, t_state *state)
 	// print_vec("state->player.dir", state->player.dir);
 	// print_vec("state->player.plane", state->player.plane);
 	// draw_ceiling_and_floor(&(state->mlx.img), 0x008db5bf, 0x00000000);
-	cast_rays(&state->mlx, state->map, state->player.pos, state->player.dir, state->player.plane, &state->textures);
+	cast_rays(state);
 	return (0);
 }
 
-int	main(void)
+int	main(int argc, char *argv[])
 {
+	if (argc != 2)
+	{
+        print_perr(PERR_ARGC, NULL);
+        return (EXIT_FAILURE);
+	}
+
+	t_parsed	parsed;
+	t_perr		err;
+
+	// PRINT THE ERROR 
+	err = parsing_load(argv[1], &parsed);
+    if (err != PERR_OK)
+	{
+        print_perr(err, argv[1]);
+        return (EXIT_FAILURE);
+    }
+
 	t_state		state;
 
-	if (init_state(&state))
+	if (init_state(&state, &parsed))
 		return (-1);
-	mlx_hook(state.mlx.win, ON_DESTROY, 1L << 3, end_loop_mouse, &state.mlx);
-	mlx_key_hook(state.mlx.win, end_loop_esc, &state.mlx);
+	mlx_hook(state.mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &state.mlx_data);
+	mlx_key_hook(state.mlx_data.win, end_loop_esc, &state.mlx_data);
 
-	mlx_key_hook(state.mlx.win, test_print, &state);
+	mlx_key_hook(state.mlx_data.win, test_print, &state);
 
-	mlx_loop(state.mlx.mlx);
-	free_mlx(&state.mlx);
+	mlx_loop(state.mlx_data.mlx);
+	free_state(&state, &parsed);
 	return (0);
 }

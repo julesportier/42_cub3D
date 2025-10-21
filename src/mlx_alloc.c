@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cube.h"
+#include "rendering.h"
 #include "../libft/src/libft.h"
 #include "../minilibx/mlx.h"
 #include <unistd.h>
@@ -41,8 +42,8 @@ static int	new_window(t_mlx_data *mlx_data, char *title)
 
 static int	new_image(t_mlx_data *mlx_data)
 {
-	mlx_data->img.img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	if (mlx_data->img.img == NULL)
+	mlx_data->img_data.img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	if (mlx_data->img_data.img == NULL)
 	{
 		perror("mlx_new_image");
 		free_mlx(mlx_data);
@@ -53,10 +54,10 @@ static int	new_image(t_mlx_data *mlx_data)
 
 static int	get_data_addr(t_mlx_data *mlx_data)
 {
-	mlx_data->img.addr = mlx_get_data_addr(
-			mlx_data->img.img, &mlx_data->img.bits_per_pixel,
-			&mlx_data->img.line_length, &mlx_data->img.endian);
-	if (mlx_data->img.addr == NULL)
+	mlx_data->img_data.data_addr = mlx_get_data_addr(
+			mlx_data->img_data.img, &mlx_data->img_data.bits_per_pixel,
+			&mlx_data->img_data.line_length, &mlx_data->img_data.endian);
+	if (mlx_data->img_data.data_addr == NULL)
 	{
 		perror("mlx_get_data_addr");
 		free_mlx(mlx_data);

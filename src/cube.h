@@ -30,7 +30,7 @@
 typedef struct s_img_data
 {
 	void	*img;
-	char	*addr;
+	char	*data_addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
@@ -40,11 +40,9 @@ typedef struct s_mlx_data
 {
 	void		*mlx;
 	void		*win;
-	t_img_data	img;
+	t_img_data	img_data;
 }	t_mlx_data;
 
-// free.c
-void	free_mlx(t_mlx_data *mlx_data);
 // mlx_alloc.c
 int		allocate_mlx(t_mlx_data *mlx_data, char *title);
 // mlx_hooks_utils.c
