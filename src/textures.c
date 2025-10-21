@@ -39,11 +39,23 @@ int	load_textures(t_mlx_data *mlx_data, t_textures *textures)
 	if (texture_to_image(mlx_data, &textures->north))
 		return (-1);
 	if (texture_to_image(mlx_data, &textures->south))
+	{
+		mlx_destroy_image(mlx_data->mlx, textures->north.img_data.img);
 		return (-1);
+	}
 	if (texture_to_image(mlx_data, &textures->est))
+	{
+		mlx_destroy_image(mlx_data->mlx, textures->north.img_data.img);
+		mlx_destroy_image(mlx_data->mlx, textures->south.img_data.img);
 		return (-1);
+	}
 	if (texture_to_image(mlx_data, &textures->west))
+	{
+		mlx_destroy_image(mlx_data->mlx, textures->north.img_data.img);
+		mlx_destroy_image(mlx_data->mlx, textures->south.img_data.img);
+		mlx_destroy_image(mlx_data->mlx, textures->est.img_data.img);
 		return (-1);
+	}
 	return (0);
 }
 

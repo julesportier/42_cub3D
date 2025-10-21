@@ -43,8 +43,6 @@ typedef struct s_mlx_data
 	t_img_data	img_data;
 }	t_mlx_data;
 
-// free.c
-void	free_mlx(t_mlx_data *mlx_data);
 // mlx_alloc.c
 int		allocate_mlx(t_mlx_data *mlx_data, char *title);
 // mlx_hooks_utils.c

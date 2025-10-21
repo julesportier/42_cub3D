@@ -167,4 +167,8 @@ t_vec	rotate_vec(t_vec vec, double angle);
 t_vec	add_vec(t_vec vec_a, t_vec vec_b);
 t_vec	d_mul_vec(t_vec vec, double mul);
 
+// free.c
+void	free_mlx(t_mlx_data *mlx_data);
+void	free_state(t_state *state, t_parsed *parsed);
+
 #endif

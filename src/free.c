@@ -28,3 +28,22 @@ void	free_mlx(t_mlx_data *mlx_data)
 		free(mlx_data->mlx);
 	}
 }
+
+static void	free_textures(t_state *state)
+{
+	if (state->textures.north.img_data.img)
+		mlx_destroy_image(state->mlx_data.mlx, state->textures.north.img_data.img);
+	if (state->textures.south.img_data.img)
+		mlx_destroy_image(state->mlx_data.mlx, state->textures.south.img_data.img);
+	if (state->textures.est.img_data.img)
+		mlx_destroy_image(state->mlx_data.mlx, state->textures.est.img_data.img);
+	if (state->textures.west.img_data.img)
+		mlx_destroy_image(state->mlx_data.mlx, state->textures.west.img_data.img);
+}
+
+void	free_state(t_state *state, t_parsed *parsed)
+{
+	free_textures(state);
+	parsing_free(parsed);
+	free_mlx(&state->mlx_data);
+}

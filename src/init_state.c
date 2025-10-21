@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rendering.h"
-#include <stdio.h>
 
 static t_player	init_player(t_player_init player_init)
 {
@@ -62,12 +61,10 @@ int	init_state(t_state	*state, t_parsed *parsed)
 	state->textures.west.filename = parsed->config.ea;
 	if (load_textures(&state->mlx_data, &state->textures))
 	{
-		// FREE MAP
+		parsing_free(parsed);
 		free_mlx(&state->mlx_data);
 		return (-1);
 	}
-	printf("north texture width : %d\n", state->textures.north.width);
-	printf("north texture color at 0 0 : %d\n", get_texture_color(&state->textures.north, 0, 0));
 	state->player = init_player(parsed->map.player);
 	state->colors = init_colors(parsed->config);
 	return (0);
