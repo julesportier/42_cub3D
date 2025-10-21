@@ -40,7 +40,7 @@ typedef struct s_mlx_data
 {
 	void		*mlx;
 	void		*win;
-	t_img_data	img;
+	t_img_data	img_data;
 }	t_mlx_data;
 
 // free.c

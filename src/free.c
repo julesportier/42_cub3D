@@ -11,13 +11,15 @@
 /* ************************************************************************** */
 
 #include "cube.h"
+#include "parsing.h"
+#include "rendering.h"
 #include "../minilibx/mlx.h"
 #include <stdlib.h>
 
 void	free_mlx(t_mlx_data *mlx_data)
 {
-	if (mlx_data->img.img != NULL)
-		mlx_destroy_image(mlx_data->mlx, mlx_data->img.img);
+	if (mlx_data->img_data.img != NULL)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->img_data.img);
 	if (mlx_data->win != NULL)
 		mlx_destroy_window(mlx_data->mlx, mlx_data->win);
 	if (mlx_data->mlx != NULL)

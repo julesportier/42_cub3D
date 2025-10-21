@@ -106,7 +106,7 @@ typedef struct	s_colors
 
 typedef struct	s_state
 {
-	t_mlx_data	mlx;
+	t_mlx_data	mlx_data;
 	t_map_data	map;
 	t_textures	textures;
 	t_player	player;

@@ -21,7 +21,7 @@
 static int	test_print(int keycode, t_state *state)
 {
 	if (keycode == ESC)
-		mlx_loop_end(state->mlx.mlx);
+		mlx_loop_end(state->mlx_data.mlx);
 	else if (keycode == LEFT)
 	{
 		state->player.dir = rotate_vec(state->player.dir, ROT_SPEED);
@@ -73,12 +73,12 @@ int	main(int argc, char *argv[])
 
 	if (init_state(&state, &parsed))
 		return (-1);
-	mlx_hook(state.mlx.win, ON_DESTROY, 1L << 3, end_loop_mouse, &state.mlx);
-	mlx_key_hook(state.mlx.win, end_loop_esc, &state.mlx);
+	mlx_hook(state.mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &state.mlx_data);
+	mlx_key_hook(state.mlx_data.win, end_loop_esc, &state.mlx_data);
 
-	mlx_key_hook(state.mlx.win, test_print, &state);
+	mlx_key_hook(state.mlx_data.win, test_print, &state);
 
-	mlx_loop(state.mlx.mlx);
-	free_mlx(&state.mlx);
+	mlx_loop(state.mlx_data.mlx);
+	free_state(&state, &parsed);
 	return (0);
 }

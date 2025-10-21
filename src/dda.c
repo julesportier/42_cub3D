@@ -130,10 +130,10 @@ void	cast_rays(t_state *state)
 			else
 				texture = &state->textures.south;
 		}
-		draw_column(&(state->mlx.img), i, &ray, &state->player.pos, texture, state->colors.ceiling, state->colors.floor);
+		draw_column(&(state->mlx_data.img_data), i, &ray, &state->player.pos, texture, state->colors.ceiling, state->colors.floor);
 		++i;
 	}
-	mlx_put_image_to_window(state->mlx.mlx, state->mlx.win, state->mlx.img.img, 0, 0);
+	mlx_put_image_to_window(state->mlx_data.mlx, state->mlx_data.win, state->mlx_data.img_data.img, 0, 0);
 }
 
 

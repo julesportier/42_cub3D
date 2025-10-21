@@ -51,7 +51,7 @@ static t_colors	init_colors(t_config config)
 
 int	init_state(t_state	*state, t_parsed *parsed)
 {
-	if (allocate_mlx(&state->mlx, "cub3D"))
+	if (allocate_mlx(&state->mlx_data, "cub3D"))
 		return (-1);
 	state->map.map = parsed->map.grid;
 	state->map.width = parsed->map.columns;
@@ -60,10 +60,10 @@ int	init_state(t_state	*state, t_parsed *parsed)
 	state->textures.south.filename = parsed->config.so;
 	state->textures.est.filename = parsed->config.we;
 	state->textures.west.filename = parsed->config.ea;
-	if (load_textures(&state->mlx, &state->textures))
+	if (load_textures(&state->mlx_data, &state->textures))
 	{
 		// FREE MAP
-		free_mlx(&state->mlx);
+		free_mlx(&state->mlx_data);
 		return (-1);
 	}
 	printf("north texture width : %d\n", state->textures.north.width);
