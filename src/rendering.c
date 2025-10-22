@@ -16,7 +16,7 @@
 
 int	calc_wall_height(double distance)
 {
-	return (round(WIN_HEIGHT / distance));
+	return (round(WIN_HEIGHT / distance * 1.45));
 }
 
 static void draw_pixel(t_img_data *img_data, t_pixel pixel)
