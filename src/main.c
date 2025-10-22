@@ -24,13 +24,13 @@ static int	test_print(int keycode, t_state *state)
 		mlx_loop_end(state->mlx_data.mlx);
 	else if (keycode == LEFT)
 	{
-		state->player.dir = rotate_vec(state->player.dir, ROT_SPEED);
-		state->player.plane = rotate_vec(state->player.plane, ROT_SPEED);
+		state->player.dir = rotate_vec(state->player.dir, -ROT_SPEED);
+		state->player.plane = rotate_vec(state->player.plane, -ROT_SPEED);
 	}
 	else if (keycode == RIGHT)
 	{
-		state->player.dir = rotate_vec(state->player.dir, -ROT_SPEED);
-		state->player.plane = rotate_vec(state->player.plane, -ROT_SPEED);
+		state->player.dir = rotate_vec(state->player.dir, ROT_SPEED);
+		state->player.plane = rotate_vec(state->player.plane, ROT_SPEED);
 	}
 	else if (keycode == W)
 		state->player.pos = move_forward(state->player.pos, state->player.dir, &state->map);
@@ -40,12 +40,6 @@ static int	test_print(int keycode, t_state *state)
 		state->player.pos = strafe_left(state->player.pos, state->player.dir, &state->map);
 	else if (keycode == D)
 		state->player.pos = strafe_right(state->player.pos, state->player.dir, &state->map);
-
-	// printf("player angle == %fdeg\n", RAD_TO_DEG(player_angle));
-	// t_vec	dir_vec = calc_dir_vec(player_angle);
-	// print_vec("state->player.dir", state->player.dir);
-	// print_vec("state->player.plane", state->player.plane);
-	// draw_ceiling_and_floor(&(state->mlx.img), 0x008db5bf, 0x00000000);
 	cast_rays(state);
 	return (0);
 }
@@ -73,11 +67,8 @@ int	main(int argc, char *argv[])
 
 	if (init_state(&state, &parsed))
 		return (-1);
-	mlx_hook(state.mlx_data.win, ON_DESTROY, 1L << 3, end_loop_mouse, &state.mlx_data);
-	mlx_key_hook(state.mlx_data.win, end_loop_esc, &state.mlx_data);
-
-	mlx_key_hook(state.mlx_data.win, test_print, &state);
-
+	mlx_hook(state.mlx_data.win, ON_DESTROY, MASK_ESC, end_loop_mouse, &state.mlx_data);
+	mlx_hook(state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, test_print, &state);
 	mlx_loop(state.mlx_data.mlx);
 	free_state(&state, &parsed);
 	return (0);
