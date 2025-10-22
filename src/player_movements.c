@@ -13,9 +13,9 @@
 #include "rendering.h"
 
 static t_vec	limit_displacement(
-	t_vec		new_pos,
-	t_vec		dir_vec,
-	t_vec		last_pos,
+	t_vec new_pos,
+	t_vec dir_vec,
+	t_vec last_pos,
 	t_map_data *map_data)
 {
 	double	collision;

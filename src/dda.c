@@ -14,12 +14,12 @@
 #include "../minilibx/mlx.h"
 
 static void	dda(
-	t_map_data	map_data,
-	t_ray		*ray,
-	t_vec		dist,
-	t_point		cell,
-	t_vec		step,
-	t_point		inc)
+	t_map_data map_data,
+	t_ray *ray,
+	t_vec dist,
+	t_point cell,
+	t_vec step,
+	t_point inc)
 {
 	char	side;
 
@@ -52,10 +52,10 @@ static void	dda(
 }
 
 void	calc_ray(
-	t_map_data	map_data,
-	t_vec		pos,
-	t_direction	dir,
-	t_ray		*ray)
+	t_map_data map_data,
+	t_vec pos,
+	t_direction dir,
+	t_ray *ray)
 {
 	t_point	cell;
 	t_vec	step;
@@ -88,20 +88,20 @@ void	calc_ray(
 	dda(map_data, ray, dist, cell, step, inc);
 }
 
-
 void	cast_rays(t_state *state)
 {
-	int		i;
+	int			i;
 	t_direction	dir;
-	t_ray	ray;
-	double	aim_pos;
+	t_ray		ray;
+	double		aim_pos;
 	t_texture	*texture;
 
 	i = 0;
 	while (i < WIN_WIDTH)
 	{
 		aim_pos = i * 2 / (double)WIN_WIDTH - 1;
-		ray.vec = add_vec(state->player.dir, d_mul_vec(state->player.plane, aim_pos));
+		ray.vec = add_vec(
+				state->player.dir, d_mul_vec(state->player.plane, aim_pos));
 		dir = calc_direction(ray.vec);
 		calc_ray(state->map, state->player.pos, dir, &ray);
 		if (ray.side == 'x')
@@ -118,8 +118,12 @@ void	cast_rays(t_state *state)
 			else
 				texture = &state->textures.south;
 		}
-		draw_column(&(state->mlx_data.img_data), i, &ray, &state->player.pos, texture, state->colors.ceiling, state->colors.floor);
+		draw_column(
+			&(state->mlx_data.img_data), i, &ray, &state->player.pos,
+			texture, state->colors.ceiling, state->colors.floor);
 		++i;
 	}
-	mlx_put_image_to_window(state->mlx_data.mlx, state->mlx_data.win, state->mlx_data.img_data.img, 0, 0);
+	mlx_put_image_to_window(
+		state->mlx_data.mlx, state->mlx_data.win,
+		state->mlx_data.img_data.img, 0, 0);
 }

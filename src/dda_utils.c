@@ -12,7 +12,7 @@
 
 #include "rendering.h"
 #include <math.h>
- 
+
 t_vec	calc_steps(t_vec ray_vec)
 {
 	t_vec	steps;

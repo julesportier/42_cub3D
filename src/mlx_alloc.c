@@ -41,7 +41,8 @@ static int	new_window(t_mlx_data *mlx_data, char *title)
 
 static int	new_image(t_mlx_data *mlx_data)
 {
-	mlx_data->img_data.img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	mlx_data->img_data.img = mlx_new_image(
+			mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	if (mlx_data->img_data.img == NULL)
 	{
 		perror("mlx_new_image");

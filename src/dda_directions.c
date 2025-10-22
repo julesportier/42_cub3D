@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "rendering.h"
- 
-t_direction     calc_direction(t_vec vec)
+
+t_direction	calc_direction(t_vec vec)
 {
 	t_direction	direction;
 

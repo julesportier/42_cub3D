@@ -20,12 +20,12 @@ int	calc_wall_height(double distance)
 	return (round(factor / distance));
 }
 
-static void draw_pixel(t_img_data *img_data, t_pixel pixel)
+static void	draw_pixel(t_img_data *img_data, t_pixel pixel)
 {
 	char	*pix_addr;
 
 	if (pixel.pos.y > WIN_HEIGHT || pixel.pos.y < 0
-			|| pixel.pos.x > WIN_WIDTH || pixel.pos.x < 0)
+		|| pixel.pos.x > WIN_WIDTH || pixel.pos.x < 0)
 		return ;
 	pix_addr = img_data->data_addr + (
 			pixel.pos.y * img_data->line_length
@@ -45,11 +45,10 @@ void	draw_vert_seg(t_img_data *img_data, t_pixel pixel, int end)
 	}
 }
 
-
 static void	draw_ceilling(
 	t_img_data *img_data,
 	int wall_height,
-	t_pixel	pixel)
+	t_pixel pixel)
 {
 	int	end;
 
@@ -68,12 +67,12 @@ static void	draw_floor(
 }
 
 static void	draw_wall(
-	t_img_data	*img_data,
-	int			wall_height,
-	t_pixel		pixel,
-	t_texture	*texture,
-	t_ray		*ray,
-	t_vec		*player_pos)
+	t_img_data *img_data,
+	int wall_height,
+	t_pixel pixel,
+	t_texture *texture,
+	t_ray *ray,
+	t_vec *player_pos)
 {
 	int		i;
 	double	wall_ratio;
@@ -97,25 +96,26 @@ static void	draw_wall(
 	i = 0;
 	while (i < wall_height && i < WIN_HEIGHT)
 	{
-		pixel.color = get_texture_color(texture, texture_x, texture_start + i * inc);
+		pixel.color = get_texture_color(
+				texture, texture_x, texture_start + i * inc);
 		draw_pixel(img_data, pixel);
 		++i;
 		++pixel.pos.y;
 	}
-};
+}
 
 void	draw_column(
-	t_img_data	*img_data,
-	int			x_pos,
-	t_ray		*ray,
-	t_vec		*player_pos,
-	t_texture	*texture,
-	int			ceiling_color,
-	int			floor_color)
+	t_img_data *img_data,
+	int x_pos,
+	t_ray *ray,
+	t_vec *player_pos,
+	t_texture *texture,
+	int ceiling_color,
+	int floor_color)
 {
 	int		wall_height;
 
- 	wall_height = calc_wall_height(ray->length);
+	wall_height = calc_wall_height(ray->length);
 	if (wall_height < WIN_HEIGHT)
 		draw_ceilling(img_data, wall_height, (t_pixel){ .pos.x = x_pos, .color = ceiling_color });
 
