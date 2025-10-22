@@ -14,10 +14,17 @@
 # define CUBE_H
 
 // Window size
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
 // mlx
 # define ON_DESTROY 17
+# define ON_KEYPRESS 2
+# define ON_KEYRELEASE 3
+// mlx masks
+# define MASK_KEYPRESS 1L << 0
+# define MASK_KEYRELEASE 1L << 1
+# define MASK_ESC 1L << 3
+// mlx keys
 # define ESC 65307
 # define W 119
 # define A 97

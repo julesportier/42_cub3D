@@ -86,5 +86,6 @@ int	init_state(t_state	*state, t_parsed *parsed)
 	}
 	state->player = init_player(parsed->map.player);
 	state->colors = init_colors(parsed->config);
+	cast_rays(state);
 	return (0);
 }
