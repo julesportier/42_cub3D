@@ -61,14 +61,9 @@ int	load_textures(t_mlx_data *mlx_data, t_textures *textures)
 
 int	get_texture_color(t_texture *texture, int x, int y)
 {
-	if (y > texture->height || y < 0
-			|| x > texture->width || x < 0)
-		return (-1);
-	if (texture->img_data.data_addr == NULL)
-		return (-1);
 	return (*(int *)(texture->img_data.data_addr + (
 			y * texture->img_data.line_length
-			+ x * (texture->img_data.bits_per_pixel / 8))));
+			+ x * (texture->img_data.bits_per_pixel >> 3))));
 }
 
 int	get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture)

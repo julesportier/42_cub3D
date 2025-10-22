@@ -23,16 +23,10 @@ int	calc_wall_height(double distance)
 
 static void draw_pixel(t_img_data *img_data, t_pixel pixel)
 {
-	char	*pix_addr;
-
-	if (pixel.pos.y > WIN_HEIGHT || pixel.pos.y < 0
-			|| pixel.pos.x > WIN_WIDTH || pixel.pos.x < 0)
-		return ;
-	pix_addr = img_data->data_addr + (
+	*(unsigned int *)(img_data->data_addr + (
 			pixel.pos.y * img_data->line_length
-			+ pixel.pos.x * (img_data->bits_per_pixel / 8)
-			);
-	*(unsigned int *)pix_addr = pixel.color;
+			+ pixel.pos.x * (img_data->bits_per_pixel >> 3)
+			)) = pixel.color;
 }
 
 void	draw_vert_seg(t_img_data *img_data, t_pixel pixel, int end)
