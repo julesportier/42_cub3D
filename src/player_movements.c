@@ -33,48 +33,50 @@ static t_vec	limit_displacement(
 	return (new_pos);
 }
 
-t_vec	move_forward(t_vec pos, t_vec dir_vec, t_map_data *map_data)
+t_vec	move_forward(t_state *state)
 {
 	t_vec	add;
 
-	add.x = pos.x + (dir_vec.x * SPEED);
-	add.y = pos.y + (dir_vec.y * SPEED);
-	add = limit_displacement(add, dir_vec, pos, map_data);
+	add.x = state->player.pos.x + (state->player.dir.x * SPEED);
+	add.y = state->player.pos.y + (state->player.dir.y * SPEED);
+	add = limit_displacement(
+			add, state->player.dir, state->player.pos, &state->map);
 	return (add);
 }
 
-t_vec	move_backward(t_vec pos, t_vec dir_vec, t_map_data *map_data)
+t_vec	move_backward(t_state *state)
 {
 	t_vec	add;
 
-	add.x = pos.x - (dir_vec.x * SPEED);
-	add.y = pos.y - (dir_vec.y * SPEED);
-	add = limit_displacement(add, negate_vec(dir_vec), pos, map_data);
+	add.x = state->player.pos.x - (state->player.dir.x * SPEED);
+	add.y = state->player.pos.y - (state->player.dir.y * SPEED);
+	add = limit_displacement(
+			add, negate_vec(state->player.dir), state->player.pos, &state->map);
 	return (add);
 }
 
-t_vec	strafe_left(t_vec pos, t_vec dir_vec, t_map_data *map_data)
+t_vec	strafe_left(t_state *state)
 {
 	t_vec	strafe;
 	t_vec	add;
 
-	strafe.x = dir_vec.y;
-	strafe.y = -dir_vec.x;
-	add.x = pos.x + (strafe.x * SPEED);
-	add.y = pos.y + (strafe.y * SPEED);
-	add = limit_displacement(add, strafe, pos, map_data);
+	strafe.x = state->player.dir.y;
+	strafe.y = -state->player.dir.x;
+	add.x = state->player.pos.x + (strafe.x * SPEED);
+	add.y = state->player.pos.y + (strafe.y * SPEED);
+	add = limit_displacement(add, strafe, state->player.pos, &state->map);
 	return (add);
 }
 
-t_vec	strafe_right(t_vec pos, t_vec dir_vec, t_map_data *map_data)
+t_vec	strafe_right(t_state *state)
 {
 	t_vec	strafe;
 	t_vec	add;
 
-	strafe.x = -dir_vec.y;
-	strafe.y = dir_vec.x;
-	add.x = pos.x + (strafe.x * SPEED);
-	add.y = pos.y + (strafe.y * SPEED);
-	add = limit_displacement(add, strafe, pos, map_data);
+	strafe.x = -state->player.dir.y;
+	strafe.y = state->player.dir.x;
+	add.x = state->player.pos.x + (strafe.x * SPEED);
+	add.y = state->player.pos.y + (strafe.y * SPEED);
+	add = limit_displacement(add, strafe, state->player.pos, &state->map);
 	return (add);
 }

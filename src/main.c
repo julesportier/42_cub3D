@@ -29,13 +29,13 @@ static int	test_print(int keycode, t_state *state)
 		state->player.plane = rotate_vec(state->player.plane, ROT_SPEED);
 	}
 	else if (keycode == W)
-		state->player.pos = move_forward(state->player.pos, state->player.dir, &state->map);
+		state->player.pos = move_forward(state);
 	else if (keycode == S)
-		state->player.pos = move_backward(state->player.pos, state->player.dir, &state->map);
+		state->player.pos = move_backward(state);
 	else if (keycode == A)
-		state->player.pos = strafe_left(state->player.pos, state->player.dir, &state->map);
+		state->player.pos = strafe_left(state);
 	else if (keycode == D)
-		state->player.pos = strafe_right(state->player.pos, state->player.dir, &state->map);
+		state->player.pos = strafe_right(state);
 	cast_rays(state);
 	return (0);
 }

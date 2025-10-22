@@ -176,10 +176,10 @@ int			get_texture_color(t_texture *texture, int x, int y);
 int			get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture);
 
 // player_movements.c
-t_vec		move_forward(t_vec pos, t_vec dir_vec, t_map_data *map_data);
-t_vec		move_backward(t_vec pos, t_vec dir_vec, t_map_data *map_data);
-t_vec		strafe_left(t_vec pos, t_vec dir_vec, t_map_data *map_data);
-t_vec		strafe_right(t_vec pos, t_vec dir_vec, t_map_data *map_data);
+t_vec		move_forward(t_state *state);
+t_vec		move_backward(t_state *state);
+t_vec		strafe_left(t_state *state);
+t_vec		strafe_right(t_state *state);
 
 // vector_operations.c
 void		print_point(char *name, t_point point);
