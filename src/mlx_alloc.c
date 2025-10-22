@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
 #include "rendering.h"
 #include "../libft/src/libft.h"
 #include "../minilibx/mlx.h"

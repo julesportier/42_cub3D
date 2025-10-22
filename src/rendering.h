@@ -13,7 +13,6 @@
 #ifndef RENDERING_H
 # define RENDERING_H
 
-# include "cube.h"
 # include "parsing.h"
 
 // Wall height in pixels,
@@ -26,6 +25,44 @@
 # define GREEN 0x0000FF00
 # define BLUE 0x000000FF
 # define WHITE 0x00FFFFFF
+
+// Window size
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
+// mlx
+# define ON_DESTROY 17
+# define ON_KEYPRESS 2
+# define ON_KEYRELEASE 3
+// mlx masks
+# define MASK_KEYPRESS 1L << 0
+# define MASK_KEYRELEASE 1L << 1
+# define MASK_ESC 1L << 3
+// mlx keys
+# define ESC 65307
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define LEFT 65361
+# define RIGHT 65363
+
+// MLX data structures
+typedef struct s_img_data
+{
+	void	*img;
+	char	*data_addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_img_data;
+
+typedef struct s_mlx_data
+{
+	void		*mlx;
+	void		*win;
+	t_img_data	img_data;
+}	t_mlx_data;
+
 
 typedef struct	s_map_data
 {
@@ -113,6 +150,11 @@ typedef struct	s_state
 	t_colors	colors;
 }	t_state;
 
+// mlx_alloc.c
+int		allocate_mlx(t_mlx_data *mlx_data, char *title);
+// mlx_hooks_utils.c
+int		end_loop_mouse(t_mlx_data *mlx_data);
+int		end_loop_esc(int keycode, t_mlx_data *mlx_data);
 // init_state.c
 int	init_state(t_state *state, t_parsed *parsed);
 // dda_directions.c

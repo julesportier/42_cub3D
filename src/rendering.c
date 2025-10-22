@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rendering.h"
-#include "cube.h"
 #include <math.h>
 
 int	calc_wall_height(double distance)

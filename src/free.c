@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
 #include "parsing.h"
 #include "rendering.h"
 #include "../minilibx/mlx.h"

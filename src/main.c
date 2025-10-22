@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rendering.h"
-#include "cube.h"
 #include "parsing.h"
 #include "../minilibx/mlx.h"
 #include <math.h>
