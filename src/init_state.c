@@ -19,7 +19,7 @@ static t_player	init_player(t_player_init player_init)
 	player.pos.x = player_init.column + 0.5;
 	player.pos.y = player_init.row + 0.5;
 	// HANDLE PLAYER.DIR
-	player.dir.x = -1;
+	player.dir.x = 1;
 	player.dir.y = 0;
 	player.plane.x = 0;
 	player.plane.y = 0.6;

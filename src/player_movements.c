@@ -83,8 +83,8 @@ t_vec	strafe_left(t_vec pos, t_vec dir_vec, t_map_data *map_data)
 	t_vec	strafe;
 	t_vec	add;
 
-	strafe.x = -dir_vec.y;
-	strafe.y = dir_vec.x;
+	strafe.x = dir_vec.y;
+	strafe.y = -dir_vec.x;
 	add.x = pos.x + (strafe.x * SPEED);
 	add.y = pos.y + (strafe.y * SPEED);
 	add = limit_displacement(add, strafe, pos, map_data);
@@ -96,8 +96,8 @@ t_vec	strafe_right(t_vec pos, t_vec dir_vec, t_map_data *map_data)
 	t_vec	strafe;
 	t_vec	add;
 
-	strafe.x = dir_vec.y;
-	strafe.y = -dir_vec.x;
+	strafe.x = -dir_vec.y;
+	strafe.y = dir_vec.x;
 	add.x = pos.x + (strafe.x * SPEED);
 	add.y = pos.y + (strafe.y * SPEED);
 	add = limit_displacement(add, strafe, pos, map_data);
