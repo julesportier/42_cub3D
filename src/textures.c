@@ -80,12 +80,7 @@ int	get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture)
 		hit_point = player_pos->y + ray->length * ray->vec.y;
 	else
 		hit_point = player_pos->x + ray->length * ray->vec.x;
-	// print_vec("ray->vec", ray->vec);
-	// printf("ray->length == %f\n", ray->length);
-	// printf("hit_point == %f ; ", hit_point);
 	hit_point -= floor(hit_point);
-	// printf("hit_point floored == %f\n", hit_point);
-	// Calculate position on texture
 	texture_x_pos = hit_point * texture->width;
 	if ((ray->side == 'x' && ray->vec.x > 0)
 			|| (ray->side == 'y' && ray->vec.y < 0))

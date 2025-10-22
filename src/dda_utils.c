@@ -17,8 +17,6 @@ t_vec	calc_steps(t_vec ray_vec)
 {
 	t_vec	steps;
 
-	// steps.x = sqrt(1 + ((ray_vec.x * ray_vec.x) / (ray_vec.y * ray_vec.y)));
-	// steps.y = sqrt(1 + ((ray_vec.y * ray_vec.y) / (ray_vec.x * ray_vec.x)));
 	steps.x = fabs(1 / ray_vec.x);
 	steps.y = fabs(1 / ray_vec.y);
 	return (steps);

@@ -13,10 +13,7 @@
 #include "rendering.h"
 #include "parsing.h"
 #include "../minilibx/mlx.h"
-#include <math.h>
 
-// #include <stdio.h>
-#define RAD_TO_DEG(rad) (rad * (180 / M_PI))
 static int	test_print(int keycode, t_state *state)
 {
 	if (keycode == ESC)
@@ -66,7 +63,7 @@ int	main(int argc, char *argv[])
 
 	if (init_state(&state, &parsed))
 		return (-1);
-	mlx_hook(state.mlx_data.win, ON_DESTROY, MASK_ESC, end_loop_mouse, &state.mlx_data);
+	mlx_hook(state.mlx_data.win, ON_DESTROY, 0, end_loop_mouse, &state.mlx_data);
 	mlx_hook(state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, test_print, &state);
 	mlx_loop(state.mlx_data.mlx);
 	free_state(&state, &parsed);

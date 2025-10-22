@@ -130,29 +130,3 @@ void	draw_column(
 	if (wall_height < WIN_HEIGHT)
 		draw_floor(img_data, wall_height, (t_pixel){ .pos.x = x_pos, .color = floor_color });
 }
-
-void	draw_ceiling_and_floor(
-	t_img_data	*img_data,
-	int		ceiling_color,
-	int		floor_color)
-{
-	int	half_screen;
-	t_pixel pixel;
-
-	half_screen = WIN_HEIGHT / 2;
-	pixel.pos.y = 0;
-	while (pixel.pos.y < WIN_HEIGHT)
-	{
-		if (pixel.pos.y < half_screen)
-			pixel.color = ceiling_color;
-		else
-			pixel.color = floor_color;
-		pixel.pos.x = 0;
-		while (pixel.pos.x < WIN_WIDTH)
-		{
-			draw_pixel(img_data, pixel);
-			++pixel.pos.x;
-		}
-		++pixel.pos.y;
-	}
-}

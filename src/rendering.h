@@ -15,16 +15,9 @@
 
 # include "parsing.h"
 
-// Wall height in pixels,
-// power of two to permit bitshift operations without loss.
 # define COLLISION 0.25
 # define SPEED 0.1
 # define ROT_SPEED 0.1
-
-# define RED 0x00FF0000
-# define GREEN 0x0000FF00
-# define BLUE 0x000000FF
-# define WHITE 0x00FFFFFF
 
 // Window size
 # define WIN_WIDTH 1280
@@ -32,11 +25,8 @@
 // mlx
 # define ON_DESTROY 17
 # define ON_KEYPRESS 2
-# define ON_KEYRELEASE 3
 // mlx masks
 # define MASK_KEYPRESS 1L << 0
-# define MASK_KEYRELEASE 1L << 1
-# define MASK_ESC 1L << 3
 // mlx keys
 # define ESC 65307
 # define W 119
@@ -154,7 +144,6 @@ typedef struct	s_state
 int		allocate_mlx(t_mlx_data *mlx_data, char *title);
 // mlx_hooks_utils.c
 int		end_loop_mouse(t_mlx_data *mlx_data);
-int		end_loop_esc(int keycode, t_mlx_data *mlx_data);
 // init_state.c
 int	init_state(t_state *state, t_parsed *parsed);
 // dda_directions.c
@@ -169,8 +158,6 @@ void	calc_ray(
 	t_direction	dir,
 	t_ray		*ray);
 void	cast_rays(t_state *state);
-// FOR TESTING
-char	**alloc_map(void);
 
 // rendering.c
 int	calc_wall_height(double distance);
@@ -182,10 +169,6 @@ void	draw_column(
 	t_texture	*texture,
 	int			ceiling_color,
 	int			floor_color);
-void	draw_ceiling_and_floor(
-	t_img_data	*img_data,
-	int		ceiling_color,
-	int		floor_color);
 
 // textures.c
 int		texture_to_image(t_mlx_data *mlx_data, t_texture *texture);
@@ -203,8 +186,6 @@ t_vec	strafe_right(t_vec pos, t_vec dir_vec, t_map_data *map_data);
 void	print_point(char *name, t_point point);
 void	print_vec(char *name, t_vec vec);
 t_vec	negate_vec(t_vec vec);
-t_vec	normalize_vec(t_vec vec);
-// t_vec	calc_dir_vec(double angle);
 t_vec	rotate_vec(t_vec vec, double angle);
 t_vec	add_vec(t_vec vec_a, t_vec vec_b);
 t_vec	d_mul_vec(t_vec vec, double mul);

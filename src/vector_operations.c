@@ -30,16 +30,6 @@ t_vec	negate_vec(t_vec vec)
 	return (vec);
 }
 
-t_vec	normalize_vec(t_vec vec)
-{
-	double	magnitude;
-
-	magnitude = hypot(vec.x, vec.y);
-	vec.x /= magnitude;
-	vec.y /= magnitude;
-	return (vec);
-}
-
 // Apply the 2d rotation matrix to the vector
 t_vec	rotate_vec(t_vec vec, double angle)
 {
