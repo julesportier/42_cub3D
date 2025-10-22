@@ -43,9 +43,11 @@ t_vec	normalize_vec(t_vec vec)
 // Apply the 2d rotation matrix to the vector
 t_vec	rotate_vec(t_vec vec, double angle)
 {
-	vec.x = vec.x * cos(angle) - vec.y * sin(angle);
-	vec.y = vec.x * sin(angle) + vec.y * cos(angle);
-	return (vec);
+	t_vec	rot_vec;
+
+	rot_vec.x = vec.x * cos(angle) - vec.y * sin(angle);
+	rot_vec.y = vec.x * sin(angle) + vec.y * cos(angle);
+	return (rot_vec);
 }
 
 t_vec	add_vec(t_vec vec_a, t_vec vec_b)
