@@ -40,25 +40,6 @@ t_vec	normalize_vec(t_vec vec)
 	return (vec);
 }
 
-// t_vec	calc_dir_vec(double angle)
-// {
-// 	t_direction	direction;
-// 	t_vec		vec;
-//
-// 	direction = calc_direction(angle);
-// 	vec.x = 1;
-// 	vec.y = tan(scale_angle(angle));
-// 	if (vec.y > 10)
-// 		vec.y = 10;
-// // #include <stdio.h>
-// // 	printf("dir vec.y == %f\n", vec.y);
-// 	if (direction.x == west)
-// 		vec.x *= -1;
-// 	if (direction.y == north)
-// 		vec.y *= -1;
-// 	return (normalize_vec(vec));
-// }
-
 // Apply the 2d rotation matrix to the vector
 t_vec	rotate_vec(t_vec vec, double angle)
 {

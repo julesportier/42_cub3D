@@ -12,17 +12,36 @@
 
 #include "rendering.h"
 
+static void	invert_player_dir(t_vec *dir, t_vec *plane)
+{
+	*dir = negate_vec(*dir);
+	*plane = negate_vec(*plane);
+}
+
 static t_player	init_player(t_player_init player_init)
 {
 	t_player	player;
 
 	player.pos.x = player_init.column + 0.5;
 	player.pos.y = player_init.row + 0.5;
-	// HANDLE PLAYER.DIR
-	player.dir.x = 1;
-	player.dir.y = 0;
-	player.plane.x = 0;
-	player.plane.y = 0.6;
+	if (player_init.dir == 'E' || player_init.dir == 'W')
+	{
+		player.dir.x = 1;
+		player.dir.y = 0;
+		player.plane.x = 0;
+		player.plane.y = 0.6;
+		if (player_init.dir == 'W')
+			invert_player_dir(&player.dir, &player.plane);
+	}
+	else if (player_init.dir == 'N' || player_init.dir == 'S')
+	{
+		player.dir.x = 0;
+		player.dir.y = -1;
+		player.plane.x = 0.6;
+		player.plane.y = 0;
+		if (player_init.dir == 'S')
+			invert_player_dir(&player.dir, &player.plane);
+	}
 	return (player);
 }
 
