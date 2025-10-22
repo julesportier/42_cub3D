@@ -24,13 +24,13 @@ static int	test_print(int keycode, t_state *state)
 		mlx_loop_end(state->mlx_data.mlx);
 	else if (keycode == LEFT)
 	{
-		state->player.dir = rotate_vec(state->player.dir, -ROT_SPEED);
-		state->player.plane = rotate_vec(state->player.plane, -ROT_SPEED);
+		state->player.dir = rotate_vec_l(state->player.dir, &state->precalc);
+		state->player.plane = rotate_vec_l(state->player.plane, &state->precalc);
 	}
 	else if (keycode == RIGHT)
 	{
-		state->player.dir = rotate_vec(state->player.dir, ROT_SPEED);
-		state->player.plane = rotate_vec(state->player.plane, ROT_SPEED);
+		state->player.dir = rotate_vec_r(state->player.dir, &state->precalc);
+		state->player.plane = rotate_vec_r(state->player.plane, &state->precalc);
 	}
 	else if (keycode == W)
 		state->player.pos = move_forward(state->player.pos, state->player.dir, &state->map);

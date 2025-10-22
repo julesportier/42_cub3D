@@ -104,6 +104,12 @@ typedef struct	s_colors
 	int	floor;
 }	t_colors;
 
+typedef struct	s_precalc
+{
+	double	cos_rot;
+	double	sin_rot;
+}	t_precalc;
+
 typedef struct	s_state
 {
 	t_mlx_data	mlx_data;
@@ -111,6 +117,7 @@ typedef struct	s_state
 	t_textures	textures;
 	t_player	player;
 	t_colors	colors;
+	t_precalc	precalc;
 }	t_state;
 
 // init_state.c
@@ -164,6 +171,8 @@ t_vec	negate_vec(t_vec vec);
 t_vec	normalize_vec(t_vec vec);
 // t_vec	calc_dir_vec(double angle);
 t_vec	rotate_vec(t_vec vec, double angle);
+t_vec	rotate_vec_r(t_vec vec, t_precalc *precalc);
+t_vec	rotate_vec_l(t_vec vec, t_precalc *precalc);
 t_vec	add_vec(t_vec vec_a, t_vec vec_b);
 t_vec	d_mul_vec(t_vec vec, double mul);
 

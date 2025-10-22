@@ -50,6 +50,24 @@ t_vec	rotate_vec(t_vec vec, double angle)
 	return (rot_vec);
 }
 
+t_vec	rotate_vec_r(t_vec vec, t_precalc *precalc)
+{
+	t_vec	rot_vec;
+
+	rot_vec.x = vec.x * precalc->cos_rot - vec.y * precalc->sin_rot;
+	rot_vec.y = vec.x * precalc->sin_rot + vec.y * precalc->cos_rot;
+	return (rot_vec);
+}
+
+t_vec	rotate_vec_l(t_vec vec, t_precalc *precalc)
+{
+	t_vec	rot_vec;
+
+	rot_vec.x = vec.x * precalc->cos_rot - vec.y * -precalc->sin_rot;
+	rot_vec.y = vec.x * -precalc->sin_rot + vec.y * precalc->cos_rot;
+	return (rot_vec);
+}
+
 t_vec	add_vec(t_vec vec_a, t_vec vec_b)
 {
 	t_vec	add;

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "rendering.h"
+#include <math.h>
 
 static void	invert_player_dir(t_vec *dir, t_vec *plane)
 {
@@ -67,6 +68,15 @@ static t_colors	init_colors(t_config config)
 	return (colors);
 }
 
+static t_precalc	init_precalc(void)
+{
+	t_precalc	precalc;
+
+	precalc.cos_rot = cos(ROT_SPEED);
+	precalc.sin_rot = sin(ROT_SPEED);
+	return (precalc);
+}
+
 int	init_state(t_state	*state, t_parsed *parsed)
 {
 	if (allocate_mlx(&state->mlx_data, "cub3D"))
@@ -86,6 +96,7 @@ int	init_state(t_state	*state, t_parsed *parsed)
 	}
 	state->player = init_player(parsed->map.player);
 	state->colors = init_colors(parsed->config);
+	state->precalc = init_precalc();
 	cast_rays(state);
 	return (0);
 }
