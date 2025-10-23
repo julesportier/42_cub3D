@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/10/16 08:52:30 by juportie         ###   ########.fr        #
+#    Updated: 2025/10/23 11:27:57 by juportie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,7 @@ SRC := main.c \
 	   mlx_hooks_utils.c \
 	   cast_rays.c \
 	   dda.c \
+	   rendering_utils.c \
 	   rendering.c \
 	   player_movements.c \
 	   vector_operations.c \

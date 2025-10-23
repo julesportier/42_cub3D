@@ -48,20 +48,22 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-        print_perr(PERR_ARGC, NULL);
-        return (EXIT_FAILURE);
+		print_perr(PERR_ARGC, NULL);
+		return (EXIT_FAILURE);
 	}
 	// PRINT THE ERROR 
 	err = parsing_load(argv[1], &parsed);
-    if (err != PERR_OK)
+	if (err != PERR_OK)
 	{
-        print_perr(err, argv[1]);
-        return (EXIT_FAILURE);
-    }
+		print_perr(err, argv[1]);
+		return (EXIT_FAILURE);
+	}
 	if (init_state(&state, &parsed))
 		return (-1);
-	mlx_hook(state.mlx_data.win, ON_DESTROY, 0, end_loop_mouse, &state.mlx_data);
-	mlx_hook(state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, test_print, &state);
+	mlx_hook(
+		state.mlx_data.win, ON_DESTROY, 0, end_loop_mouse, &state.mlx_data);
+	mlx_hook(
+		state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, test_print, &state);
 	mlx_loop(state.mlx_data.mlx);
 	free_state(&state, &parsed);
 	return (0);

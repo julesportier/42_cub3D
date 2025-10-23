@@ -12,6 +12,7 @@
 
 #include "rendering.h"
 #include "../minilibx/mlx.h"
+#include <math.h>
 
 static t_texture	*get_texture(t_state *state, t_ray *ray, t_direction *dir)
 {
@@ -49,28 +50,34 @@ static t_direction	calc_direction(t_vec vec)
 	return (direction);
 }
 
+static int	calc_wall_height(double distance)
+{
+	static double	factor = (double)WIN_WIDTH * 0.83;
+
+	return (round(factor / distance));
+}
+
 void	cast_rays(t_state *state)
 {
-	int			i;
 	t_direction	dir;
 	t_ray		ray;
 	double		aim_pos;
-	t_texture	*texture;
+	t_wall_data	wall;
 
-	i = 0;
-	while (i < WIN_WIDTH)
+	wall.x_pos = 0;
+	while (wall.x_pos < WIN_WIDTH)
 	{
-		aim_pos = i * 2 / (double)WIN_WIDTH - 1;
+		aim_pos = wall.x_pos * 2 / (double)WIN_WIDTH - 1;
 		ray.vec = add_vec(
 				state->player.dir,
 				d_mul_vec(state->player.plane, aim_pos));
 		dir = calc_direction(ray.vec);
 		ray = calc_ray(state, dir, &ray);
-		texture = get_texture(state, &ray, &dir);
-		draw_column(
-			&(state->mlx_data.img_data), i, &ray, &state->player.pos,
-			texture, state->colors.ceiling, state->colors.floor);
-		++i;
+		wall.texture = get_texture(state, &ray, &dir);
+		wall.texture_x = get_texture_x(&ray, &state->player.pos, wall.texture);
+		wall.height = calc_wall_height(ray.length);
+		draw_column(state, &wall);
+		++wall.x_pos;
 	}
 	mlx_put_image_to_window(
 		state->mlx_data.mlx, state->mlx_data.win,

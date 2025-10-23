@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/16 09:44:44 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/23 11:27:42 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,14 @@ typedef struct s_textures
 	t_texture	west;
 }	t_textures;
 
+typedef struct s_wall_data
+{
+	int			height;
+	int			x_pos;
+	t_texture	*texture;
+	int			texture_x;
+}	t_wall_data;
+
 typedef struct s_player
 {
 	t_vec	pos;
@@ -159,16 +167,11 @@ void		cast_rays(t_state *state);
 // dda.c
 t_ray		calc_ray(t_state *state, t_direction dir, t_ray *ray);
 
+// rendering_utils.c
+void		draw_pixel(t_img_data *img_data, t_pixel pixel);
+void		draw_vert_seg(t_img_data *img_data, t_pixel pixel, int end);
 // rendering.c
-int			calc_wall_height(double distance);
-void		draw_column(
-				t_img_data *img_data,
-				int x_pos,
-				t_ray *ray,
-				t_vec *player_pos,
-				t_texture *texture,
-				int ceiling_color,
-				int floor_color);
+void		draw_column(t_state *state, t_wall_data *wall);
 
 // textures.c
 int			texture_to_image(t_mlx_data *mlx_data, t_texture *texture);
