@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/16 09:49:49 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/23 13:07:57 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parsing.h"
 #include "../minilibx/mlx.h"
 
-static int	test_print(int keycode, t_state *state)
+static int	keys_actions(int keycode, t_state *state)
 {
 	if (keycode == ESC)
 		mlx_loop_end(state->mlx_data.mlx);
@@ -63,7 +63,7 @@ int	main(int argc, char *argv[])
 	mlx_hook(
 		state.mlx_data.win, ON_DESTROY, 0, end_loop_mouse, &state.mlx_data);
 	mlx_hook(
-		state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, test_print, &state);
+		state.mlx_data.win, ON_KEYPRESS, MASK_KEYPRESS, keys_actions, &state);
 	mlx_loop(state.mlx_data.mlx);
 	free_state(&state, &parsed);
 	return (0);
