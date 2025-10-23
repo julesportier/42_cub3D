@@ -100,6 +100,14 @@ typedef struct s_ray
 	t_cardinal	wall;
 }	t_ray;
 
+typedef struct s_dda_data
+{
+	t_point	cell;
+	t_vec	step;
+	t_vec	dist;
+	t_point	inc;
+}	t_dda_data;
+
 typedef struct s_texture
 {
 	int			width;
@@ -145,18 +153,11 @@ int			allocate_mlx(t_mlx_data *mlx_data, char *title);
 int			end_loop_mouse(t_mlx_data *mlx_data);
 // init_state.c
 int			init_state(t_state *state, t_parsed *parsed);
-// dda_directions.c
-t_direction	calc_direction(t_vec vec);
-// dda_utils.c
-t_vec		calc_steps(t_vec ray_vec);
 
-// dda.c
-void		calc_ray(
-				t_map_data map_data,
-				t_vec pos,
-				t_direction dir,
-				t_ray *ray);
+// cast_rays.c
 void		cast_rays(t_state *state);
+// dda.c
+t_ray		calc_ray(t_state *state, t_direction dir, t_ray *ray);
 
 // rendering.c
 int			calc_wall_height(double distance);

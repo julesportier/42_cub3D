@@ -47,8 +47,7 @@ SRC := main.c \
 	   init_state.c \
 	   mlx_alloc.c \
 	   mlx_hooks_utils.c \
-	   dda_utils.c \
-	   dda_directions.c \
+	   cast_rays.c \
 	   dda.c \
 	   rendering.c \
 	   player_movements.c \
