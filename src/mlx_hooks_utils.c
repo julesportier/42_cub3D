@@ -10,18 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
+#include "rendering.h"
 #include "../minilibx/mlx.h"
 
 int	end_loop_mouse(t_mlx_data *mlx_data)
 {
 	mlx_loop_end(mlx_data->mlx);
-	return (0);
-}
-
-int	end_loop_esc(int keycode, t_mlx_data *mlx_data)
-{
-	if (keycode == ESC)
-		mlx_loop_end(mlx_data->mlx);
 	return (0);
 }

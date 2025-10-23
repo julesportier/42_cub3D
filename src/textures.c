@@ -62,7 +62,7 @@ int	load_textures(t_mlx_data *mlx_data, t_textures *textures)
 int	get_texture_color(t_texture *texture, int x, int y)
 {
 	if (y > texture->height || y < 0
-			|| x > texture->width || x < 0)
+		|| x > texture->width || x < 0)
 		return (-1);
 	if (texture->img_data.data_addr == NULL)
 		return (-1);
@@ -74,21 +74,16 @@ int	get_texture_color(t_texture *texture, int x, int y)
 int	get_texture_x(t_ray *ray, t_vec *player_pos, t_texture *texture)
 {
 	double	hit_point;
-	int 	texture_x_pos;
+	int		texture_x_pos;
 
 	if (ray->side == 'x')
 		hit_point = player_pos->y + ray->length * ray->vec.y;
 	else
 		hit_point = player_pos->x + ray->length * ray->vec.x;
-	// print_vec("ray->vec", ray->vec);
-	// printf("ray->length == %f\n", ray->length);
-	// printf("hit_point == %f ; ", hit_point);
 	hit_point -= floor(hit_point);
-	// printf("hit_point floored == %f\n", hit_point);
-	// Calculate position on texture
 	texture_x_pos = hit_point * texture->width;
 	if ((ray->side == 'x' && ray->vec.x > 0)
-			|| (ray->side == 'y' && ray->vec.y < 0))
+		|| (ray->side == 'y' && ray->vec.y < 0))
 		texture_x_pos = texture->width - texture_x_pos - 1;
 	return (texture_x_pos);
 }
