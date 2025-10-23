@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 10:08:18 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/23 11:27:42 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/23 11:39:04 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,6 @@ t_vec		strafe_left(t_state *state);
 t_vec		strafe_right(t_state *state);
 
 // vector_operations.c
-void		print_point(char *name, t_point point);
-void		print_vec(char *name, t_vec vec);
 t_vec		negate_vec(t_vec vec);
 t_vec		rotate_vec(t_vec vec, double angle);
 t_vec		add_vec(t_vec vec_a, t_vec vec_b);

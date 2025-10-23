@@ -6,22 +6,12 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/14 17:00:00 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/23 11:38:59 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rendering.h"
 #include <math.h>
-#include <stdio.h>
-
-void	print_point(char *name, t_point point)
-{
-	printf("%s .x == %d ; .y == %d\n", name, point.x, point.y);
-}
-void	print_vec(char *name, t_vec vec)
-{
-	printf("%s .x == %f ; .y == %f\n", name, vec.x, vec.y);
-}
 
 t_vec	negate_vec(t_vec vec)
 {
