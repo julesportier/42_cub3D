@@ -183,11 +183,15 @@ static t_perr load_cfg_build_map(int fd, t_config *cfg, t_map *m)
 t_perr parsing_load(const char *path, t_parsed *out)
 {
     if (!path || !out)
-        return PERR_EMPTY;
-
+	{
+		print_perr(PERR_EMPTY, path);
+        return (PERR_EMPTY);
+	}
     int fd = open(path, O_RDONLY);
-    if (fd < 0)
+    if (fd < 0) {
+		print_perr(PERR_OPEN, path);
         return PERR_OPEN;
+	}
 
     t_config cfg;
     t_map    m;
@@ -197,6 +201,7 @@ t_perr parsing_load(const char *path, t_parsed *out)
 
     if (perr != PERR_OK) {
         cfg_free(&cfg);
+		print_perr(perr, path);
         return perr;
     }
 

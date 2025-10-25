@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/23 13:07:57 by juportie         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:22:24 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static int	keys_actions(int keycode, t_state *state)
 int	main(int argc, char *argv[])
 {
 	t_parsed	parsed;
-	t_perr		err;
 	t_state		state;
 
 	if (argc != 2)
@@ -51,13 +50,8 @@ int	main(int argc, char *argv[])
 		print_perr(PERR_ARGC, NULL);
 		return (EXIT_FAILURE);
 	}
-	// PRINT THE ERROR 
-	err = parsing_load(argv[1], &parsed);
-	if (err != PERR_OK)
-	{
-		print_perr(err, argv[1]);
-		return (EXIT_FAILURE);
-	}
+	if (parsing_load(argv[1], &parsed))
+		return (EXIT_FAILURE); 
 	if (init_state(&state, &parsed))
 		return (-1);
 	mlx_hook(
