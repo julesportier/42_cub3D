@@ -6,43 +6,15 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 16:51:48 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/25 17:42:34 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/26 18:51:14 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void    *ft_memcpy_new(void *dest, const void *src, size_t n)
-{
-    size_t              i;
-    unsigned char       *d;
-    const unsigned char *s;
-
-    if (!dest && !src)
-        return (NULL);
-    if (dest == src || n == 0)
-        return dest;
-
-    d = (unsigned char *)dest;
-    s = (const unsigned char *)src;
-    i = 0;
-    while (i < n)
-    {
-        d[i] = s[i];
-        i++;
-    }
-    return (dest);
-}
-
-/* Comportement proche de realloc:
-   - si ptr == NULL : équivaut à malloc(new_size)
-   - si new_size == 0 : retourne NULL (à toi de free(ptr) si tu veux libérer)
-   - en cas de succès : copie min(old_size, new_size), free(ptr), retourne new bloc
-   - en cas d'échec : NE libère PAS ptr, retourne NULL (le caller garde l'ancien)
-*/
 void *ft_realloc(void *ptr, size_t old_size, size_t new_size)
 {
-    void *newp;
+	void	*newp;
     size_t n;
 
     if (new_size == 0)

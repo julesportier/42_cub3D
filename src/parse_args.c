@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 15:16:42 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/26 15:49:33 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_bool	check_extension(const char *path)
 t_perr	validate_params(int argc, char **argv, const char **out_path)
 {
 	const char	*path;
-	
+
 	if (argc != 2)
 		return (PERR_ARGC);
 	path = argv[1];
@@ -47,6 +47,7 @@ t_perr	validate_params(int argc, char **argv, const char **out_path)
 void	print_perr(t_perr err, const char *str)
 {
 	const char	*path_for_msg;
+
 	if (str != NULL)
 		path_for_msg = str;
 	else
