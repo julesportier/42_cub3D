@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:44:34 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/26 18:45:27 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/27 15:20:04 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,14 @@ static t_bool handle_before_map(char *line, t_config *cfg, t_mapbuild *mb, t_per
         mb->started = true;
         if (!mb_push_line(mb, line))
 		{
-            if (err) *err = PERR_READ;
+            if (err)
+			{
+				if (mb->alloc_failed)
+					*err = PERR_ALLOC;
+				else
+					*err = PERR_READ;
+			}
+			mb->alloc_failed = 0;
             return (false);
         }
         return (true);
@@ -79,15 +86,19 @@ static t_bool handle_in_or_after_map(char *line, t_mapbuild *mb, t_perr *err)
         if (!mb_push_line(mb, line))
 		{
             if (err)
-				*err = PERR_READ;
+			{
+				if (mb->alloc_failed)
+					*err = PERR_ALLOC;
+				else
+					*err = PERR_READ;
+			}
+			mb->alloc_failed = 0;
             return (false);
         }
     }
 	else
-	{
         mb->ended = true;
-    }
-    return true;
+    return (true);
 }
 
 static t_bool	handle_line(char *line, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
@@ -138,6 +149,7 @@ void mb_init(t_mapbuild *map)
 	ft_memset(map, 0, sizeof(*map));
 	map->player.row = -1;
 	map->player.column = -1;
+	map->alloc_failed = 0;
 }
 
 t_bool parse_header_line(const char *line, t_config *cfg, t_perr *perr)

@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 16:51:48 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/26 18:51:14 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/27 17:37:33 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void *ft_realloc(void *ptr, size_t old_size, size_t new_size)
 
     if (ptr && old_size) {
         n = (old_size < new_size) ? old_size : new_size;
-        ft_memcpy_new(newp, ptr, n);
-        free(ptr); // on libère l’ancien *uniquement* après succès
+        ft_memcpy(newp, ptr, n);
+        free(ptr);
     }
     return newp;
 }
@@ -68,7 +68,10 @@ t_bool mb_grow_buf(t_mapbuild *map, size_t need_more)
     new_cap = mb_calc_new_cap(map->capacity, want);
     new_buf = (char *)ft_realloc(map->buf, map->len, new_cap);
     if (!new_buf)
+	{
+		map->alloc_failed = 1;
         return (false);
+	}
     map->buf = new_buf;
     map->capacity = new_cap;
     return (true);

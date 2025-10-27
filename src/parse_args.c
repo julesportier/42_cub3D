@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/26 15:49:33 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/27 15:25:14 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ void	print_perr(t_perr err, const char *str)
 	if (err == PERR_OK)
 		return ;
 	ft_putendl_fd("Error", 2);
-	if (err == PERR_ARGC)
-		ft_putendl_fd("Usage: ./cub3D <map.cub>", 2);
-	else if (err == PERR_EMPTY)
-		ft_putendl_fd("Chemin de fichier vide.", 2);
-	else if (err == PERR_EXT)
+//	if (err == PERR_ARGC)
+//		ft_putendl_fd("Usage: ./cub3D <map.cub>", 2);
+//	else if (err == PERR_EMPTY)
+//		ft_putendl_fd("Chemin de fichier vide.", 2);
+	if (err == PERR_EXT)
 	{
 		ft_putstr_fd("Extension invalide pour '", 2);
 		ft_putstr_fd((char *)path_for_msg, 2);
 		ft_putendl_fd("' (attendu: .cub, sensible a la casse).", 2);
 	}
 	else
-		ft_putendl_fd("Parametres invalides.", 2);
+		ft_putendl_fd((char *)perr_str(err), 2);
 }

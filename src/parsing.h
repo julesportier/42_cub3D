@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/25 17:14:02 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/10/27 13:34:40 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_mapbuild
     size_t    capacity;   // capacité allouée de buf
     int       rows;       // nb de lignes carte rencontrées
     int       maxw;       // largeur max rencontrée
+	int		 alloc_failed;
     t_player_init  player;     // position/dir trouvées pendant le build
     int       player_count;// combien de joueurs
     t_bool      started;    // on est entré dans la section map
