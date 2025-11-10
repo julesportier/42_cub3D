@@ -6,13 +6,34 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/27 15:25:14 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 18:10:51 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-t_bool	check_extension(const char *path)
+char	*dup_range(const char *start, const char *end)
+{
+	size_t	len;
+	char	*str;
+
+	if (!start || !end)
+		return (NULL);
+	if (end < start)
+		return (NULL);
+	len = (size_t)(end - start);
+	if (len == SIZE_MAX)
+		return (NULL);
+	str = (char *)malloc(len + 1);
+	if (!str)
+		return (NULL);
+	if (len)
+		ft_memcpy(str, start, len);
+	str[len] = '\0';
+	return (str);
+}
+
+static t_bool	check_extension(const char *path)
 {
 	size_t	n;
 
@@ -28,7 +49,7 @@ t_bool	check_extension(const char *path)
 	return (false);
 }
 
-t_perr	validate_params(int argc, char **argv, const char **out_path)
+static t_perr	validate_params(int argc, char **argv, const char **out_path)
 {
 	const char	*path;
 
@@ -44,6 +65,35 @@ t_perr	validate_params(int argc, char **argv, const char **out_path)
 	return (PERR_OK);
 }
 
+const char	*perr_str(t_perr e)
+{
+	if (e == PERR_ARGC)
+		return ("Invalid number of arguments");
+	else if (e == PERR_EMPTY)
+		return ("Empty file path");
+	else if (e == PERR_EXT)
+		return ("Invalid file extension (expected .cub)");
+	else if (e == PERR_DIR)
+		return ("Path is a directory");
+	else if (e == PERR_OPEN)
+		return ("Failed to open file");
+	else if (e == PERR_READ)
+		return ("Failed to read file");
+	else if (e == PERR_ALLOC)
+		return ("Out of memory");
+	else if (e == PERR_EL_DUP)
+		return ("Duplicate identifier");
+	else if (e == PERR_EL_MISS)
+		return ("Missing identifier");
+	else if (e == PERR_ID_BAD)
+		return ("Invalid identifier");
+	else if (e == PERR_RGB_BAD)
+		return ("Invalid RGB value");
+	else if (e == PERR_PATH_MISS)
+		return ("Missing/invalid texture path");
+	return ("Unknown error");
+}
+
 void	print_perr(t_perr err, const char *str)
 {
 	const char	*path_for_msg;
@@ -55,10 +105,6 @@ void	print_perr(t_perr err, const char *str)
 	if (err == PERR_OK)
 		return ;
 	ft_putendl_fd("Error", 2);
-//	if (err == PERR_ARGC)
-//		ft_putendl_fd("Usage: ./cub3D <map.cub>", 2);
-//	else if (err == PERR_EMPTY)
-//		ft_putendl_fd("Chemin de fichier vide.", 2);
 	if (err == PERR_EXT)
 	{
 		ft_putstr_fd("Extension invalide pour '", 2);

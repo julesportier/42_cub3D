@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/10/25 16:22:24 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 19:00:25 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 	if (parsing_load(argv[1], &parsed))
-		return (EXIT_FAILURE); 
+		return (EXIT_FAILURE);
 	if (init_state(&state, &parsed))
 		return (-1);
 	mlx_hook(
