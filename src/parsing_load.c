@@ -6,13 +6,13 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 15:02:54 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:24:52 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 19:09:58 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static t_bool	parse_header_line(const char *line, t_config *cfg, t_perr *perr)
+t_bool	parse_header_line(const char *line, t_config *cfg, t_perr *perr)
 {
 	const char	*p;
 	t_id		id;

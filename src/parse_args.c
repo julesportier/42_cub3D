@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:10:51 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 19:04:08 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static t_bool	check_extension(const char *path)
 	return (false);
 }
 
-static t_perr	validate_params(int argc, char **argv, const char **out_path)
+t_perr	validate_params(int argc, char **argv, const char **out_path)
 {
 	const char	*path;
 

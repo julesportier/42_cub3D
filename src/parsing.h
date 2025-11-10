@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:56:55 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 19:09:38 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,10 +127,12 @@ t_bool		is_map_char(int car);
 t_bool		parse_triplet(const char *str, t_rgb *dst, const char **end_after);
 t_bool		handle_rgb(t_id id, const char *rest, t_config *cfg, t_perr *perr);
 t_bool		rgb_is_set(const t_rgb *c);
+t_bool		parse_header_line(const char *line, t_config *cfg, t_perr *perr);
 t_bool		handle_texture(
 				t_id id, const char *rest, t_config *cfg, t_perr *perr);
 t_perr		header_complete(const t_config *cfg);
 t_perr		parsing_load(const char *path, t_parsed *out);
+t_perr		validate_params(int argc, char **argv, const char **out_path);
 char		*get_next_line(int fd);
 char		*dup_range(const char *start, const char *end);
 char		**cfg_slot_for_id(t_config *cfg, t_id id);
