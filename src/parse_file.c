@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:44:34 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 19:06:13 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/11 19:18:19 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,11 @@ t_bool	parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 		*out_err = PERR_OK;
 	mb_init(mb);
 	line = get_next_line(fd);
+	if (!line)
+	{
+		*out_err = PERR_FILE_EMPTY;
+		return (false);
+	}
 	while (line)
 	{
 		if (!handle_line(line, cfg, mb, out_err))

@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 19:04:08 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/11 19:52:53 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,10 @@ const char	*perr_str(t_perr e)
 		return ("Empty file path");
 	else if (e == PERR_EXT)
 		return ("Invalid file extension (expected .cub)");
-	else if (e == PERR_DIR)
-		return ("Path is a directory");
 	else if (e == PERR_OPEN)
 		return ("Failed to open file");
 	else if (e == PERR_READ)
-		return ("Failed to read file");
+		return ("Invalid map or configuration: element out of place or map not closed");
 	else if (e == PERR_ALLOC)
 		return ("Out of memory");
 	else if (e == PERR_EL_DUP)
@@ -87,6 +85,8 @@ const char	*perr_str(t_perr e)
 		return ("Missing identifier");
 	else if (e == PERR_ID_BAD)
 		return ("Invalid identifier");
+	else if (e == PERR_FILE_EMPTY)
+		return ("File is empty");
 	else if (e == PERR_RGB_BAD)
 		return ("Invalid RGB value");
 	else if (e == PERR_PATH_MISS)

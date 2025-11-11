@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 15:02:54 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 19:09:58 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/11 19:41:02 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static t_perr	load_cfg_build_map(int fd, t_config *cfg, t_map *m)
 	cfg_init(cfg);
 	if (!parse_file_fd(fd, cfg, &mb, &perr))
 	{
+		mb_free(&mb);
 		if (perr != PERR_OK)
 			return (perr);
-		return (PERR_READ);
 	}
 	perr = header_complete(cfg);
 	if (perr != PERR_OK)
