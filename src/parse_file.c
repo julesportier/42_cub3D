@@ -16,13 +16,10 @@ static t_bool	handle_map_start(char *line, t_mapbuild *mb, t_perr *err)
 {
 	if (!mb_push_line(mb, line))
 	{
-		if (err)
-		{
-			if (mb->alloc_failed)
-				*err = PERR_ALLOC;
-			else
-				*err = PERR_READ;
-		}
+		if (mb->alloc_failed)
+			*err = PERR_ALLOC;
+		else
+			*err = PERR_READ;
 		mb->alloc_failed = 0;
 		return (false);
 	}
@@ -32,8 +29,6 @@ static t_bool	handle_map_start(char *line, t_mapbuild *mb, t_perr *err)
 static t_bool	handle_before_map(
 	char *line, t_config *cfg, t_mapbuild *mb, t_perr *err)
 {
-	t_perr	perr;
-
 	if (is_map_line(line))
 	{
 		mb->started = true;
@@ -41,18 +36,9 @@ static t_bool	handle_before_map(
 	}
 	if (!is_blank_or_ws_only(line))
 	{
-		perr = PERR_OK;
-		if (!parse_header_line(line, cfg, &perr))
-		{
-			if (err)
-			{
-				if (perr != PERR_OK)
-					*err = perr;
-				else
-					*err = PERR_ID_BAD;
-			}
+		*err = PERR_OK;
+		if (!parse_header_line(line, cfg, err))
 			return (false);
-		}
 	}
 	return (true);
 }
@@ -78,26 +64,23 @@ static t_bool	handle_in_or_after_map(char *line, t_mapbuild *mb)
 static t_bool	handle_line(
 	char *line, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 {
-	t_perr	err;
 	t_bool	ok;
 
-	err = PERR_OK;
+	*out_err = PERR_OK;
 	if (!mb->started)
-		ok = handle_before_map(line, cfg, mb, &err);
+		ok = handle_before_map(line, cfg, mb, out_err);
 	else
 	{
 		ok = handle_in_or_after_map(line, mb);
 		if (!ok)
 		{
 			if (mb->alloc_failed)
-				err = PERR_ALLOC;
+				*out_err = PERR_ALLOC;
 			else
-				err = PERR_READ;
+				*out_err = PERR_READ;
 			mb->alloc_failed = 0;
 		}
 	}
-	if (!ok && out_err)
-		*out_err = err;
 	free(line);
 	return (ok);
 }
