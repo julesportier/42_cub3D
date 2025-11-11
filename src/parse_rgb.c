@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 17:00:55 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 17:55:13 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 18:21:01 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ static t_bool	rgb_take_triplet(
 	return (true);
 }
 
-static t_bool	rgb_assign(t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
+static t_bool	rgb_assign(
+	t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
 {
 	if (id == ID_F)
 	{
@@ -80,12 +81,12 @@ t_bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
 	return (true);
 }
 
-t_bool rgb_is_set(const t_rgb *c)
+t_bool	rgb_is_set(const t_rgb *c)
 {
 	return (c->is_set);
 }
 
-t_perr header_complete(const t_config *cfg)
+t_perr	header_complete(const t_config *cfg)
 {
 	if (!cfg->no || !cfg->so || !cfg->we || !cfg->ea)
 		return (PERR_EL_MISS);

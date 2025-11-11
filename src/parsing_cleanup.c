@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 15:17:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 16:47:04 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 18:23:22 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	mb_free(t_mapbuild *map)
 void	map_free_split(t_map *m)
 {
 	int	r;
-	
+
 	if (!m)
-		return;
+		return ;
 	if (m->grid)
 	{
 		r = 0;
@@ -48,10 +48,10 @@ void	cfg_free(t_config *c)
 	ft_memset(c, 0, sizeof(*c));
 }
 
-void parsing_free(t_parsed *p)
+void	parsing_free(t_parsed *p)
 {
-    if (!p)
+	if (!p)
 		return ;
-    map_free_split(&p->map);
-    cfg_free(&p->config);
+	map_free_split(&p->map);
+	cfg_free(&p->config);
 }

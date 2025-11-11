@@ -6,17 +6,18 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 16:12:15 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 17:39:33 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 18:22:17 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static t_bool trim_range(const char *rest, const char **start, const char **end)
+static t_bool	trim_range(
+	const char *rest, const char **start, const char **end)
 {
-	const char *p;
-	size_t len;
-	char ch;
+	const char	*p;
+	size_t		len;
+	char		ch;
 
 	p = skip_ws(rest);
 	if (*p == '\0')
@@ -35,29 +36,29 @@ static t_bool trim_range(const char *rest, const char **start, const char **end)
 	*end = p + len;
 	return (true);
 }
- 
+
 char	**cfg_slot_for_id(t_config *cfg, t_id id)
 {
-	if (id==ID_NO)
+	if (id == ID_NO)
 		return (&cfg->no);
-	if (id==ID_SO)
+	if (id == ID_SO)
 		return (&cfg->so);
-	if (id==ID_WE)
+	if (id == ID_WE)
 		return (&cfg->we);
-	if (id==ID_EA)
+	if (id == ID_EA)
 		return (&cfg->ea);
 	return (NULL);
 }
 
-static t_bool tex_take_path(
+static t_bool	tex_take_path(
 	const char *rest,
 	const char **start,
 	const char **end,
 	t_perr *perr
 )
 {
-	size_t len;
-	const char *suf;
+	const char	*suf;
+	size_t		len;
 
 	if (!trim_range(rest, start, end))
 	{

@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 16:10:18 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/10/19 16:10:26 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/10 18:19:46 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,50 +25,51 @@ static t_bool	is_id_sep(char c)
 	return (false);
 }
 
-static t_id	try_take_id(const char **pp)
+static t_id	try_match_keyword(
+	const char **pp, const char *kw, size_t n, t_id id)
 {
 	const char	*p;
-	
+
 	if (!pp || !*pp)
 		return (ID_UNKNOWN);
 	p = *pp;
-	if (ft_strncmp(p, "NO", 2) == 0 && is_id_sep(p[2]))
-	{
-		*pp = p + 2;
-		return (ID_NO);
-	}
-	if (ft_strncmp(p, "SO", 2) == 0 && is_id_sep(p[2]))
-	{
-		*pp = p + 2;
-		return (ID_SO);
-	}
-	if (ft_strncmp(p, "WE", 2) == 0 && is_id_sep(p[2]))
-	{
-		*pp = p + 2;
-		return (ID_WE);
-	}
-	if (ft_strncmp(p, "EA", 2) == 0 && is_id_sep(p[2]))
-	{
-		*pp = p + 2;
-		return (ID_EA);
-	}
-	if (ft_strncmp(p, "F",  1) == 0 && is_id_sep(p[1]))
-	{
-		*pp = p + 1;
-		return (ID_F); 
-	}
-	if (ft_strncmp(p, "C",  1) == 0 && is_id_sep(p[1]))
-	{
-		*pp = p + 1;
-		return (ID_C); 
-	}
+	if (ft_strncmp(p, kw, n) != 0 || !is_id_sep(p[n]))
+		return (ID_UNKNOWN);
+	*pp = p + n;
+	return (id);
+}
+
+static t_id	try_take_id(const char **pp)
+{
+	t_id	id;
+
+	if (!pp || !*pp)
+		return (ID_UNKNOWN);
+	id = try_match_keyword(pp, "NO", 2, ID_NO);
+	if (id != ID_UNKNOWN)
+		return (id);
+	id = try_match_keyword(pp, "SO", 2, ID_SO);
+	if (id != ID_UNKNOWN)
+		return (id);
+	id = try_match_keyword(pp, "WE", 2, ID_WE);
+	if (id != ID_UNKNOWN)
+		return (id);
+	id = try_match_keyword(pp, "EA", 2, ID_EA);
+	if (id != ID_UNKNOWN)
+		return (id);
+	id = try_match_keyword(pp, "F", 1, ID_F);
+	if (id != ID_UNKNOWN)
+		return (id);
+	id = try_match_keyword(pp, "C", 1, ID_C);
+	if (id != ID_UNKNOWN)
+		return (id);
 	return (ID_UNKNOWN);
 }
 
 t_id	parse_id_at_start(const char **pline)
 {
-	const char	*p; 
-	t_id	id;
+	const char	*p;
+	t_id		id;
 
 	p = skip_ws(*pline);
 	if (*p == '\0')
@@ -76,7 +77,7 @@ t_id	parse_id_at_start(const char **pline)
 		*pline = p;
 		return (ID_NONE);
 	}
-    id = try_take_id(&p);
+	id = try_take_id(&p);
 	*pline = p;
 	return (id);
 }

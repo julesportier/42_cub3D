@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/10/23 11:27:57 by juportie         ###   ########.fr        #
+#    Updated: 2025/11/10 15:16:45 by vakozhev         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,16 +55,18 @@ SRC := main.c \
 	   vector_operations.c \
 	   textures.c \
 	   parse_args.c \
-	   parse_utils.c \
+	   parsing_utils.c \
 	   parsing_cleanup.c \
-	   parsing.c \
+	   parsing_struct_init.c \
+	   parse_file.c \
 	   parse_id.c\
  	   parse_rgb.c\
  	   parse_texture.c\
  	   rgb_lexer.c \
 	   parsing_map_builder.c\
 	   parsing_map_checks.c\
-	   parsing_map_grid.c
+	   parsing_map_grid.c \
+	   parsing_load.c
 	   # parsing_main.c
 
 BUILD_DIR := build
