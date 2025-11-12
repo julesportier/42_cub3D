@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/11 19:52:53 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 12:40:24 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ const char	*perr_str(t_perr e)
 	else if (e == PERR_OPEN)
 		return ("Failed to open file");
 	else if (e == PERR_READ)
-		return ("Invalid map or configuration: element out of place or map not closed");
+		return ("Invalid configuration: element out of place or map not closed");
 	else if (e == PERR_ALLOC)
 		return ("Out of memory");
 	else if (e == PERR_EL_DUP)

@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:44:34 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/11 19:18:19 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 13:59:25 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,11 @@ static t_bool	handle_in_or_after_map(char *line, t_mapbuild *mb)
 			return (false);
 	}
 	else
+	{
+		if (line_len_no_nl(line) > 0 && !is_blank_or_ws_only(line))
+			return (false);
 		mb->ended = true;
+	}
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 16:10:18 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:19:46 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 13:38:18 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,58 +26,54 @@ static t_bool	is_id_sep(char c)
 }
 
 static t_id	try_match_keyword(
-	const char **pp, const char *kw, size_t n, t_id id)
+	const char **cursor, const char *kw, size_t kw_len, t_id id)
 {
-	const char	*p;
+	const char	*p_line;
 
-	if (!pp || !*pp)
+	p_line = *cursor;
+	if (ft_strncmp(p_line, kw, kw_len) != 0 || !is_id_sep(p_line[kw_len]))
 		return (ID_UNKNOWN);
-	p = *pp;
-	if (ft_strncmp(p, kw, n) != 0 || !is_id_sep(p[n]))
-		return (ID_UNKNOWN);
-	*pp = p + n;
+	*cursor = p_line + kw_len;
 	return (id);
 }
 
-static t_id	try_take_id(const char **pp)
+static t_id	try_take_id(const char **cursor)
 {
 	t_id	id;
 
-	if (!pp || !*pp)
-		return (ID_UNKNOWN);
-	id = try_match_keyword(pp, "NO", 2, ID_NO);
+	id = try_match_keyword(cursor, "NO", 2, ID_NO);
 	if (id != ID_UNKNOWN)
 		return (id);
-	id = try_match_keyword(pp, "SO", 2, ID_SO);
+	id = try_match_keyword(cursor, "SO", 2, ID_SO);
 	if (id != ID_UNKNOWN)
 		return (id);
-	id = try_match_keyword(pp, "WE", 2, ID_WE);
+	id = try_match_keyword(cursor, "WE", 2, ID_WE);
 	if (id != ID_UNKNOWN)
 		return (id);
-	id = try_match_keyword(pp, "EA", 2, ID_EA);
+	id = try_match_keyword(cursor, "EA", 2, ID_EA);
 	if (id != ID_UNKNOWN)
 		return (id);
-	id = try_match_keyword(pp, "F", 1, ID_F);
+	id = try_match_keyword(cursor, "F", 1, ID_F);
 	if (id != ID_UNKNOWN)
 		return (id);
-	id = try_match_keyword(pp, "C", 1, ID_C);
+	id = try_match_keyword(cursor, "C", 1, ID_C);
 	if (id != ID_UNKNOWN)
 		return (id);
 	return (ID_UNKNOWN);
 }
 
-t_id	parse_id_at_start(const char **pline)
+t_id	parse_id_at_start(const char **line_cursor)
 {
-	const char	*p;
+	const char	*current;
 	t_id		id;
 
-	p = skip_ws(*pline);
-	if (*p == '\0')
+	current = skip_ws(*line_cursor);
+	if (*current == '\0')
 	{
-		*pline = p;
+		*line_cursor = current;
 		return (ID_NONE);
 	}
-	id = try_take_id(&p);
-	*pline = p;
+	id = try_take_id(&current);
+	*line_cursor = current;
 	return (id);
 }

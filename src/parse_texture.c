@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 16:12:15 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:22:17 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 13:58:55 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,19 @@ static t_bool	tex_take_path(
 
 	if (!trim_range(rest, start, end))
 	{
-		if (perr)
-			*perr = PERR_PATH_MISS;
+		*perr = PERR_PATH_MISS;
 		return (false);
 	}
 	len = (size_t)(*end - *start);
 	if (len < 4)
 	{
-		if (perr)
-			*perr = PERR_PATH_MISS;
+		*perr = PERR_PATH_MISS;
 		return (false);
 	}
 	suf = *end - 4;
 	if (ft_strncmp(suf, ".xpm", 4) != 0)
 	{
-		if (perr)
-			*perr = PERR_PATH_MISS;
+		*perr = PERR_PATH_MISS;
 		return (false);
 	}
 	return (true);
@@ -90,14 +87,12 @@ static char	**tex_get_slot(t_config *cfg, t_id id, t_perr *perr)
 	slot = cfg_slot_for_id(cfg, id);
 	if (!slot)
 	{
-		if (perr)
-			*perr = PERR_ID_BAD;
+		*perr = PERR_ID_BAD;
 		return (NULL);
 	}
 	if (*slot)
 	{
-		if (perr)
-			*perr = PERR_EL_DUP;
+		*perr = PERR_EL_DUP;
 		return (NULL);
 	}
 	return (slot);
@@ -118,12 +113,10 @@ t_bool	handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 	path = dup_range(start, end);
 	if (!path)
 	{
-		if (perr)
-			*perr = PERR_ALLOC;
+		*perr = PERR_ALLOC;
 		return (false);
 	}
 	*slot = path;
-	if (perr)
-		*perr = PERR_OK;
+	*perr = PERR_OK;
 	return (true);
 }
