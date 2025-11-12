@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:44:34 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 19:06:13 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 13:59:25 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,11 @@ static t_bool	handle_in_or_after_map(char *line, t_mapbuild *mb)
 			return (false);
 	}
 	else
+	{
+		if (line_len_no_nl(line) > 0 && !is_blank_or_ws_only(line))
+			return (false);
 		mb->ended = true;
+	}
 	return (true);
 }
 
@@ -93,6 +97,11 @@ t_bool	parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 		*out_err = PERR_OK;
 	mb_init(mb);
 	line = get_next_line(fd);
+	if (!line)
+	{
+		*out_err = PERR_FILE_EMPTY;
+		return (false);
+	}
 	while (line)
 	{
 		if (!handle_line(line, cfg, mb, out_err))

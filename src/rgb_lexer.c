@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 17:57:47 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 18:29:48 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/12 14:06:27 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,69 +14,69 @@
 
 static t_bool	parse_colors(const char *str, int *result)
 {
-	const char	*p;
-	long		v;
+	const char	*cursor;
+	long		value;
 
 	if (!str || !result)
 		return (false);
-	p = skip_ws(str);
-	if (*p == '+')
-		p ++;
-	if (*p < '0' || *p > '9')
+	cursor = skip_ws(str);
+	if (*cursor == '+')
+		cursor ++;
+	if (*cursor < '0' || *cursor > '9')
 		return (false);
-	v = 0;
-	while (*p >= '0' && *p <= '9')
+	value = 0;
+	while (*cursor >= '0' && *cursor <= '9')
 	{
-		v = v * 10 + (*p - '0');
-		if (v > 255)
+		value = value * 10 + (*cursor - '0');
+		if (value > 255)
 			return (false);
-		p ++;
+		cursor ++;
 	}
-	p = skip_ws(p);
-	if (*p != '\0')
+	cursor = skip_ws(cursor);
+	if (*cursor != '\0')
 		return (false);
-	*result = (int)v;
+	*result = (int)value;
 	return (true);
 }
 
-static t_bool	read_component(const char **pp, int *out)
+static t_bool	read_component(const char **cursor, int *out)
 {
 	const char	*p;
-	char		tok[4];
-	int			nd;
+	char		digits[4];
+	int			digit_count;
 
-	p = *pp;
-	nd = 0;
+	p = *cursor;
+	digit_count = 0;
 	p = skip_ws(p);
 	if (*p < '0' || *p > '9')
 		return (false);
-	while (nd < 3 && p[nd] >= '0' && p[nd] <= '9')
+	while (digit_count < 3 && p[digit_count] >= '0' && p[digit_count] <= '9')
 	{
-		tok[nd] = p[nd];
-		nd ++;
+		digits[digit_count] = p[digit_count];
+		digit_count ++;
 	}
-	tok[nd] = '\0';
-	if (nd == 0)
+	digits[digit_count] = '\0';
+	if (digit_count == 0)
 		return (false);
-	if (!parse_colors(tok, out))
+	if (!parse_colors(digits, out))
 		return (false);
-	p += nd;
+	p += digit_count;
 	p = skip_ws(p);
-	*pp = p;
+	*cursor = p;
 	return (true);
 }
 
-static t_bool	consume_comma(const char **pp)
+static t_bool	consume_comma(const char **cursor)
 {
 	const char	*p;
 
-	p = *pp;
+	p = *cursor;
 	p = skip_ws(p);
 	if (*p != ',')
 		return (false);
 	p ++;
 	p = skip_ws(p);
-	*pp = p;
+	*cursor = p;
 	return (true);
 }
 
@@ -92,28 +92,28 @@ static void	assign_rgb_component(t_rgb *dst, int index, int val)
 
 t_bool	parse_triplet(const char *str, t_rgb *dst, const char **end_after)
 {
-	const char	*p;
-	int			i;
-	int			val;
+	const char	*cursor;
+	int			component_index;
+	int			component_value;
 
 	if (!str || !dst)
 		return (false);
-	p = str;
-	i = 0;
-	while (i < 3)
+	cursor = str;
+	component_index = 0;
+	while (component_index < 3)
 	{
-		if (!read_component(&p, &val))
+		if (!read_component(&cursor, &component_value))
 			return (false);
-		assign_rgb_component(dst, i, val);
-		if (i < 2 && !consume_comma(&p))
+		assign_rgb_component(dst, component_index, component_value);
+		if (component_index < 2 && !consume_comma(&cursor))
 			return (false);
-		i++;
+		component_index ++;
 	}
-	while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
-		p ++;
+	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\r' || *cursor == '\n')
+		cursor ++;
 	if (end_after)
-		*end_after = p;
-	if (*p != '\0')
+		*end_after = cursor;
+	if (*cursor != '\0')
 		return (false);
 	dst->is_set = true;
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/10 19:09:38 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/11 19:17:41 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef enum e_perr
 	PERR_ARGC,
 	PERR_EMPTY,
 	PERR_EXT,
-	PERR_DIR,
+//	PERR_DIR,
 	PERR_OPEN,
 	PERR_READ,
 	PERR_ALLOC,
@@ -43,6 +43,7 @@ typedef enum e_perr
 	PERR_EL_MISS,
 	PERR_ID_BAD,
 	PERR_RGB_BAD,
+	PERR_FILE_EMPTY,
 	PERR_PATH_MISS
 }	t_perr;
 
