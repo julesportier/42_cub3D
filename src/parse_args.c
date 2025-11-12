@@ -76,7 +76,7 @@ const char	*perr_str(t_perr e)
 	else if (e == PERR_OPEN)
 		return ("Failed to open file");
 	else if (e == PERR_READ)
-		return ("Invalid configuration: element out of place or map not closed");
+		return ("Configuration file illformed");
 	else if (e == PERR_ALLOC)
 		return ("Out of memory");
 	else if (e == PERR_EL_DUP)

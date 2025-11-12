@@ -92,28 +92,26 @@ static void	assign_rgb_component(t_rgb *dst, int index, int val)
 
 t_bool	parse_triplet(const char *str, t_rgb *dst, const char **end_after)
 {
-	const char	*cursor;
 	int			component_index;
 	int			component_value;
 
 	if (!str || !dst)
 		return (false);
-	cursor = str;
 	component_index = 0;
 	while (component_index < 3)
 	{
-		if (!read_component(&cursor, &component_value))
+		if (!read_component(&str, &component_value))
 			return (false);
 		assign_rgb_component(dst, component_index, component_value);
-		if (component_index < 2 && !consume_comma(&cursor))
+		if (component_index < 2 && !consume_comma(&str))
 			return (false);
 		component_index ++;
 	}
-	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\r' || *cursor == '\n')
-		cursor ++;
+	while (*str == ' ' || *str == '\t' || *str == '\r' || *str == '\n')
+		str ++;
 	if (end_after)
-		*end_after = cursor;
-	if (*cursor != '\0')
+		*end_after = str;
+	if (*str != '\0')
 		return (false);
 	dst->is_set = true;
 	return (true);
