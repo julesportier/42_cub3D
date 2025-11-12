@@ -39,13 +39,13 @@ static t_bool	trim_range(
 
 char	**cfg_slot_for_id(t_config *cfg, t_id id)
 {
-	if (id == ID_NO)
+	if (id == id_no)
 		return (&cfg->no);
-	if (id == ID_SO)
+	if (id == id_so)
 		return (&cfg->so);
-	if (id == ID_WE)
+	if (id == id_we)
 		return (&cfg->we);
-	if (id == ID_EA)
+	if (id == id_ea)
 		return (&cfg->ea);
 	return (NULL);
 }
@@ -62,19 +62,19 @@ static t_bool	tex_take_path(
 
 	if (!trim_range(rest, start, end))
 	{
-		*perr = PERR_PATH_MISS;
+		*perr = perr_path_miss;
 		return (false);
 	}
 	len = (size_t)(*end - *start);
 	if (len < 4)
 	{
-		*perr = PERR_PATH_MISS;
+		*perr = perr_path_miss;
 		return (false);
 	}
 	suf = *end - 4;
 	if (ft_strncmp(suf, ".xpm", 4) != 0)
 	{
-		*perr = PERR_PATH_MISS;
+		*perr = perr_path_miss;
 		return (false);
 	}
 	return (true);
@@ -87,12 +87,12 @@ static char	**tex_get_slot(t_config *cfg, t_id id, t_perr *perr)
 	slot = cfg_slot_for_id(cfg, id);
 	if (!slot)
 	{
-		*perr = PERR_ID_BAD;
+		*perr = perr_id_bad;
 		return (NULL);
 	}
 	if (*slot)
 	{
-		*perr = PERR_EL_DUP;
+		*perr = perr_el_dup;
 		return (NULL);
 	}
 	return (slot);
@@ -113,10 +113,10 @@ t_bool	handle_texture(t_id id, const char *rest, t_config *cfg, t_perr *perr)
 	path = dup_range(start, end);
 	if (!path)
 	{
-		*perr = PERR_ALLOC;
+		*perr = perr_alloc;
 		return (false);
 	}
 	*slot = path;
-	*perr = PERR_OK;
+	*perr = perr_ok;
 	return (true);
 }

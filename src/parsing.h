@@ -31,32 +31,31 @@ typedef enum e_bool
 
 typedef enum e_perr
 {
-	PERR_OK = 0,
-	PERR_ARGC,
-	PERR_EMPTY,
-	PERR_EXT,
-//	PERR_DIR,
-	PERR_OPEN,
-	PERR_READ,
-	PERR_ALLOC,
-	PERR_EL_DUP,
-	PERR_EL_MISS,
-	PERR_ID_BAD,
-	PERR_RGB_BAD,
-	PERR_FILE_EMPTY,
-	PERR_PATH_MISS
+	perr_ok = 0,
+	perr_argc,
+	perr_empty,
+	perr_ext,
+	perr_open,
+	perr_read,
+	perr_alloc,
+	perr_el_dup,
+	perr_el_miss,
+	perr_id_bad,
+	perr_rgb_bad,
+	perr_file_empty,
+	perr_path_miss
 }	t_perr;
 
 typedef enum e_id
 {
-	ID_NONE = 0,
-	ID_NO,
-	ID_SO,
-	ID_WE,
-	ID_EA,
-	ID_F,
-	ID_C,
-	ID_UNKNOWN
+	id_none = 0,
+	id_no,
+	id_so,
+	id_we,
+	id_ea,
+	id_f,
+	id_c,
+	id_unknown
 }	t_id;
 
 typedef struct s_rgb

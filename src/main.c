@@ -47,7 +47,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-		print_perr(PERR_ARGC, NULL);
+		print_perr(perr_argc, NULL);
 		return (EXIT_FAILURE);
 	}
 	if (parsing_load(argv[1], &parsed))
