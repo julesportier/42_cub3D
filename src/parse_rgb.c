@@ -28,12 +28,12 @@ static t_bool	rgb_take_triplet(
 	end_ptr = NULL;
 	if (!parse_triplet(rest, &tmp, &end_ptr))
 	{
-		*perr = PERR_RGB_BAD;
+		*perr = perr_rgb_bad;
 		return (false);
 	}
 	if (*skip_ws(end_ptr) != '\0')
 	{
-		*perr = PERR_RGB_BAD;
+		*perr = perr_rgb_bad;
 		return (false);
 	}
 	*out = tmp;
@@ -44,11 +44,11 @@ static t_bool	rgb_take_triplet(
 static t_bool	rgb_assign(
 	t_id	id, const t_rgb *val, t_config *cfg, t_perr *perr)
 {
-	if (id == ID_F)
+	if (id == id_f)
 	{
 		if (cfg->floor_rgb.is_set)
 		{
-			*perr = PERR_EL_DUP;
+			*perr = perr_el_dup;
 			return (false);
 		}
 		cfg->floor_rgb = *val;
@@ -56,7 +56,7 @@ static t_bool	rgb_assign(
 	}
 	if (cfg->ceil_rgb.is_set)
 	{
-		*perr = PERR_EL_DUP;
+		*perr = perr_el_dup;
 		return (false);
 	}
 	cfg->ceil_rgb = *val;
@@ -72,7 +72,7 @@ t_bool	handle_rgb(t_id	id, const char	*rest, t_config	*cfg, t_perr	*perr)
 		return (false);
 	if (!rgb_assign(id, &tmp, cfg, perr))
 		return (false);
-	*perr = PERR_OK;
+	*perr = perr_ok;
 	return (true);
 }
 
@@ -84,8 +84,8 @@ t_bool	rgb_is_set(const t_rgb *c)
 t_perr	header_complete(const t_config *cfg)
 {
 	if (!cfg->no || !cfg->so || !cfg->we || !cfg->ea)
-		return (PERR_EL_MISS);
+		return (perr_el_miss);
 	if (!rgb_is_set(&cfg->floor_rgb) || !rgb_is_set(&cfg->ceil_rgb))
-		return (PERR_EL_MISS);
-	return (PERR_OK);
+		return (perr_el_miss);
+	return (perr_ok);
 }

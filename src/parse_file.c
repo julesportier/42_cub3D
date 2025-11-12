@@ -17,9 +17,9 @@ static t_bool	handle_map_start(char *line, t_mapbuild *mb, t_perr *err)
 	if (!mb_push_line(mb, line))
 	{
 		if (mb->alloc_failed)
-			*err = PERR_ALLOC;
+			*err = perr_alloc;
 		else
-			*err = PERR_READ;
+			*err = perr_read;
 		mb->alloc_failed = 0;
 		return (false);
 	}
@@ -36,7 +36,7 @@ static t_bool	handle_before_map(
 	}
 	if (!is_blank_or_ws_only(line))
 	{
-		*err = PERR_OK;
+		*err = perr_ok;
 		if (!parse_header_line(line, cfg, err))
 			return (false);
 	}
@@ -70,7 +70,7 @@ static t_bool	handle_line(
 {
 	t_bool	ok;
 
-	*out_err = PERR_OK;
+	*out_err = perr_ok;
 	if (!mb->started)
 		ok = handle_before_map(line, cfg, mb, out_err);
 	else
@@ -79,9 +79,9 @@ static t_bool	handle_line(
 		if (!ok)
 		{
 			if (mb->alloc_failed)
-				*out_err = PERR_ALLOC;
+				*out_err = perr_alloc;
 			else
-				*out_err = PERR_READ;
+				*out_err = perr_read;
 			mb->alloc_failed = 0;
 		}
 	}
@@ -94,12 +94,12 @@ t_bool	parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 	char	*line;
 
 	if (out_err)
-		*out_err = PERR_OK;
+		*out_err = perr_ok;
 	mb_init(mb);
 	line = get_next_line(fd);
 	if (!line)
 	{
-		*out_err = PERR_FILE_EMPTY;
+		*out_err = perr_file_empty;
 		return (false);
 	}
 	while (line)
