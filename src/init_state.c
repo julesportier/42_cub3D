@@ -76,8 +76,8 @@ int	init_state(t_state	*state, t_parsed *parsed)
 	state->map.height = parsed->map.rows;
 	state->textures.north.filename = parsed->config.no;
 	state->textures.south.filename = parsed->config.so;
-	state->textures.est.filename = parsed->config.we;
-	state->textures.west.filename = parsed->config.ea;
+	state->textures.est.filename = parsed->config.ea;
+	state->textures.west.filename = parsed->config.we;
 	if (load_textures(&state->mlx_data, &state->textures))
 	{
 		parsing_free(parsed);
