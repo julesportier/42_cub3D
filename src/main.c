@@ -54,6 +54,7 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	if (init_state(&state, &parsed))
 		return (-1);
+	cast_rays(&state);
 	mlx_hook(
 		state.mlx_data.win, ON_DESTROY, 0, end_loop_mouse, &state.mlx_data);
 	mlx_hook(
