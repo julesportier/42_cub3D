@@ -21,16 +21,16 @@ static t_texture	*get_texture(t_state *state, t_ray *ray, t_direction *dir)
 	if (ray->side == 'x')
 	{
 		if (dir->x == est)
-			texture = &state->textures.est;
-		else
 			texture = &state->textures.west;
+		else
+			texture = &state->textures.est;
 	}
 	else
 	{
 		if (dir->y == north)
-			texture = &state->textures.north;
-		else
 			texture = &state->textures.south;
+		else
+			texture = &state->textures.north;
 	}
 	return (texture);
 }
