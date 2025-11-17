@@ -90,8 +90,6 @@ rel: CFLAGS = $(CFLAGS_REL)
 rel: all
 
 ft:
-	@git submodule init
-	@git submodule update
 	$(MAKE) CFLAGS="$(CFLAGS)" -C $(LIBFT_DIR)
 mlx:
 	$(MAKE) -C $(LIBMLX_DIR)
