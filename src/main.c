@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 09:36:03 by juportie          #+#    #+#             */
-/*   Updated: 2025/11/10 19:00:25 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/18 16:30:03 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,17 @@ static int	keys_actions(int keycode, t_state *state)
 
 int	main(int argc, char *argv[])
 {
+	const char	*path;
 	t_parsed	parsed;
 	t_state		state;
 
 	if (argc != 2)
 	{
-		print_perr(perr_argc, NULL);
+		ft_putendl_fd("Error\nInvalid number of arguments", 2);
 		return (EXIT_FAILURE);
 	}
+	if (validate_params(argv, &path))
+		return (EXIT_FAILURE);
 	if (parsing_load(argv[1], &parsed))
 		return (EXIT_FAILURE);
 	if (init_state(&state, &parsed))

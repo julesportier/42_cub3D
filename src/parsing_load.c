@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 15:02:54 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/14 10:52:57 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/18 18:21:58 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ static t_perr	load_cfg_build_map(int fd, t_config *cfg, t_map *m)
 	if (!map_build_split(&mb, m))
 		return (mb_free(&mb), perr_read);
 	mb_free(&mb);
-	if (!map_quick_border_check(m) || !map_neighbors_ok(m))
-		return (map_free_split(m), perr_read);
+	if (!map_quick_border_check(m))
+		return (map_free_split(m), perr_map_closed);
+	if (!map_neighbors_ok(m))
+		return (map_free_split(m), perr_map_space);
 	return (perr_ok);
 }
 

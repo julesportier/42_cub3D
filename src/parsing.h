@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/11 19:17:41 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/18 18:55:41 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ typedef enum e_bool
 typedef enum e_perr
 {
 	perr_ok = 0,
-	perr_argc,
-	perr_empty,
+	perr_map_closed,
+	perr_map_space,
 	perr_ext,
 	perr_open,
 	perr_read,
@@ -43,7 +43,12 @@ typedef enum e_perr
 	perr_id_bad,
 	perr_rgb_bad,
 	perr_file_empty,
-	perr_path_miss
+	perr_path_miss,
+	perr_map_empty,
+	perr_player_none,
+	perr_player_dup,
+	perr_trailing,
+	perr_header_missing
 }	t_perr;
 
 typedef enum e_id
@@ -132,7 +137,7 @@ t_bool		handle_texture(
 				t_id id, const char *rest, t_config *cfg, t_perr *perr);
 t_perr		header_complete(const t_config *cfg);
 t_perr		parsing_load(const char *path, t_parsed *out);
-t_perr		validate_params(int argc, char **argv, const char **out_path);
+t_perr		validate_params(char **argv, const char **out_path);
 char		*get_next_line(int fd);
 char		*dup_range(const char *start, const char *end);
 char		**cfg_slot_for_id(t_config *cfg, t_id id);
