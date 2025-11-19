@@ -6,7 +6,7 @@
 /*   By: vakozhev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:18:06 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/18 18:55:41 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/19 13:04:38 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ t_bool		parse_triplet(const char *str, t_rgb *dst, const char **end_after);
 t_bool		handle_rgb(t_id id, const char *rest, t_config *cfg, t_perr *perr);
 t_bool		rgb_is_set(const t_rgb *c);
 t_bool		parse_header_line(const char *line, t_config *cfg, t_perr *perr);
+t_bool		cfg_any_field_set(const t_config *c);
 t_bool		handle_texture(
 				t_id id, const char *rest, t_config *cfg, t_perr *perr);
 t_perr		header_complete(const t_config *cfg);

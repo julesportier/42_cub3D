@@ -6,7 +6,7 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 17:00:55 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/18 18:52:40 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/19 12:57:14 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,10 @@ t_bool	rgb_is_set(const t_rgb *c)
 	return (c->is_set);
 }
 
-static t_bool cfg_any_field_set(const t_config *c)
-{
-    return (c->no || c->so || c->we || c->ea
-         || rgb_is_set(&c->floor_rgb) || rgb_is_set(&c->ceil_rgb));
-}
-
 t_perr	header_complete(const t_config *cfg)
 {
 	if (!cfg_any_field_set(cfg))
-        return (perr_header_missing);
+		return (perr_header_missing);
 	if ((!cfg->no) || (!cfg->so) || (!cfg->we) || (!cfg->ea))
 		return (perr_el_miss);
 	if ((!rgb_is_set(&cfg->floor_rgb)) || (!rgb_is_set(&cfg->ceil_rgb)))

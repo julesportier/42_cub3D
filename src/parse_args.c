@@ -6,32 +6,11 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/18 18:57:59 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/19 13:01:50 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-char	*dup_range(const char *start, const char *end)
-{
-	size_t	len;
-	char	*str;
-
-	if (!start || !end)
-		return (NULL);
-	if (end < start)
-		return (NULL);
-	len = (size_t)(end - start);
-	if (len == SIZE_MAX)
-		return (NULL);
-	str = (char *)malloc(len + 1);
-	if (!str)
-		return (NULL);
-	if (len)
-		ft_memcpy(str, start, len);
-	str[len] = '\0';
-	return (str);
-}
 
 static t_bool	check_extension(const char *path)
 {
@@ -57,7 +36,6 @@ t_perr	validate_params(char **argv, const char **out_path)
 
 	err = perr_ok;
 	path = NULL;
-	
 	path = argv[1];
 	if (!check_extension(path))
 		err = perr_ext;
@@ -118,13 +96,13 @@ void	print_perr(t_perr err, const char *str)
 		ft_putendl_fd("' (expected: .cub, case sensitive).", 2);
 	}
 	else if (err == perr_player_none)
-        ft_putendl_fd("No player on the map", 2);
+		ft_putendl_fd("No player on the map", 2);
 	else if (err == perr_player_dup)
 		ft_putendl_fd("Multiple players on the map", 2);
-    else if (err == perr_map_empty)
-        ft_putendl_fd("Map section is missing or empty", 2);
-    else if (err == perr_trailing)
-        ft_putendl_fd("Trailing non-empty content into or after the map", 2);
+	else if (err == perr_map_empty)
+		ft_putendl_fd("Map section is missing or empty", 2);
+	else if (err == perr_trailing)
+		ft_putendl_fd("Trailing non-empty content into or after the map", 2);
 	else
 		ft_putendl_fd((char *)perr_str(err), 2);
 }

@@ -6,7 +6,7 @@
 #    By: juportie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/03 09:06:58 by juportie          #+#    #+#              #
-#    Updated: 2025/11/18 13:58:10 by vakozhev         ###   ########lyon.fr    #
+#    Updated: 2025/11/19 13:05:15 by vakozhev         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,6 +56,7 @@ SRC := main.c \
 	   textures.c \
 	   parse_args.c \
 	   parsing_utils.c \
+	   header_utils.c \
 	   parsing_cleanup.c \
 	   parsing_struct_init.c \
 	   parse_file.c \
