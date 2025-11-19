@@ -54,7 +54,13 @@ static t_bool	handle_in_or_after_map(char *line, t_mapbuild *mb, t_perr *err)
 	if (is_map_line(line))
 	{
 		if (!mb_push_line(mb, line))
+		{
+			if (mb->alloc_failed)
+				*err = perr_alloc;
+			else
+				*err = perr_player_dup;
 			return (false);
+		}
 	}
 	else
 	{
@@ -68,31 +74,14 @@ static t_bool	handle_in_or_after_map(char *line, t_mapbuild *mb, t_perr *err)
 static t_bool	handle_line(
 	char *line, t_config *cfg, t_mapbuild *mb, t_perr *out_err)
 {
-	t_bool	ok;
-	t_perr	local_err;
+	t_bool	ret;
 
-	local_err = perr_ok;
 	*out_err = perr_ok;
 	if (!mb->started)
-		ok = handle_before_map(line, cfg, mb, out_err);
+		ret = handle_before_map(line, cfg, mb, out_err);
 	else
-	{
-		ok = handle_in_or_after_map(line, mb, &local_err);
-		if (!ok)
-		{
-			if (mb->alloc_failed)
-				*out_err = perr_alloc;
-			else
-			{
-				if (local_err != perr_ok)
-					*out_err = local_err;
-				else
-					*out_err = perr_player_dup;
-			}
-			mb->alloc_failed = 0;
-		}
-	}
-	return (free(line), ok);
+		ret = handle_in_or_after_map(line, mb, out_err);
+	return (free(line), ret);
 }
 
 t_bool	parse_file_fd(int fd, t_config *cfg, t_mapbuild *mb, t_perr *out_err)

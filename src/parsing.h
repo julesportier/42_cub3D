@@ -41,6 +41,7 @@ typedef enum e_perr
 	perr_el_dup,
 	perr_el_miss,
 	perr_id_bad,
+	perr_id_missing_content,
 	perr_rgb_bad,
 	perr_file_empty,
 	perr_path_miss,
@@ -60,7 +61,8 @@ typedef enum e_id
 	id_ea,
 	id_f,
 	id_c,
-	id_unknown
+	id_unknown,
+	id_no_field
 }	t_id;
 
 typedef struct s_rgb
@@ -142,7 +144,7 @@ t_perr		validate_params(char **argv, const char **out_path);
 char		*get_next_line(int fd);
 char		*dup_range(const char *start, const char *end);
 char		**cfg_slot_for_id(t_config *cfg, t_id id);
-void		print_perr(t_perr err, const char *str);
+void		print_perr(t_perr err);
 void		mb_free(t_mapbuild *map);
 void		map_free_split(t_map *m);
 void		cfg_free(t_config *c);
