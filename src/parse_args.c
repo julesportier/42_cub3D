@@ -6,32 +6,11 @@
 /*   By: vakozhev <vakozhev@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 14:51:40 by vakozhev          #+#    #+#             */
-/*   Updated: 2025/11/12 12:40:24 by vakozhev         ###   ########lyon.fr   */
+/*   Updated: 2025/11/19 13:01:50 by vakozhev         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-char	*dup_range(const char *start, const char *end)
-{
-	size_t	len;
-	char	*str;
-
-	if (!start || !end)
-		return (NULL);
-	if (end < start)
-		return (NULL);
-	len = (size_t)(end - start);
-	if (len == SIZE_MAX)
-		return (NULL);
-	str = (char *)malloc(len + 1);
-	if (!str)
-		return (NULL);
-	if (len)
-		ft_memcpy(str, start, len);
-	str[len] = '\0';
-	return (str);
-}
 
 static t_bool	check_extension(const char *path)
 {
@@ -49,34 +28,39 @@ static t_bool	check_extension(const char *path)
 	return (false);
 }
 
-t_perr	validate_params(int argc, char **argv, const char **out_path)
+t_perr	validate_params(char **argv, const char **out_path)
 {
 	const char	*path;
+	const char	*message_for_error;
+	t_perr		err;
 
-	if (argc != 2)
-		return (perr_argc);
+	err = perr_ok;
+	path = NULL;
 	path = argv[1];
-	if (path == NULL || *path == '\0')
-		return (perr_empty);
 	if (!check_extension(path))
-		return (perr_ext);
-	if (out_path)
-		*out_path = path;
+		err = perr_ext;
+	if (err != perr_ok)
+	{
+		message_for_error = argv[1];
+		print_perr(err, message_for_error);
+		return (err);
+	}
+	*out_path = path;
 	return (perr_ok);
 }
 
 const char	*perr_str(t_perr e)
 {
-	if (e == perr_argc)
-		return ("Invalid number of arguments");
-	else if (e == perr_empty)
-		return ("Empty file path");
-	else if (e == perr_ext)
-		return ("Invalid file extension (expected .cub)");
-	else if (e == perr_open)
+	if (e == perr_map_closed)
+		return ("Map is not closed (found '0' on border)");
+	else if (e == perr_map_space)
+		return ("Invalid map: floor '0' adjacent to void ' '");
+	else if (e == perr_header_missing)
+		return ("Header is missing");
+	if (e == perr_open)
 		return ("Failed to open file");
 	else if (e == perr_read)
-		return ("Configuration file illformed");
+		return ("Invalid map");
 	else if (e == perr_alloc)
 		return ("Out of memory");
 	else if (e == perr_el_dup)
@@ -107,10 +91,18 @@ void	print_perr(t_perr err, const char *str)
 	ft_putendl_fd("Error", 2);
 	if (err == perr_ext)
 	{
-		ft_putstr_fd("Extension invalide pour '", 2);
+		ft_putstr_fd("Invalid extension for '", 2);
 		ft_putstr_fd((char *)path_for_msg, 2);
-		ft_putendl_fd("' (attendu: .cub, sensible a la casse).", 2);
+		ft_putendl_fd("' (expected: .cub, case sensitive).", 2);
 	}
+	else if (err == perr_player_none)
+		ft_putendl_fd("No player on the map", 2);
+	else if (err == perr_player_dup)
+		ft_putendl_fd("Multiple players on the map", 2);
+	else if (err == perr_map_empty)
+		ft_putendl_fd("Map section is missing or empty", 2);
+	else if (err == perr_trailing)
+		ft_putendl_fd("Trailing non-empty content into or after the map", 2);
 	else
 		ft_putendl_fd((char *)perr_str(err), 2);
 }
