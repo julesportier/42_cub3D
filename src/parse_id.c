@@ -31,7 +31,11 @@ static t_id	try_match_keyword(
 	const char	*p_line;
 
 	p_line = *cursor;
-	if (ft_strncmp(p_line, kw, kw_len) != 0 || !is_id_sep(p_line[kw_len]))
+	if (ft_strncmp(p_line, kw, kw_len) != 0)
+		return (id_unknown);
+	else if (*(p_line + kw_len) == '\n')
+		return (id_no_field);
+	else if (!is_id_sep(p_line[kw_len]))
 		return (id_unknown);
 	*cursor = p_line + kw_len;
 	return (id);

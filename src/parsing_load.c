@@ -29,6 +29,11 @@ t_bool	parse_header_line(const char *line, t_config *cfg, t_perr *perr)
 		*perr = perr_id_bad;
 		return (false);
 	}
+	if (id == id_no_field)
+	{
+		*perr = perr_id_missing_content;
+		return (false);
+	}
 	if (id == id_no || id == id_so || id == id_we || id == id_ea)
 		return (handle_texture(id, p_line_copy, cfg, perr));
 	else
@@ -71,7 +76,7 @@ t_perr	parsing_load(const char *path, t_parsed *out)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 	{
-		print_perr(perr_open, path);
+		print_perr(perr_open);
 		return (perr_open);
 	}
 	perr = load_cfg_build_map(fd, &cfg, &m);
@@ -79,7 +84,7 @@ t_perr	parsing_load(const char *path, t_parsed *out)
 	if (perr != perr_ok)
 	{
 		cfg_free(&cfg);
-		print_perr(perr, path);
+		print_perr(perr);
 		return (perr);
 	}
 	out->config = cfg;

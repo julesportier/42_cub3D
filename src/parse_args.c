@@ -31,7 +31,6 @@ static t_bool	check_extension(const char *path)
 t_perr	validate_params(char **argv, const char **out_path)
 {
 	const char	*path;
-	const char	*message_for_error;
 	t_perr		err;
 
 	err = perr_ok;
@@ -41,8 +40,7 @@ t_perr	validate_params(char **argv, const char **out_path)
 		err = perr_ext;
 	if (err != perr_ok)
 	{
-		message_for_error = argv[1];
-		print_perr(err, message_for_error);
+		print_perr(err);
 		return (err);
 	}
 	*out_path = path;
@@ -78,23 +76,13 @@ const char	*perr_str(t_perr e)
 	return ("Unknown error");
 }
 
-void	print_perr(t_perr err, const char *str)
+void	print_perr(t_perr err)
 {
-	const char	*path_for_msg;
-
-	if (str != NULL)
-		path_for_msg = str;
-	else
-		path_for_msg = "";
 	if (err == perr_ok)
 		return ;
 	ft_putendl_fd("Error", 2);
 	if (err == perr_ext)
-	{
-		ft_putstr_fd("Invalid extension for '", 2);
-		ft_putstr_fd((char *)path_for_msg, 2);
-		ft_putendl_fd("' (expected: .cub, case sensitive).", 2);
-	}
+		ft_putendl_fd("Invalid config file extension", 2);
 	else if (err == perr_player_none)
 		ft_putendl_fd("No player on the map", 2);
 	else if (err == perr_player_dup)
@@ -103,6 +91,8 @@ void	print_perr(t_perr err, const char *str)
 		ft_putendl_fd("Map section is missing or empty", 2);
 	else if (err == perr_trailing)
 		ft_putendl_fd("Trailing content into or after the map", 2);
+	else if (err == perr_id_missing_content)
+		ft_putendl_fd("No content after identifier", 2);
 	else
 		ft_putendl_fd((char *)perr_str(err), 2);
 }
