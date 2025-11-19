@@ -24,7 +24,7 @@ int	texture_to_image(t_mlx_data *mlx_data, t_texture *texture)
 			&texture->height);
 	if (!texture->img_data.img)
 	{
-		ft_putendl_fd("Error:\nloading texture failed\n", 2);
+		ft_putendl_fd("Error:\nloading texture failed", 2);
 		return (-1);
 	}
 	texture->img_data.data_addr = mlx_get_data_addr(

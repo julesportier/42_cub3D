@@ -13,6 +13,7 @@
 CC := cc
 CFLAGS := -Wall -Werror -Wextra
 CFLAGS_DB := -Wall -Werror -Wextra -g3
+DEP_FLAGS = -MMD
 
 NAME := libft.a
 
@@ -98,27 +99,29 @@ SRC :=	ft_isalpha.c \
 	ft_isequalstr.c \
 	ft_sqrt_floor.c
 
-OBJ_DIR := build
-OBJ := $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+BUILD_DIR := build
+OBJ := $(addprefix $(BUILD_DIR)/, $(SRC:.c=.o))
+DEP_FILES := $(OBJ:.o=.d)
 
+all: $(BUILD_DIR) $(NAME)
 
-all: $(OBJ_DIR) $(NAME)
 dbg: CFLAGS := $(CFLAGS_DB)
 dbg: all
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
-$(NAME): $(OBJ)
-	ar rs $(NAME) $?
-
-$(OBJ_DIR)/%.o: %.c $(HEADER) Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
-
+	rm -rf $(BUILD_DIR)
 fclean: clean
 	rm -f $(NAME)
-
 re: fclean all
 
 .PHONY: all dbg clean fclean re
+-include $(DEP_FILES)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(NAME): $(OBJ)
+	ar rs $(NAME) $?
+
+$(BUILD_DIR)/%.o: %.c Makefile
+	$(CC) $(CFLAGS) $(DEP_FLAGS) -c $< -o $@
