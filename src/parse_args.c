@@ -102,7 +102,7 @@ void	print_perr(t_perr err, const char *str)
 	else if (err == perr_map_empty)
 		ft_putendl_fd("Map section is missing or empty", 2);
 	else if (err == perr_trailing)
-		ft_putendl_fd("Trailing non-empty content into or after the map", 2);
+		ft_putendl_fd("Trailing content into or after the map", 2);
 	else
 		ft_putendl_fd((char *)perr_str(err), 2);
 }
